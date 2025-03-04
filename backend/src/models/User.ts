@@ -1,11 +1,11 @@
 import mongoose,{Document,Schema} from "mongoose";
 
 export interface IUser extends Document{
-  name:String,
-  email:String,
-  password:String,
-  otp?:String,
-  otpExpiry?:String,
+  name:string,
+  email:string,
+  password:string,
+  otp?:string,
+  otpExpiry?:Date,
   isVerified:Boolean
 }
 
@@ -14,7 +14,7 @@ const userSchema = new Schema <IUser> ({
   email:{type:String,required:true,unique:true},
   password:{type:String,required:true},
   otp:String,
-  otpExpiry:String,
+  otpExpiry:Date,
   isVerified:{type:Boolean,default:false}
 })
 

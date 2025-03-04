@@ -9,17 +9,19 @@ export const signup = async (req:Request,res:Response) => {
     const {name,email,password} = req.body;
     const response = await authService.singup(name,email,password)
     res.json(response)
-  } catch (error) {
+  } catch (error:any) {
     res.status(400).json({message:error.message})
   }
 }
 
 export const verifyOTP = async (req:Request,res:Response) => {
   try {
-    const {email,otp} = req.body;
-    const response = await authService.verifyOTP(email,otp)
+    console.log("its here")
+    console.log("verofy: ",req.body)
+    const {email,otp,name,password} = req.body;
+    const response = await authService.verifyOTP(email,otp,name,password)
     res.json(response)
-  } catch (error) {
+  } catch (error:any) {
     res.status(400).json({message:error.message})
   }
 }
