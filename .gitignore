@@ -1,0 +1,43 @@
+# 🔹 Node.js dependencies
+node_modules/
+npm-debug.log
+yarn.lock
+package-lock.json
+
+# 🔹 Environment Variables (Sensitive Data)
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+
+# 🔹 TypeScript Build Outputs
+dist/
+build/
+out/
+*.tsbuildinfo
+
+# 🔹 Logs
+logs/
+*.log
+yarn-error.log
+npm-debug.log
+debug.log
+error.log
+
+# 🔹 OS-specific files
+.DS_Store
+Thumbs.db
+
+# 🔹 IDE & Editor Files
+.vscode/
+.idea/
+*.iml
+
+# 🔹 MongoDB Data (if using local MongoDB)
+data/db/
+dump/
+
+# 🔹 Git & Deployment files
+.git/
+
