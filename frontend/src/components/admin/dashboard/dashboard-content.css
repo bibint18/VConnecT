@@ -1,0 +1,19 @@
+/* .dashboard-content {
+  @apply flex p-4 bg-gray-50;
+}
+
+.main-content {
+  @apply flex-1 mr-4;
+}
+
+.side-content {
+  @apply w-72;
+}
+
+.stats-row {
+  @apply flex gap-4 mb-4;
+}
+
+.stats-row > div {
+  @apply flex-1;
+} */

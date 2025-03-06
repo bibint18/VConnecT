@@ -1,43 +1,23 @@
-# 🔹 Node.js dependencies
-node_modules/
-npm-debug.log
-yarn.lock
-package-lock.json
+# Ignore node_modules in both frontend and backend
+Frontend/node_modules/
+Backend/node_modules/
 
-# 🔹 Environment Variables (Sensitive Data)
-.env
-.env.local
-.env.development
-.env.production
-.env.test
+# Ignore .env files in both frontend and backend
+Frontend/.env
+Backend/.env
 
-# 🔹 TypeScript Build Outputs
-dist/
-build/
-out/
-*.tsbuildinfo
+# Ignore dist folders in both frontend and backend
+Frontend/dist/
+Backend/dist/
 
-# 🔹 Logs
-logs/
-*.log
-yarn-error.log
-npm-debug.log
-debug.log
-error.log
+# Ignore logs in both frontend and backend
+Frontend/logs/
+Backend/logs/
 
-# 🔹 OS-specific files
-.DS_Store
-Thumbs.db
+# Ignore .idea in both frontend and backend
+Frontend/.idea/ 
+Backend/.idea/
 
-# 🔹 IDE & Editor Files
-.vscode/
-.idea/
-*.iml
-
-# 🔹 MongoDB Data (if using local MongoDB)
-data/db/
-dump/
-
-# 🔹 Git & Deployment files
-.git/
-
+# Ignore .vscode in both frontend and backend
+Frontend/.vscode/
+Backend/.vscode/

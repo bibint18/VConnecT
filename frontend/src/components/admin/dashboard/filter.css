@@ -1,0 +1,35 @@
+/* .filter-container {
+  @apply bg-white rounded-lg shadow-sm mb-6;
+}
+
+.filter-header {
+  @apply p-3;
+}
+
+.filter-label {
+  @apply text-purple-600 font-medium;
+}
+
+.filter-content {
+  @apply p-3 pt-0;
+}
+
+.date-range {
+  @apply flex justify-between mb-3;
+}
+
+.date-field {
+  @apply flex flex-col;
+}
+
+.date-label {
+  @apply text-xs text-gray-500;
+}
+
+.date-value {
+  @apply text-sm font-medium;
+}
+
+.apply-button {
+  @apply w-full bg-gray-100 text-gray-700 py-1 rounded text-sm;
+} */

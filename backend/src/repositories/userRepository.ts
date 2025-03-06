@@ -1,12 +1,11 @@
 import { IUserRepository } from "../interfaces/IUserRepository";
 import { IUser,User } from "../models/User";
+import { OtpVerification } from "../models/OtpModel";
 import bcrypt from 'bcryptjs'
 
 export class UserRepository implements IUserRepository{
   async createUser(data: Partial<IUser>): Promise<IUser |null> {
     // const password=data.password
-    if(!data.password) return null
-    data.password=await bcrypt.hash(data.password,10)
     return await new User(data).save()
   }
 
@@ -15,7 +14,8 @@ export class UserRepository implements IUserRepository{
   }
 
   async updateOtp(email: String, otp: String, otpExpiry: Date): Promise<void> {
-    await User.findOneAndUpdate({email},{otp,otpExpiry})
+    console.log("otpExpiry: ",otpExpiry)
+    await OtpVerification.findOneAndUpdate({email},{otp,expiresAt:otpExpiry},{upsert:true,new:true})
   }
 
   async verifyOtp(email: string, otp: string): Promise<IUser | null> {
@@ -26,5 +26,10 @@ export class UserRepository implements IUserRepository{
     user.otpExpiry=undefined
     await user.save()
     return user
+  }
+
+  async updateUser(email:string,updateData:Partial<IUser>){
+    console.log("reached updateUser repository",email,updateData)
+    return await User.findOneAndUpdate({email},updateData,{new:true})
   }
 }

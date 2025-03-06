@@ -1,0 +1,23 @@
+/* .download-container {
+  @apply flex items-center bg-gray-200 rounded-lg overflow-hidden;
+}
+
+.download-button {
+  @apply py-2 px-4 text-gray-700 text-sm;
+}
+
+.format-selector {
+  @apply flex items-center gap-1 py-2 px-3 bg-gray-300 text-gray-700 text-sm;
+}
+
+.format-icon {
+  @apply w-4 h-4;
+}
+
+.download-icon-button {
+  @apply p-2 bg-black text-white;
+}
+
+.download-icon {
+  @apply w-4 h-4;
+} */

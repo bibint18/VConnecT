@@ -1,0 +1,23 @@
+/* .stats-card {
+  @apply rounded-lg bg-white p-4 shadow-sm mb-4;
+}
+
+.stats-card.gradient {
+  @apply text-white bg-gradient-to-br;
+}
+
+.stats-content {
+  @apply flex flex-col items-center justify-center;
+}
+
+.stats-title {
+  @apply text-sm font-medium text-gray-500 mb-1;
+}
+
+.stats-card.gradient .stats-title {
+  @apply text-white text-opacity-80;
+}
+
+.stats-value {
+  @apply text-2xl font-bold;
+} */

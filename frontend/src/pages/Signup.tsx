@@ -49,7 +49,7 @@ const Signup = () => {
     signupMutation(formData)
   };
 
-
+  console.log("formData:", formData);
     return (
       <>
     {isEmailVerified ? (

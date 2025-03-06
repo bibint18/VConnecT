@@ -1,0 +1,51 @@
+/* .sidebar-container {
+  @apply flex flex-col justify-between h-screen bg-white border-r border-gray-200 w-56;
+}
+
+.sidebar-nav {
+  @apply flex-1 overflow-y-auto;
+}
+
+.nav-list {
+  @apply space-y-1 py-2;
+}
+
+.nav-item {
+  @apply relative px-3 py-2;
+}
+
+.nav-item.active {
+  @apply bg-gray-100;
+}
+
+.nav-item.active .nav-link {
+  @apply font-medium;
+}
+
+.nav-link {
+  @apply flex items-center gap-3 text-gray-700 hover:text-black;
+}
+
+.nav-icon {
+  @apply text-gray-500 w-5 h-5;
+}
+
+.nav-label {
+  @apply text-sm;
+}
+
+.sidebar-footer {
+  @apply border-t border-gray-200 py-2;
+} */
+
+
+
+
+
+
+  .flex-1 {
+    scrollbar-width: none; /* Firefox */
+  }
+  .flex-1::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+  }

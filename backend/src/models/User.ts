@@ -6,7 +6,10 @@ export interface IUser extends Document{
   password:string,
   otp?:string,
   otpExpiry?:Date,
-  isVerified:Boolean
+  isVerified:boolean
+  isAdmin:boolean
+  failedLoginAttempts: number;
+  lockUntil: Date | null;
 }
 
 const userSchema = new Schema <IUser> ({
@@ -15,7 +18,10 @@ const userSchema = new Schema <IUser> ({
   password:{type:String,required:true},
   otp:String,
   otpExpiry:Date,
-  isVerified:{type:Boolean,default:false}
+  isVerified:{type:Boolean,default:false},
+  isAdmin:{type:Boolean,default:false},
+  failedLoginAttempts: { type: Number, default: 0 },
+  lockUntil: { type: Date, default: null },
 })
 
 export const User = mongoose.model<IUser>("User",userSchema)

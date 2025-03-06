@@ -1,0 +1,34 @@
+/* @import "tailwindcss";
+
+
+.header-container {
+  @apply flex justify-between items-center px-6 py-3 bg-white border-b border-gray-200;
+}
+
+.logo-container {
+  @apply flex items-center gap-2;
+}
+
+.logo-icon {
+  @apply text-black;
+}
+
+.logo-text h1 {
+  @apply text-xl font-bold;
+}
+
+.logo-text p {
+  @apply text-xs text-gray-600;
+}
+
+.admin-container {
+  @apply flex items-center;
+}
+
+.admin-button {
+  @apply flex items-center gap-2 text-gray-700 font-medium;
+}
+
+.settings-icon {
+  @apply h-5 w-5;
+} */

@@ -1,9 +1,10 @@
 import { IUserRepository } from "../interfaces/IUserRepository";
 import nodemailer from 'nodemailer'
-import crypto from 'crypto'
+import crypto, { hash } from 'crypto'
 import { IUser } from "../models/User";
 import bcrypt from 'bcryptjs'
 import { OtpVerification } from "../models/OtpModel";
+import { generateAccessToken,generateRefreshToken } from "../utils/generateToken";
 export class AuthService {
   private userRepository:IUserRepository;
   constructor(userRepo:IUserRepository){
@@ -20,11 +21,12 @@ export class AuthService {
       // await this.userRepository.createUser(data)
       const otp = crypto.randomInt(100000,999999).toString()
     const otpExpiry= new Date(Date.now() + 10 * 60 * 1000)
-    await OtpVerification.updateOne(
-      { email },
-      { email, otp, expiresAt: otpExpiry },
-      { upsert: true } 
-    );
+    // await OtpVerification.updateOne(
+    //   { email },
+    //   { email, otp, expiresAt: otpExpiry },
+    //   { upsert: true } 
+    // );
+    await this.userRepository.updateOtp(email,otp,otpExpiry)
     await this.sendOTP(email,otp)
     return { message: "OTP sent successfully!" };
   }
@@ -42,27 +44,6 @@ export class AuthService {
     })
     return {message:"Otp sent successfully!"}
   }
-
-  // async verifyOTP(email:string,otp:string,name:string,password:string){
-  //   console.log("here")
-  //   const otpRecord = await OtpVerification.findOne({email})
-  //   console.log('otpRecord',otpRecord)
-  //   if(!otpRecord){
-  //     console.log('!otp')
-  //     throw new Error("OTP expired or invalid. Please request a new one.")
-  //   }
-  //   if (otpRecord.otp !== otp) {
-  //     throw new Error("Incorrect OTP.");
-  //   }
-  //   if (new Date() > otpRecord.expiresAt) {
-  //     throw new Error("OTP has expired. Request a new one.");
-  //   }
-  //   const hashedPassword = await bcrypt.hash(password, 10);
-  //   console.log("password hashed")
-  //   const newUser = await this.userRepository.createUser({ name, email, password: hashedPassword, isVerified: true });
-  //   await OtpVerification.deleteOne({ email });
-  //   return { message: "Signup successful", user: newUser };
-  // }
 
   async verifyOTP(email: string, otp: string, name: string, password: string) {
     console.log("here");
@@ -94,13 +75,16 @@ export class AuthService {
     }
 
     console.log("Hashing password...");
-    const hashedPassword = await bcrypt.hash(password, 10);
+    console.log("to be hashed: ",password)
+    console.log("length of psw",password.length)
+    const hashedPassword = await bcrypt.hash(password,10);
     console.log("Password hashed:", hashedPassword);
-
+    const isMatch = await bcrypt.compare(password,hashedPassword)
+    console.log("Ismatch after the hashing",isMatch)
     const newUser = await this.userRepository.createUser({
         name,
         email,
-        password: hashedPassword,
+        password:hashedPassword,
         isVerified: true
     });
 
@@ -109,6 +93,41 @@ export class AuthService {
     await OtpVerification.deleteOne({ email });
 
     return { message: "Signup successful", user: newUser };
+}
+
+async resendOTP (email:string){
+  const otp = crypto.randomInt(100000,999999).toString()
+  const otpExpiry = new Date(Date.now() + 10 * 60 * 1000)
+  await this.userRepository.updateOtp(email,otp,otpExpiry)
+  await this.sendOTP(email,otp)
+}
+
+async login(email:string,password:string,isAdminLogin:boolean){
+  console.log("at service as last password: ",password,password.length)
+  
+  const user = await this.userRepository.findByEmail(email)
+  if(user)console.log("Stored hashed password:", user.password);
+  
+  console.log("reached auth login,user: ",user)
+  if(!user) throw new Error("Invalid credentials")
+  if(isAdminLogin && !user.isAdmin) throw new Error("Unauthorized access")
+  if(user.failedLoginAttempts >=3 && user.lockUntil && user.lockUntil> new Date()){
+    throw new Error("account locked try again later")
+  }
+  const isMatch = await bcrypt.compare(password,user.password)
+  console.log("ismatch: ",isMatch)
+  if(!isMatch){
+    await this.userRepository.updateUser(email,{
+      failedLoginAttempts:user.failedLoginAttempts+1,
+      lockUntil:user.failedLoginAttempts + 2 >=3 ? new Date(Date.now() + 10 * 60 * 1000): null
+    })
+    throw new Error("Invalid credentials")
+  }
+  await this.userRepository.updateUser(email,{failedLoginAttempts:0,lockUntil:null})
+  const accessToken = generateAccessToken(user)
+  console.log("service avcess token",accessToken)
+  const refreshToken = generateRefreshToken(user)
+  return {accessToken,refreshToken,user}
 }
 
 }

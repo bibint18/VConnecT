@@ -5,4 +5,5 @@ export interface IUserRepository{
   findByEmail(email:string): Promise<IUser | null>;
   updateOtp(email:String,otp:String,otpExpiry:Date): Promise<void>;
   verifyOtp(email: string, otp: string): Promise<IUser | null>;
+  updateUser(email: string, updateData: Partial<IUser>): Promise<IUser | null>;
 }
