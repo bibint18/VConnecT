@@ -1,6 +1,6 @@
 
 import axiosInstance from "../utils/axiosInterceptor";
-import axios from "axios";
+import {store} from '../redux/store'
 export const loginUser = async(email:string,password:string,recaptchaToken:string) => {
   console.log("hereeeeeeeeeeeeeee")
   console.log("datas: ",email,password,recaptchaToken)
@@ -15,9 +15,20 @@ export const loginUser = async(email:string,password:string,recaptchaToken:strin
 }
 
 export const loginAdmin = async (email:string,password:string) => {
-  const response=await axios.post('http://localhost:3000/api/admin/adminLogin',{
+  const response=await axiosInstance.post('/adminLogin',{
     email,
     password
   })
   return response.data
+}
+
+export const adminLogout = async () => {
+  try {
+    await axiosInstance.post('/adminLogout')
+  } catch (error) {
+    console.error(error)
+  }
+  document.cookie = "adminToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+  store.dispatch({type:"auth/logout"})
+  window.location.href='/adminLogin'
 }

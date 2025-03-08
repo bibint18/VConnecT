@@ -63,7 +63,8 @@
 //   );
 // }
 
-import MainContent from '../components/admin/dashboard/MainContent';
+import CustomerDashboard from '../components/admin/dashboard/CustomerDashboard';
+// import CustomerDashboard from '../components/admin/dashboard/CustomerDashboard';
 import Header from '../components/admin/header/Header';
 import Sidebar from '../components/admin/sidebar/Sidebar';
 
@@ -77,7 +78,8 @@ export default function AdminDashboard() {
       <div className="flex flex-1 pt-16 bg-yellow-900">
         {/* Sidebar (Positioned Below Header & Stuck to the Left) */}
         <Sidebar />
-        <MainContent/>
+        {/* <MainContent/> */}
+        <CustomerDashboard/>
         
       </div>
     </div>

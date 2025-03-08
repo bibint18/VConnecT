@@ -59,18 +59,7 @@ export const login =async (req:Request,res:Response): Promise<void> => {
   }
 }
 
-// export const adminLogin = async(req:Request,res:Response) => {
-//   const refreshToken = req.cookies.refreshToken;
-//   if (!refreshToken) return res.sendStatus(403);
-//   try {
-//     const decoded: any = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET as string);
-//     const accessToken = generateAccessToken(decoded);
-//     res.cookie("accessToken", accessToken, { httpOnly: true });
-//     res.json({ accessToken });
-//   } catch (error) {
-//     res.sendStatus(403);
-//   }
-// }
+
 
 export const refresh = async(req:Request,res:Response) => {
   try {
@@ -78,6 +67,7 @@ export const refresh = async(req:Request,res:Response) => {
     if(refreshToken){
       const decoded: any = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET as string);
     const accessToken = generateAccessToken(decoded);
+    console.log("accessToken",accessToken)
     res.cookie("accessToken", accessToken, { httpOnly: true });
     res.json({ accessToken });
     }else{
@@ -106,3 +96,10 @@ export const LoginAdmin = async(req:Request,res:Response) => {
   }
   }
 }
+
+export const adminLogout = async (req:Request,res:Response) => {
+  res.clearCookie("accessToken"); 
+  res.status(200).json({ message: "Logged out successfully" });
+}
+
+

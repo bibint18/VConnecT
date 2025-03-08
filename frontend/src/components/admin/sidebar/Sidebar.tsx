@@ -229,6 +229,7 @@
 // export default Sidebar;
 
 import React, { useState, useEffect } from "react";
+import { adminLogout } from "../../../services/authService";
 import './sidebar.css'
 import {
   LayoutDashboard,
@@ -260,7 +261,7 @@ const Sidebar: React.FC = () => {
 
   return (
     <aside
-      className={`h-[calc(100vh-64px)] bg-white border-r border-gray-200 transition-all duration-300 ${
+      className={`h-full h-[calc(100vh-64px)] bg-white border-r border-gray-200 transition-all duration-300 ${
         isCollapsed ? "w-16" : "w-64"
       } flex flex-col`}
     >
@@ -298,14 +299,14 @@ const Sidebar: React.FC = () => {
       </nav>
 
       {/* Logout Button (Always Visible) */}
-      <div className="p-2 border-t">
+      <div className="p-2 border-t bg-black" onClick={adminLogout}>
         <a
           href="#"
           className={`flex items-center p-3 text-gray-700 hover:bg-gray-100 rounded-lg transition-all ${
             isCollapsed ? "justify-center" : "pl-4"
           }`}
         >
-          <LogOut className="h-5 w-5 text-gray-700" />
+          <LogOut className="h-5 w-5 text-gray-700 " />
           <span className={`ml-3 transition-all duration-300 ${isCollapsed ? "hidden" : "block"}`}>
             Logout
           </span>

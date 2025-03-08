@@ -1,11 +1,11 @@
-import { createSlice,PayloadAction } from "@reduxjs/toolkit";
+import { createSlice} from "@reduxjs/toolkit";
 
 interface AuthState{
   isAuthenticated:boolean
 }
 
 const initialState: AuthState = {
-  isAuthenticated:false
+  isAuthenticated:!!document.cookie.includes("adminToken")
 }
 
 const authSlice = createSlice({
