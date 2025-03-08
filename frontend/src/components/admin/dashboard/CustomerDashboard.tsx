@@ -417,7 +417,7 @@ import { Search, ChevronDown, BarChart2, Edit, Trash2, ChevronRight, ChevronLeft
 import './customerDashboard.css'
 import { useUsers,useBlockUser,useDeleteUser,useUnblockUser } from "../../../hooks/useUsers"
 // import { Edit,Trash2 } from "lucide-react"
-
+import Swal from "sweetalert2";
 export default function CustomerDashboard() {
   const [page,setPage] = useState(1)
   const limit=6
@@ -433,9 +433,31 @@ export default function CustomerDashboard() {
   const handleUnblock = (id:string) => {
     unblockMutation.mutate(id)
   }
-  const handleDelete = (id:string) => {
-    deleteMutation.mutate(id)
-  }
+  // const handleDelete = (id:string) => {
+  //   deleteMutation.mutate(id)
+  // }
+  const handleDelete = (id: string) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deleteMutation.mutate(id, {
+          onSuccess: () => {
+            Swal.fire("Deleted!", "The user has been deleted.", "success");
+          },
+          onError: () => {
+            Swal.fire("Error!", "Something went wrong.", "error");
+          },
+        });
+      }
+    });
+  };
   if(isLoading) return <p>Loading users...</p>
   if(isError) return <p>Error fetching users..</p>
   // const [customers, setCustomers] = useState([

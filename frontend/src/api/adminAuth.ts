@@ -29,7 +29,7 @@ export const unblockUser = async (id: string) => {
 
 // Delete a user
 export const deleteUser = async (id: string) => {
-  const response = await axios.post(`${API_URL}/delete/${id}`);
+  const response = await axios.post(`${API_URL}/admin/users/delete/${id}`);
   return response.data;
 };
 
