@@ -1,4 +1,4 @@
-:root {
+/* :root {
   --background: hsl(0, 0%, 100%);
   --foreground: hsl(222.2, 84%, 4.9%);
 
@@ -61,11 +61,258 @@
 }
 
 /* Global Styles */
-* {
+/* * {
   border-color: var(--border);
 }
 
 body {
   background-color: var(--background);
   color: var(--foreground);
+} */ 
+
+
+
+
+
+/* customerDashboard.css */
+.customer-dashboard {
+  background: linear-gradient(135deg, #f5f7fa 0%, #e4e9f0 100%);
+  min-height: 100vh;
+  padding: 2rem;
 }
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.grid-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+@media (min-width: 1024px) {
+  .grid-layout {
+    grid-template-columns: 3fr 1fr;
+  }
+}
+
+/* Search Bar */
+.search-container {
+  position: relative;
+  max-width: 450px;
+  width: 100%;
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.75rem 2.5rem 0.75rem 1rem;
+  border-radius: 9999px;
+  border: none;
+  background: white;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.search-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.3);
+}
+
+/* Sort Options */
+.sort-options {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.5rem;
+  background: white;
+  border-radius: 9999px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.sort-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #4b5563;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  transition: all 0.3s ease;
+}
+
+.sort-item:hover {
+  background: #f97316;
+  color: white;
+}
+
+/* Table */
+.table-container {
+  background: white;
+  border-radius: 1rem;
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+.table-header {
+  background: #fff7ed;
+  color: #6b7280;
+  font-weight: 600;
+}
+
+.table-row {
+  transition: all 0.2s ease;
+}
+
+.table-row:hover {
+  background: #f8fafc;
+  transform: translateY(-2px);
+}
+
+/* Toggle Switch */
+.access-toggle {
+  position: relative;
+  width: 3rem;
+  height: 1.5rem;
+  border-radius: 9999px;
+  transition: all 0.3s ease;
+}
+
+.access-toggle span {
+  position: absolute;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 9999px;
+  background: white;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Buttons */
+.action-button {
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.edit-button {
+  background: #e9d5ff;
+  color: #7c3aed;
+}
+
+.edit-button:hover {
+  background: #7c3aed;
+  color: white;
+  transform: scale(1.1);
+}
+
+.delete-button {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.delete-button:hover {
+  background: #dc2626;
+  color: white;
+  transform: scale(1.1);
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.page-button {
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.page-button-active {
+  background: #f97316;
+  color: white;
+}
+
+.page-button-active:hover {
+  background: #ea580c;
+}
+
+.page-button-inactive {
+  background: #e5e7eb;
+  color: #4b5563;
+}
+
+.page-button-inactive:hover {
+  background: #d1d5db;
+}
+
+/* Sidebar */
+.sidebar {
+  background: white;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.05);
+}
+
+.top-customer {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem;
+  border-radius: 0.75rem;
+  transition: all 0.3s ease;
+}
+
+.top-customer:hover {
+  background: #f8fafc;
+  transform: translateX(5px);
+}
+
+/* customerDashboard.css */
+/* ... (keeping all previous styles) ... */
+
+/* New Block Status Button */
+.status-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100px;
+  height: 32px;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.status-unblocked {
+  background: #22c55e; /* Green */
+  color: white;
+}
+
+.status-unblocked:hover {
+  background: #16a34a;
+  transform: translateY(-1px);
+}
+
+.status-blocked {
+  background: #ef4444; /* Red */
+  color: white;
+}
+
+.status-blocked:hover {
+  background: #dc2626;
+  transform: translateY(-1px);
+}
+
+/* Rest of the previous styles remain unchanged */

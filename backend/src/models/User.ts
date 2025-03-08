@@ -10,6 +10,9 @@ export interface IUser extends Document{
   isAdmin:boolean
   failedLoginAttempts: number;
   lockUntil: Date | null;
+  plan:string;
+  isDeleted:boolean;
+  isBlocked:boolean
 }
 
 const userSchema = new Schema <IUser> ({
@@ -22,6 +25,9 @@ const userSchema = new Schema <IUser> ({
   isAdmin:{type:Boolean,default:false},
   failedLoginAttempts: { type: Number, default: 0 },
   lockUntil: { type: Date, default: null },
+  plan:{type:String,default:"BASIC"},
+  isDeleted:{type:Boolean,default:false},
+  isBlocked:{type:Boolean,default:false}
 })
 
 export const User = mongoose.model<IUser>("User",userSchema)
