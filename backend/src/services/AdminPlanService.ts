@@ -19,6 +19,7 @@ export class PlanService{
   }
 
   async updatePlan(planId:string,updateData: Partial<IPlan>): Promise <IPlan | null>{
+    console.log("reached service planid",planId)
     return await this.planRepository.updatePlan(planId,updateData)
   }
 }

@@ -37,7 +37,7 @@ export const deleteUser = async (id: string) => {
 
 
 //PLANS API
-interface PlanFormData {
+export interface PlanFormData {
   name: string;
   type: string;
   description: string;
@@ -59,5 +59,11 @@ export const fetchPlans = async () => {
 
 export const findPlanById =async (id:string) => {
   const response = await axios.get(`${API_URL}/admin/plans/${id}`)
+  return response.data
+}
+
+export const updatePlan = async (id:string,planData:Partial<PlanFormData>) => {
+  console.log("update api ",id,planData)
+  const response =await axios.put(`${API_URL}/admin/plans/${id}`,planData)
   return response.data
 }

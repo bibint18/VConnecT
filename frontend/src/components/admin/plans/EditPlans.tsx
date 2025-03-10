@@ -140,7 +140,8 @@ import React, { useEffect, useState } from "react";
 
 import "./addPlan.css";
 import { useGetPlanById } from "../../../hooks/useGetPlanByid";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { useUpdatePlan } from "../../../hooks/useUpdatePlan";
 interface PlanFormData {
   name: string;
   type: string;
@@ -153,10 +154,11 @@ interface PlanFormData {
 }
 
 const EditPlan: React.FC = () => {
+  const navigate = useNavigate()
   const {id} = useParams<{id:string}>()
   console.log("edit plan id: ",id)
   const {data:user,isLoading} = useGetPlanById(id || '')
-
+  const {mutate,isPending} = useUpdatePlan()
   const [formData, setFormData] = useState<PlanFormData>({
     name: "",
     type: "",
@@ -177,7 +179,7 @@ const EditPlan: React.FC = () => {
       regularAmount: user.regularAmount || '',
       discountAmount: user.discountAmount || '',
       benefits: user.benefits || '',
-      isListed: user.isListed || '',
+      isListed: Boolean(user.isListed),
       duration: user.duration || '',
     })
   }
@@ -202,13 +204,19 @@ const EditPlan: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // mutate(formData);
+    if(id){
+      mutate({id,planData:formData},{
+        onSuccess: () => {
+          navigate('/plans')
+        }
+      })
+    }
   };
   if (isLoading) return <p>Loading...</p>;
   return (
     <div className="form-container">
       <div className="form-card">
-        <h2 className="form-heading">Add New Plan</h2>
+        <h2 className="form-heading">Edit Plan</h2>
         <form onSubmit={handleSubmit}>
           {/* Name & Type */}
           <div className="form-group">
@@ -326,13 +334,13 @@ const EditPlan: React.FC = () => {
             </div>
           </div>
 
-          {/* <button 
+          <button 
             type="submit" 
             className="form-button" 
             disabled={isPending}
           >
-            {isPending ? "Adding..." : "Add Plan"}
-          </button> */}
+            {isPending ? "Editing..." : "Edit Plan"}
+          </button>
         </form>
       </div>
     </div>

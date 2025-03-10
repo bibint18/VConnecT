@@ -36,3 +36,16 @@ export const getPlanById = async(req:Request,res:Response) => {
     res.status(500).json({error:"failed to find plan"})
   }
 }
+
+export const updatePlan = async (req:Request,res:Response) => {
+  try {
+    console.log("reached edit backend")
+    const {id} = req.params
+    const updateData = req.body
+    const updatePlan = await planService.updatePlan(id,updateData)
+    res.status(200).json(updatePlan)
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({error:"failed to edit plan"})
+  }
+}
