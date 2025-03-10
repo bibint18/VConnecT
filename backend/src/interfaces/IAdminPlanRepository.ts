@@ -5,5 +5,6 @@ export interface IPlanRepository{
   getAllPlans() : Promise<IPlan[]>
   getPlanById(planId:string): Promise<IPlan | null>
   updatePlan(planId:string,updateData:Partial<IPlan>):Promise<IPlan | null>
+  deletePlan(planId:string):Promise<boolean>
 }
 

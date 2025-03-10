@@ -22,4 +22,8 @@ export class PlanService{
     console.log("reached service planid",planId)
     return await this.planRepository.updatePlan(planId,updateData)
   }
+  
+  async deletePlan(planId:string): Promise<boolean>{
+    return await this.planRepository.deletePlan(planId)
+  }
 }

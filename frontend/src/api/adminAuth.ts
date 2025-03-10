@@ -64,6 +64,11 @@ export const findPlanById =async (id:string) => {
 
 export const updatePlan = async (id:string,planData:Partial<PlanFormData>) => {
   console.log("update api ",id,planData)
-  const response =await axios.put(`${API_URL}/admin/plans/${id}`,planData)
+  const response =await axios.put(`${API_URL}/admin/plans/edit/${id}`,planData)
+  return response.data
+}
+
+export const deletePlan = async (id:string) => {
+  const response = await axios.post(`${API_URL}/admin/plans/delete/${id}`)
   return response.data
 }

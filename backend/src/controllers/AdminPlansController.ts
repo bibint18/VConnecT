@@ -49,3 +49,14 @@ export const updatePlan = async (req:Request,res:Response) => {
     res.status(500).json({error:"failed to edit plan"})
   }
 }
+
+export const deletePlan = async (req:Request,res:Response) => {
+  try {
+    const {id} = req.params
+    const plan = await planService.deletePlan(id)
+    res.status(200).json(plan)
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({error:"failed to delete"})
+  }
+}

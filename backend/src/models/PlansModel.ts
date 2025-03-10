@@ -11,6 +11,7 @@ export interface IPlan extends Document{
   isListed: boolean;
   duration: string;
   createdAt: Date;
+  isDeleted:boolean;
 }
 
 const PlanSchema:Schema = new Schema({
@@ -23,6 +24,7 @@ const PlanSchema:Schema = new Schema({
   isListed: { type: Boolean, default: true },
   duration: { type: String, required: true},
   createdAt: { type: Date, default: Date.now },
+  isDeleted:{type:Boolean,default:false}
 })
 
 export const Plan = mongoose.model<IPlan>('Plan',PlanSchema)

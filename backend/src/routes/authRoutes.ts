@@ -17,7 +17,8 @@ import {
    createPlan ,
    getAllPlans,
    getPlanById,
-   updatePlan
+   updatePlan,
+   deletePlan
   }
 from '../controllers/AdminPlansController'
 import verifyRecaptcha from '../middlewares/recaptchaMiddleware'
@@ -43,5 +44,6 @@ router.post('/admin/users/delete/:id',deleteUser)
 router.post('/admin/plans/add',createPlan)
 router.get('/admin/plans',getAllPlans)
 router.get('/admin/plans/:id',getPlanById)
-router.put('/admin/plans/:id',updatePlan)
+router.put('/admin/plans/edit/:id',updatePlan)
+router.post('/admin/plans/delete/:id',deletePlan)
 export default router

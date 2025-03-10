@@ -293,7 +293,8 @@ import { Search, Package, Edit, Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import './plans.css';
 import { usePlans } from "../../../hooks/useAdminPlans";
-
+import { useDeletePlan } from "../../../hooks/useDeletePlan";
+import Swal from "sweetalert2";
 interface Plan {
   _id: string;
   serialNumber: string;
@@ -303,68 +304,37 @@ interface Plan {
   sales:string
   benefits: string[];
   permission: string[];
-  isListed:boolean
+  isListed:boolean;
+  isDeleted:boolean
 }
 
 export default function SubscriptionPlans() {
   const navigate = useNavigate();
   const [searchTerm,setSearchTerm] = useState('')
   const {data:plans=[],isPending,isError} = usePlans()
+  const {mutate} = useDeletePlan() 
   console.log("plans: ",plans)
-  // const [plans, setPlans] = useState<Plan[]>([
-  //   {
-  //     id: "1",
-  //     serialNumber: "01",
-  //     name: "Basic",
-  //     amount: "Free",
-  //     benefits: ["1 Room Creation", "Basic Support", "Standard Templates"],
-  //     permission: ["Friend requests", "Public Profile", "Basic Messaging"],
-  //     status: "ACTIVE",
-  //   },
-  //   {
-  //     id: "2",
-  //     serialNumber: "02",
-  //     name: "Premium",
-  //     amount: "$10/mo",
-  //     benefits: ["Room Creation", "Priority Support", "Premium Templates", "Custom Themes"],
-  //     permission: ["Premium Rooms", "Advanced Messaging", "File Sharing", "Group Creation"],
-  //     status: "ACTIVE",
-  //   },
-  //   {
-  //     id: "3",
-  //     serialNumber: "03",
-  //     name: "Platinum",
-  //     amount: "$50/mo",
-  //     benefits: [
-  //       "Room Creation",
-  //       "24/7 Support",
-  //       "All Templates",
-  //       "Custom Branding",
-  //       "Analytics Dashboard",
-  //       "Priority Rendering",
-  //     ],
-  //     permission: ["Unlimited access", "Admin Controls", "API Access", "White Labeling", "Custom Integrations"],
-  //     status: "ACTIVE",
-  //   },
-  // ]);
-
+  const handleDelete = (id: string) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "This plan will be deleted!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        mutate(id);
+        Swal.fire("Deleted!", "Plan has been deleted.", "success");
+      }
+    });
+  };
   const filteredPlans = (plans as Plan[]).filter(
     (plan:Plan) =>
       plan.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       plan.regularAmount.toLowerCase().includes(searchTerm.toLowerCase()),
   );
-
-  // const toggleStatus = (id: string) => {
-  //   setPlans(
-  //     plans.map((plan) =>
-  //       plan.id === id ? { ...plan, status: plan.status === "ACTIVE" ? "INACTIVE" : "ACTIVE" } : plan,
-  //     ),
-  //   );
-  // };
-
-  // const deletePlan = (id: string) => {
-  //   setPlans(plans.filter((plan) => plan.id !== id));
-  // };
   if (isPending) return <div className="text-center py-12">Loading plans...</div>;
   if (isError) return <div className="text-center py-12 text-red-500">Failed to load plans.</div>;
   return (
@@ -443,7 +413,7 @@ export default function SubscriptionPlans() {
                       >
                         <Edit className="h-5 w-5" />
                       </button>
-                      <button 
+                      <button onClick={() => handleDelete(plan._id)}
                         className="action-button delete-button"
                       >
                         <Trash2 className="h-5 w-5" />
