@@ -229,6 +229,7 @@
 // export default Sidebar;
 
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { adminLogout } from "../../../services/authService";
 import './sidebar.css'
 import {
@@ -248,7 +249,7 @@ import {
 
 const Sidebar: React.FC = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
-
+  const navigate = useNavigate()
   useEffect(() => {
     const handleResize = () => {
       setIsCollapsed(window.innerWidth < 768); // Collapse when screen < 768px
@@ -269,9 +270,9 @@ const Sidebar: React.FC = () => {
       <nav className="flex-1 overflow-y-auto">
         <ul className="flex flex-col p-2 space-y-2">
           {[
-            { label: "Dashboard", icon: LayoutDashboard },
-            { label: "Customers", icon: Users },
-            { label: "Plans", icon: ListChecks },
+            { label: "Dashboard", icon: LayoutDashboard ,path:'/dashboard'},
+            { label: "Customers", icon: Users ,path:'/users'},
+            { label: "Plans", icon: ListChecks ,path:"/plans"},
             { label: "Banners", icon: Image },
             { label: "Rooms", icon: MessageSquare },
             { label: "Payments", icon: CreditCard },
@@ -281,10 +282,12 @@ const Sidebar: React.FC = () => {
             { label: "Feeds", icon: Rss },
             { label: "Reports", icon: BarChart3 },
           ].map((item, index) => (
-            <li key={index}>
-              <a
-                href="#"
-                className={`flex items-center p-3 text-gray-700 hover:bg-gray-100 rounded-lg transition-all ${
+            <li key={index} >
+              <a onClick={() => {
+                  if (item.path) navigate(item.path); 
+                }}
+                
+                className={`flex items-center p-3 text-gray-700 hover:bg-gray-100 rounded-lg transition-all cursor-pointer ${
                   isCollapsed ? "justify-center" : "pl-4"
                 }`}
               >
