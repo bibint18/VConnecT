@@ -295,7 +295,7 @@ import './plans.css';
 import { usePlans } from "../../../hooks/useAdminPlans";
 
 interface Plan {
-  id: string;
+  _id: string;
   serialNumber: string;
   name: string;
   regularAmount: string;
@@ -409,7 +409,7 @@ export default function SubscriptionPlans() {
             </thead>
             <tbody>
               {filteredPlans.map((plan:Plan,index:number) => (
-                <tr key={plan.id} className="table-row border-b border-gray-100 last:border-0">
+                <tr key={plan._id} className="table-row border-b border-gray-100 last:border-0">
                   <td className="px-4 py-3 font-bold">{index+1}</td>
                   <td className="px-4 py-3">{plan.name}</td>
                   <td className="px-4 py-3">{plan.regularAmount
@@ -439,7 +439,7 @@ export default function SubscriptionPlans() {
                     <div className="flex items-center gap-2">
                       <button 
                         className="action-button edit-button" 
-                        onClick={() => navigate(`/plans/edit/${plan.id}`)}
+                        onClick={() => navigate(`/plans/edit/${plan._id}`)}
                       >
                         <Edit className="h-5 w-5" />
                       </button>

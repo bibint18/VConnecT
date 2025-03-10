@@ -136,10 +136,11 @@
 
 
 
-import React, { useState } from "react";
-import { useAddPlan } from "../../../hooks/useAddPlans";
-import "./addPlan.css";
+import React, { useEffect, useState } from "react";
 
+import "./addPlan.css";
+import { useGetPlanById } from "../../../hooks/useGetPlanByid";
+import { useParams } from "react-router-dom";
 interface PlanFormData {
   name: string;
   type: string;
@@ -152,6 +153,10 @@ interface PlanFormData {
 }
 
 const EditPlan: React.FC = () => {
+  const {id} = useParams<{id:string}>()
+  console.log("edit plan id: ",id)
+  const {data:user,isLoading} = useGetPlanById(id || '')
+
   const [formData, setFormData] = useState<PlanFormData>({
     name: "",
     type: "",
@@ -163,7 +168,20 @@ const EditPlan: React.FC = () => {
     duration: "",
   });
 
-  const { mutate, isPending } = useAddPlan();
+ useEffect(() => {
+  if(user){
+    setFormData({
+      name: user.name || '',
+      type: user.type || '',
+      description: user.description || '',
+      regularAmount: user.regularAmount || '',
+      discountAmount: user.discountAmount || '',
+      benefits: user.benefits || '',
+      isListed: user.isListed || '',
+      duration: user.duration || '',
+    })
+  }
+ },[user])
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -184,9 +202,9 @@ const EditPlan: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    mutate(formData);
+    // mutate(formData);
   };
-
+  if (isLoading) return <p>Loading...</p>;
   return (
     <div className="form-container">
       <div className="form-card">
@@ -308,13 +326,13 @@ const EditPlan: React.FC = () => {
             </div>
           </div>
 
-          <button 
+          {/* <button 
             type="submit" 
             className="form-button" 
             disabled={isPending}
           >
             {isPending ? "Adding..." : "Add Plan"}
-          </button>
+          </button> */}
         </form>
       </div>
     </div>
