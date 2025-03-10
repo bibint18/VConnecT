@@ -288,85 +288,85 @@
 
 
 
-"use client"
+import { useState } from "react";
+import { Search, Package, Edit, Trash2 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import './plans.css';
+import { usePlans } from "../../../hooks/useAdminPlans";
 
-import { useState } from "react"
-import { Search, Package, Edit, Trash2 } from "lucide-react"
-import './plans.css'
-import Modal from "./Modal"
-import AddPlanForm from "./AddPlan"
-import EditPlanForm from "./EditPlans"
 interface Plan {
-  id: string
-  serialNumber: string
-  name: string
-  amount: string
-  benefits: string[]
-  permission: string[]
-  status: "ACTIVE" | "INACTIVE"
+  id: string;
+  serialNumber: string;
+  name: string;
+  regularAmount: string;
+  discountAmount:string;
+  sales:string
+  benefits: string[];
+  permission: string[];
+  isListed:boolean
 }
 
 export default function SubscriptionPlans() {
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false)
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
-  const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null)
-  const [plans, setPlans] = useState<Plan[]>([
-    {
-      id: "1",
-      serialNumber: "01",
-      name: "Basic",
-      amount: "Free",
-      benefits: ["1 Room Creation", "Basic Support", "Standard Templates"],
-      permission: ["Friend requests", "Public Profile", "Basic Messaging"],
-      status: "ACTIVE",
-    },
-    {
-      id: "2",
-      serialNumber: "02",
-      name: "Premium",
-      amount: "$10/mo",
-      benefits: ["Room Creation", "Priority Support", "Premium Templates", "Custom Themes"],
-      permission: ["Premium Rooms", "Advanced Messaging", "File Sharing", "Group Creation"],
-      status: "ACTIVE",
-    },
-    {
-      id: "3",
-      serialNumber: "03",
-      name: "Platinum",
-      amount: "$50/mo",
-      benefits: [
-        "Room Creation",
-        "24/7 Support",
-        "All Templates",
-        "Custom Branding",
-        "Analytics Dashboard",
-        "Priority Rendering",
-      ],
-      permission: ["Unlimited access", "Admin Controls", "API Access", "White Labeling", "Custom Integrations"],
-      status: "ACTIVE",
-    },
-  ])
+  const navigate = useNavigate();
+  const [searchTerm,setSearchTerm] = useState('')
+  const {data:plans=[],isPending,isError} = usePlans()
+  console.log("plans: ",plans)
+  // const [plans, setPlans] = useState<Plan[]>([
+  //   {
+  //     id: "1",
+  //     serialNumber: "01",
+  //     name: "Basic",
+  //     amount: "Free",
+  //     benefits: ["1 Room Creation", "Basic Support", "Standard Templates"],
+  //     permission: ["Friend requests", "Public Profile", "Basic Messaging"],
+  //     status: "ACTIVE",
+  //   },
+  //   {
+  //     id: "2",
+  //     serialNumber: "02",
+  //     name: "Premium",
+  //     amount: "$10/mo",
+  //     benefits: ["Room Creation", "Priority Support", "Premium Templates", "Custom Themes"],
+  //     permission: ["Premium Rooms", "Advanced Messaging", "File Sharing", "Group Creation"],
+  //     status: "ACTIVE",
+  //   },
+  //   {
+  //     id: "3",
+  //     serialNumber: "03",
+  //     name: "Platinum",
+  //     amount: "$50/mo",
+  //     benefits: [
+  //       "Room Creation",
+  //       "24/7 Support",
+  //       "All Templates",
+  //       "Custom Branding",
+  //       "Analytics Dashboard",
+  //       "Priority Rendering",
+  //     ],
+  //     permission: ["Unlimited access", "Admin Controls", "API Access", "White Labeling", "Custom Integrations"],
+  //     status: "ACTIVE",
+  //   },
+  // ]);
 
-  const [searchTerm, setSearchTerm] = useState("")
-
-  const filteredPlans = plans.filter(
-    (plan) =>
+  const filteredPlans = (plans as Plan[]).filter(
+    (plan:Plan) =>
       plan.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      plan.amount.toLowerCase().includes(searchTerm.toLowerCase()),
-  )
+      plan.regularAmount.toLowerCase().includes(searchTerm.toLowerCase()),
+  );
 
-  const toggleStatus = (id: string) => {
-    setPlans(
-      plans.map((plan) =>
-        plan.id === id ? { ...plan, status: plan.status === "ACTIVE" ? "INACTIVE" : "ACTIVE" } : plan,
-      ),
-    )
-  }
+  // const toggleStatus = (id: string) => {
+  //   setPlans(
+  //     plans.map((plan) =>
+  //       plan.id === id ? { ...plan, status: plan.status === "ACTIVE" ? "INACTIVE" : "ACTIVE" } : plan,
+  //     ),
+  //   );
+  // };
 
-  const deletePlan = (id: string) => {
-    setPlans(plans.filter((plan) => plan.id !== id))
-  }
-
+  // const deletePlan = (id: string) => {
+  //   setPlans(plans.filter((plan) => plan.id !== id));
+  // };
+  if (isPending) return <div className="text-center py-12">Loading plans...</div>;
+  if (isError) return <div className="text-center py-12 text-red-500">Failed to load plans.</div>;
   return (
     <div className="subscription-plans flex-1">
       <div className="container">
@@ -384,7 +384,10 @@ export default function SubscriptionPlans() {
           </div>
 
           {/* Add Plan Button */}
-          <button className="add-plan-button" onClick={() => setIsAddModalOpen(true)} >
+          <button 
+            className="add-plan-button" 
+            onClick={() => navigate('/plans/add')}
+          >
             <Package className="h-4 w-4 mr-1" />
             <span>Add New Plan</span>
           </button>
@@ -398,20 +401,20 @@ export default function SubscriptionPlans() {
                 <th className="rounded-tl-lg px-4 py-3 text-left text-sm">S. Number</th>
                 <th className="px-4 py-3 text-left text-sm">Name</th>
                 <th className="px-4 py-3 text-left text-sm">Amount</th>
+                <th className="px-4 py-3 text-left text-sm">Sale Amount</th>
                 <th className="px-4 py-3 text-left text-sm">Benefits</th>
-                {/* <th className="px-4 py-3 text-left text-sm">Permissions</th> */}
-                <th className="px-4 py-3 text-left text-sm">Status</th>
+                <th className="px-4 py-3 text-left text-sm">ACTIVE</th>
                 <th className="rounded-tr-lg px-4 py-3 text-left text-sm">Update</th>
               </tr>
             </thead>
             <tbody>
-              {filteredPlans.map((plan) => (
+              {filteredPlans.map((plan:Plan,index:number) => (
                 <tr key={plan.id} className="table-row border-b border-gray-100 last:border-0">
-                  <td className="px-4 py-3 font-bold">{plan.serialNumber}</td>
+                  <td className="px-4 py-3 font-bold">{index+1}</td>
                   <td className="px-4 py-3">{plan.name}</td>
-                  <td className="px-4 py-3">{plan.amount}</td>
-
-                  {/* Benefits */}
+                  <td className="px-4 py-3">{plan.regularAmount
+                  }</td>
+                  <td className="px-4 py-3">{plan.discountAmount}</td>
                   <td className="px-4 py-3">
                     <div className="h-24 overflow-y-auto pr-2 custom-scrollbar">
                       <ol className="list-decimal pl-5 text-sm">
@@ -423,37 +426,26 @@ export default function SubscriptionPlans() {
                       </ol>
                     </div>
                   </td>
-
-                  {/* Permissions */}
-                  {/* <td className="px-4 py-3">
-                    <div className="h-24 overflow-y-auto pr-2 custom-scrollbar">
-                      <ol className="list-decimal pl-5 text-sm">
-                        {plan.permission.map((perm, index) => (
-                          <li key={index} className="mb-1">
-                            {perm}
-                          </li>
-                        ))}
-                      </ol>
-                    </div>
-                  </td> */}
-
-                  {/* Status */}
                   <td className="px-4 py-3">
                     <button
-                      onClick={() => toggleStatus(plan.id)}
-                      className={`status-button ${plan.status === "ACTIVE" ? "status-active" : "status-inactive"}`}
+                      className={`status-button ${plan.isListed  ? "status-active"  : "status-inactive"}`}
                     >
-                      {plan.status}
+                      {plan.isListed ? "TRUE" : "FALSE"}
                     </button>
-                  </td>
+                    
 
-                  {/* Actions */}
+                  </td>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2">
-                      <button className="action-button edit-button" onClick={() => { setSelectedPlan(plan); setIsEditModalOpen(true) }} >
+                      <button 
+                        className="action-button edit-button" 
+                        onClick={() => navigate(`/plans/edit/${plan.id}`)}
+                      >
                         <Edit className="h-5 w-5" />
                       </button>
-                      <button onClick={() => deletePlan(plan.id)} className="action-button delete-button">
+                      <button 
+                        className="action-button delete-button"
+                      >
                         <Trash2 className="h-5 w-5" />
                       </button>
                     </div>
@@ -471,17 +463,6 @@ export default function SubscriptionPlans() {
           </div>
         )}
       </div>
-      {/* Add Plan Modal */}
-      <Modal isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)}>
-        <AddPlanForm closeModal={() => setIsAddModalOpen(false)} />
-      </Modal>
-
-      {/* Edit Plan Modal */}
-      {selectedPlan && (
-        <Modal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)}>
-          <EditPlanForm  closeModal={() => setIsEditModalOpen(false)} />
-        </Modal>
-      )}
     </div>
-  )
+  );
 }

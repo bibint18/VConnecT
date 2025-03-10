@@ -1,9 +1,9 @@
 
 import Header from '../components/admin/header/Header';
 import Sidebar from '../components/admin/sidebar/Sidebar';
-import CustomerDashboard from '../components/admin/dashboard/CustomerDashboard';
+import EditPlan from '../components/admin/plans/EditPlans';
 
-export default function AdminCustomers() {
+export default function AdminEditPlan() {
   return (
     <div className="flex flex-col h-screen">
       {/* Header */}
@@ -14,7 +14,7 @@ export default function AdminCustomers() {
         {/* Sidebar (Positioned Below Header & Stuck to the Left) */}
         <Sidebar />
         {/* <MainContent/> */}
-        <CustomerDashboard/>
+        <EditPlan/>
         
       </div>
     </div>

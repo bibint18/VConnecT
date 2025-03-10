@@ -1,6 +1,24 @@
 import express from 'express'
-import { signup,verifyOTP ,ResendOtp,login,refresh,LoginAdmin,adminLogout} from '../controllers/AuthController'
-import { getAllUsers,blockUser,unblockUser,deleteUser } from '../controllers/AdminUsersController'
+import 
+{ signup,
+  verifyOTP ,
+  ResendOtp,
+  login,
+  refresh,
+  LoginAdmin,
+  adminLogout,
+} 
+from '../controllers/AuthController'
+import {
+   getAllUsers,blockUser,unblockUser,deleteUser 
+  }
+from '../controllers/AdminUsersController'
+import {
+   createPlan ,
+   getAllPlans,
+   getPlanById
+  }
+from '../controllers/AdminPlansController'
 import verifyRecaptcha from '../middlewares/recaptchaMiddleware'
 
 const router = express.Router()
@@ -19,4 +37,9 @@ router.get('/admin/users',getAllUsers)
 router.post('/admin/users/block/:id',blockUser)
 router.post('/admin/users/unblock/:id',unblockUser)
 router.post('/admin/users/delete/:id',deleteUser)
+
+//admin plans management
+router.post('/admin/plans/add',createPlan)
+router.get('/admin/plans',getAllPlans)
+router.get('/admin/plans/:id',getPlanById)
 export default router

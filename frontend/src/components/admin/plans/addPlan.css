@@ -1,4 +1,132 @@
-/* AddPlanForm.css */
+/* AddPlanForm.css
+
+/* Container Styling */
+/* .form-container {
+  background: linear-gradient(135deg, #f9fafb, #e5e7eb);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  width: 100;
+} */
+
+/* Card Styling */
+/* .form-card {
+  background: #ffffff;
+  border-radius: 1rem;
+  padding: 2rem;
+  max-width: 28rem;
+  width: 100%;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+} */
+
+/* .form-card:hover {
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
+} */
+
+/* Heading Styling */
+/* .form-heading {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #1f2937;
+  letter-spacing: -0.025em;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.form-heading::after {
+  content: "";
+  position: absolute;
+  bottom: -0.5rem;
+  left: 0;
+  width: 3rem;
+  height: 3px;
+  background: linear-gradient(to right, #f59e0b, #d97706);
+  border-radius: 2px;
+} */
+
+/* Form Group Styling */
+/* .form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #4b5563;
+  margin-bottom: 0.5rem;
+  transition: color 0.2s ease;
+}
+
+.form-input,
+.form-textarea,
+.form-select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  color: #374151;
+  background: #f9fafb;
+  transition: all 0.2s ease;
+}
+
+.form-input:focus,
+.form-textarea:focus,
+.form-select:focus {
+  outline: none;
+  border-color: transparent;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+  background: #ffffff;
+}
+
+.form-input::placeholder,
+.form-textarea::placeholder {
+  color: #9ca3af;
+}
+
+.form-textarea {
+  height: 7rem;
+  resize: vertical;
+} */
+
+/* Button Styling */
+/* .form-button {
+  width: 100%;
+  background: linear-gradient(to right, #f59e0b, #d97706);
+  color: #ffffff;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-button:hover {
+  background: linear-gradient(to right, #d97706, #b45309);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+.form-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+} */
+
+/* Focus and Hover Effects for Labels */
+/* .form-group:focus-within .form-label {
+  color: #3b82f6;
+}  */
+
+
 
 /* Container Styling */
 .form-container {
@@ -8,6 +136,7 @@
   align-items: center;
   justify-content: center;
   padding: 1.5rem;
+  width: 100%;
 }
 
 /* Card Styling */
@@ -15,7 +144,7 @@
   background: #ffffff;
   border-radius: 1rem;
   padding: 2rem;
-  max-width: 28rem;
+  max-width: 32rem;
   width: 100%;
   border: 1px solid #e5e7eb;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
@@ -94,6 +223,18 @@
   resize: vertical;
 }
 
+/* Row Styling for Side-by-Side Inputs */
+.form-row {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.form-group.half-width {
+  flex: 1;
+  margin-bottom: 0;
+}
+
 /* Button Styling */
 .form-button {
   width: 100%;
@@ -109,15 +250,21 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-.form-button:hover {
+.form-button:hover:not(:disabled) {
   background: linear-gradient(to right, #d97706, #b45309);
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
   transform: translateY(-2px);
 }
 
-.form-button:active {
+.form-button:active:not(:disabled) {
   transform: translateY(0);
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.form-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background: #9ca3af;
 }
 
 /* Focus and Hover Effects for Labels */

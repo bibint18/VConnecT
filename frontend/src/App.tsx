@@ -13,7 +13,9 @@ import AdminDashboard from "./pages/AdminDashboard";
 import AdminCustomers from "./pages/AdminCustomers";
 // import Plans from './components/admin/plans/Plans'
 // import AddPlansPage from "./components/admin/plans/AddPlan";
-import AdminPlans from "./pages/AdminPlans";
+import AdminPlans from "./pages/AdminPlans"
+import AdminAddPlan from "./pages/AdminAddPlans";
+import AdminEditPlan from "./pages/AdminEditPlan";
 function App() {
   return (
     <Router>
@@ -28,7 +30,8 @@ function App() {
         <Route path="/adminLogin" element={<AdminLogin/>} />
         <Route path="/home" element={<Home/>} />
         {/* <Route path="/dashboard" element={<Dashboard/>} /> */}
-
+        <Route path="/plans/edit/:id" element={<AdminEditPlan/>} />
+        <Route path="/plans/add" element={<AdminAddPlan/>} />
         <Route element={<ProtectedRoute/>}>
             <Route path="/dashboard" element={<AdminDashboard/>} />
         </Route>

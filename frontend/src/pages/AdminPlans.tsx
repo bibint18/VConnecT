@@ -9,7 +9,7 @@ export default function AdminPlans() {
       <Header />
 
       {/* Main Content Area */}
-      <div className="flex flex-1 pt-16 bg-yellow-900">
+      <div className="flex flex-1 pt-16 ">
         {/* Sidebar (Positioned Below Header & Stuck to the Left) */}
         <Sidebar />
         {/* <MainContent/> */}
