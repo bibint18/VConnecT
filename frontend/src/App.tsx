@@ -16,12 +16,16 @@ import AdminCustomers from "./pages/AdminCustomers";
 import AdminPlans from "./pages/AdminPlans"
 import AdminAddPlan from "./pages/AdminAddPlans";
 import AdminEditPlan from "./pages/AdminEditPlan";
+import Header from "./components/User/Header/Header";
+import HomePage from "./components/User/Header/HomePage";
 function App() {
   return (
     <Router>
       <ToastContainer />
       <Routes>
         <Route path="/plans" element={<AdminPlans/>} />
+        <Route path="/header" element={<HomePage/>} />
+
         {/* <Route path="/addplans" element={<AddPlansPage/>} /> */}
         <Route path="/" element={<Signup />} />
         <Route path="/verify-otp" element={<VerifyOTP />} />

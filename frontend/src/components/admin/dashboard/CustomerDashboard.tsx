@@ -425,7 +425,7 @@ export default function CustomerDashboard() {
   const blockMutation = useBlockUser()
   const unblockMutation = useUnblockUser()
   const deleteMutation = useDeleteUser()
-
+  const [searchTerm,setSearchTerm] = useState('')
   const handleBlock = (id:string) => {
     console.log("handleBlock: ",id)
     blockMutation.mutate(id)
@@ -433,9 +433,7 @@ export default function CustomerDashboard() {
   const handleUnblock = (id:string) => {
     unblockMutation.mutate(id)
   }
-  // const handleDelete = (id:string) => {
-  //   deleteMutation.mutate(id)
-  // }
+
   const handleDelete = (id: string) => {
     Swal.fire({
       title: "Are you sure?",
@@ -460,59 +458,7 @@ export default function CustomerDashboard() {
   };
   if(isLoading) return <p>Loading users...</p>
   if(isError) return <p>Error fetching users..</p>
-  // const [customers, setCustomers] = useState([
-  //   {
-  //     id: "01",
-  //     name: "John Doe",
-  //     email: "developer@gmail.com",
-  //     plan: "Platinum",
-  //     access: true,
-  //     avatar: "/placeholder.svg?height=40&width=40",
-  //   },
-  //   {
-  //     id: "02",
-  //     name: "Shubham",
-  //     email: "shubham@gmail.com",
-  //     plan: "Platinum",
-  //     access: false,
-  //     avatar: "/placeholder.svg?height=40&width=40",
-  //   },
-  //   {
-  //     id: "03",
-  //     name: "Sarah Johnson",
-  //     email: "sarah@example.com",
-  //     plan: "Gold",
-  //     access: true,
-  //     avatar: "/placeholder.svg?height=40&width=40",
-  //   },
-  //   {
-  //     id: "04",
-  //     name: "Michael Chen",
-  //     email: "michael@example.com",
-  //     plan: "Platinum",
-  //     access: true,
-  //     avatar: "/placeholder.svg?height=40&width=40",
-  //   },
-  // ])
-
-  // const topCustomers = [
-  //   {
-  //     name: "Developer",
-  //     streak: "100 days streak",
-  //     avatar: "/placeholder.svg?height=40&width=40",
-  //   },
-  //   {
-  //     name: "Developer",
-  //     streak: "1 min ago",
-  //     avatar: "/placeholder.svg?height=40&width=40",
-  //   },
-  // ]
-
-  // const toggleAccess = (id: string) => {
-  //   setCustomers(
-  //     customers.map((customer) => (customer.id === id ? { ...customer, access: !customer.access } : customer)),
-  //   )
-  // }
+ const filteredUsers:User[] = users ? users?.filter((user) => user.name.toLowerCase().includes(searchTerm.toLowerCase())) : []
 
   return (
     <div className="customer-dashboard flex-1">
@@ -525,6 +471,8 @@ export default function CustomerDashboard() {
                   type="text"
                   placeholder="Search users here"
                   className="search-input"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
                 />
                 <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-orange-500" />
               </div>
@@ -561,7 +509,8 @@ export default function CustomerDashboard() {
                   </tr>
                 </thead>
                 <tbody>
-                {users?.map((user: User,index:number) => (
+                
+                {filteredUsers?.length > 0 ? ( filteredUsers?.map((user: User,index:number) => (
                     <tr key={user._id} className="table-row border-b border-gray-100 last:border-0">
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-2">
@@ -608,7 +557,13 @@ export default function CustomerDashboard() {
                         </div>
                       </td>
                     </tr>
-                  ))}
+                  ))): (
+                    <tr>
+                      <td colSpan={6} className="text-center py-4 text-gray-500">
+                        No users found
+                      </td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
             </div>
