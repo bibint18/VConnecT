@@ -7,6 +7,7 @@ import
   refresh,
   LoginAdmin,
   adminLogout,
+  userLogout
 } 
 from '../controllers/AuthController'
 import {
@@ -31,7 +32,7 @@ router.post('/login',verifyRecaptcha,login)
 router.post('/refresh',refresh)
 router.post("/adminLogin",LoginAdmin)
 router.post('/adminLogout',adminLogout)
-
+router.post('logout',userLogout)
 
 
 //adminUser MAnagement
@@ -46,4 +47,6 @@ router.get('/admin/plans',getAllPlans)
 router.get('/admin/plans/:id',getPlanById)
 router.put('/admin/plans/edit/:id',updatePlan)
 router.post('/admin/plans/delete/:id',deletePlan)
+
+
 export default router

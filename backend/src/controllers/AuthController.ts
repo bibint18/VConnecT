@@ -58,7 +58,10 @@ export const login =async (req:Request,res:Response): Promise<void> => {
     res.status(400).json({ message: error.message });
   }
 }
-
+export const userLogout = async (req:Request,res:Response) => {
+  res.clearCookie('accessToken')
+  res.status(200).json({message:"user logged out"})
+}
 
 
 export const refresh = async(req:Request,res:Response) => {
@@ -84,8 +87,8 @@ export const LoginAdmin = async(req:Request,res:Response) => {
     const { email, password } = req.body;
     const { accessToken, refreshToken, user } = await authService.login(email, password, true);
     
-    res.cookie("accessToken", accessToken, { httpOnly: true });
-    res.cookie("refreshToken", refreshToken, { httpOnly: true });
+    res.cookie("accessTokenAdmin", accessToken, { httpOnly: true });
+    res.cookie("refreshTokenAdmin", refreshToken, { httpOnly: true });
 
     res.json({ message: "Admin login successful", user });
   } catch (error) {
@@ -98,8 +101,10 @@ export const LoginAdmin = async(req:Request,res:Response) => {
 }
 
 export const adminLogout = async (req:Request,res:Response) => {
-  res.clearCookie("accessToken"); 
+  res.clearCookie("accessTokenAdmin"); 
   res.status(200).json({ message: "Logged out successfully" });
 }
+
+
 
 

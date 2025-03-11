@@ -22,6 +22,17 @@ export const loginUser = async(email:string,password:string,recaptchaToken:strin
   } 
 }
 
+export const logoutUser = async () => {
+  try {
+    await axiosInstance.post('/logout')
+  } catch (error) {
+    console.error(error)
+  }
+  document.cookie = "adminToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+  store.dispatch({type:"user/logoutTheuser"})
+  window.location.href='/'
+}
+
 export const loginAdmin = async (email:string,password:string) => {
   const response=await axiosInstance.post('/adminLogin',{
     email,

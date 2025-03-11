@@ -6,6 +6,8 @@ import { useAppDispatch, useAppSelector } from "../redux/store";
 import { loginTheUser } from "../redux/userSlice";
 import {toast} from "react-toastify"
 import './styles.css'
+import { signInWithPopup } from "firebase/auth";
+import { auth, googleProvider } from "../firebase/Setup";
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -47,7 +49,13 @@ const Login: React.FC = () => {
       }
     }
   };
-
+  const googleSignIn = async () => {
+    try {
+      await signInWithPopup(auth,googleProvider)
+    } catch (error) {
+      console.error(error)
+    }
+  }
   return (
     <div className="min-h-screen bg-black flex items-center justify-center p-4">
       <div className="bg-gray-900 rounded-lg shadow-2xl p-8 max-w-md w-full border border-purple-500">
@@ -93,6 +101,7 @@ const Login: React.FC = () => {
           >
             Login
           </button>
+          
         </form>
         <p className="mt-6 text-center text-gray-400">
           New user?{" "}
@@ -101,6 +110,15 @@ const Login: React.FC = () => {
             className="text-purple-500 cursor-pointer hover:underline"
           >
             Signup
+          </span>
+        </p>
+        <p className="mt-6 text-center text-gray-400">
+           Sign in{" "}
+          <span
+            onClick={googleSignIn}
+            className="text-purple-500 cursor-pointer hover:underline"
+          >
+           with Google
           </span>
         </p>
       </div>
