@@ -52,8 +52,9 @@ export const addNewPlan = async(PlanData:PlanFormData) =>{
   return response.data
 }
 
-export const fetchPlans = async () => {
-  const response = await axios.get(`${API_URL}/admin/plans`)
+export const fetchPlans = async (page=1,limit=4,search='',sort='A-Z') => {
+  const response = await axios.get(`${API_URL}/admin/plans`,{params:{page,limit,search,sort}})
+  console.log("fetching plans response api ",response.data)
   return response.data
 }
 

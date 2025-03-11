@@ -17,9 +17,11 @@ export const createPlan = async(req:Request,res:Response) => {
 
 export const getAllPlans = async (req:Request,res:Response) => {
   try {
-    console.log("reached backend fetch plans")
-    const plans = await planService.gettAllPlans()
-    res.status(200).json(plans)
+    
+    console.log("reached backend fetch plans",req.query)
+    const{search,sort,page=1,limit=4} = req.query
+    const {plans,total} = await planService.gettAllPlans(String(search),String(sort),Number(page),Number(limit))
+    res.status(200).json({plans,total})
   } catch (error) {
     console.log(error)
     res.status(500).json({error:"Failed to fetch plans"})

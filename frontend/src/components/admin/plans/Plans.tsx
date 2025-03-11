@@ -295,6 +295,7 @@ import './plans.css';
 import { usePlans } from "../../../hooks/useAdminPlans";
 import { useDeletePlan } from "../../../hooks/useDeletePlan";
 import Swal from "sweetalert2";
+import {ChevronDown,BarChart2,ChevronRight,ChevronLeft} from 'lucide-react'
 interface Plan {
   _id: string;
   serialNumber: string;
@@ -311,9 +312,14 @@ interface Plan {
 export default function SubscriptionPlans() {
   const navigate = useNavigate();
   const [searchTerm,setSearchTerm] = useState('')
-  const {data:plans=[],isPending,isError} = usePlans()
+  const [sortOption,setSortOption] = useState('A-Z')
+  const [page,setPage] = useState(1)
+  const limit =4
+  const {data={ plans: [], total: 0 },isPending,isError} = usePlans(page,limit,searchTerm,sortOption)
+  console.log(data)
+  const totalPages=1
   const {mutate} = useDeletePlan() 
-  console.log("plans: ",plans)
+  console.log("plans: ",data.plans)
   const handleDelete = (id: string) => {
     Swal.fire({
       title: "Are you sure?",
@@ -330,11 +336,7 @@ export default function SubscriptionPlans() {
       }
     });
   };
-  const filteredPlans = (plans as Plan[]).filter(
-    (plan:Plan) =>
-      plan.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      plan.regularAmount.toLowerCase().includes(searchTerm.toLowerCase()),
-  );
+  
   if (isPending) return <div className="text-center py-12">Loading plans...</div>;
   if (isError) return <div className="text-center py-12 text-red-500">Failed to load plans.</div>;
   return (
@@ -352,6 +354,32 @@ export default function SubscriptionPlans() {
             />
             <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-orange-500" />
           </div>
+          <div className="sort-options">
+                <div className="sort-item">
+                  <BarChart2 className="h-5 w-5 text-orange-500" />
+                  <span>Sort By</span>
+                </div>
+                <div className="sort-item">
+                  <select className="outline-none"
+                  value={sortOption}
+                  onChange={(e) => setSortOption(e.target.value)}
+                  >
+                    <ChevronDown className="h-4 w-4" />
+                    <option className="text-black" value="A-Z">A-Z</option>
+    <option className="text-black " value="Z-A">Z-A</option>
+    <option className="text-black " value="saleLowHigh">Sale Amount (Low-High)</option>
+    <option className="text-black " value="saleHighLow">Sale Amount (High-Low)</option>
+                  </select>
+                </div>
+
+                {/* <div className="sort-item">
+                  <BarChart2 className="h-5 w-5 text-orange-500" />
+                  <span>Points</span>
+                </div> */}
+                {/* <div className="sort-item">
+                  <span>Streaks</span>
+                </div> */}
+              </div>
 
           {/* Add Plan Button */}
           <button 
@@ -378,7 +406,7 @@ export default function SubscriptionPlans() {
               </tr>
             </thead>
             <tbody>
-              {filteredPlans.map((plan:Plan,index:number) => (
+              {data.plans.map((plan:Plan,index:number) => (
                 <tr key={plan._id} className="table-row border-b border-gray-100 last:border-0">
                   <td className="px-4 py-3 font-bold">{index+1}</td>
                   <td className="px-4 py-3">{plan.name}</td>
@@ -427,12 +455,24 @@ export default function SubscriptionPlans() {
         </div>
 
         {/* Empty State */}
-        {filteredPlans.length === 0 && (
+        {data.plans.length === 0 && (
           <div className="text-center py-12">
             <p className="text-gray-500 text-lg">No plans found. Try adjusting your search or add a new plan.</p>
           </div>
         )}
       </div>
+
+      <div className="pagination">
+              <button disabled={page === 1} onClick={() => setPage((prev) => prev - 1)} className="page-button">
+                <ChevronLeft className="h-4 w-4" />
+              </button>
+              <span className="px-3 py-2">{page}</span>
+              <button disabled={page >= totalPages} 
+    onClick={() => setPage((prev) => prev + 1)} 
+    className="page-button">
+                <ChevronRight className="h-4 w-4" />
+              </button>
+            </div>
     </div>
   );
 }

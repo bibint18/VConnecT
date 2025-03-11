@@ -10,8 +10,8 @@ export class PlanService{
     return await this.planRepository.createPlan(planData)
   }
 
-  async gettAllPlans() : Promise<IPlan []> {
-    return await this.planRepository.getAllPlans()
+  async gettAllPlans(search:string,sort:string,page:number,limit:number) : Promise<{ plans: IPlan[], total: number }> {
+    return await this.planRepository.getAllPlans(search,sort,page,limit)
   }
 
   async getPlanById(planId:string) : Promise <IPlan | null>{

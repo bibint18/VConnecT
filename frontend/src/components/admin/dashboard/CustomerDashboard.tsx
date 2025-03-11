@@ -413,7 +413,7 @@ interface User{
 //   isError:boolean
 // }
 import { useState } from "react"
-import { Search, ChevronDown, BarChart2, Edit, Trash2, ChevronRight, ChevronLeft } from "lucide-react"
+import { Search, ChevronDown, BarChart2, Trash2, ChevronRight, ChevronLeft } from "lucide-react"
 import './customerDashboard.css'
 import { useUsers,useBlockUser,useDeleteUser,useUnblockUser } from "../../../hooks/useUsers"
 import Swal from "sweetalert2";
@@ -578,9 +578,9 @@ const totalPages = Math.ceil(totalUsers/limit)
 
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-2">
-                          <button className="action-button edit-button">
+                          {/* <button className="action-button edit-button">
                             <Edit className="h-5 w-5" />
-                          </button>
+                          </button> */}
                           <button  onClick={() => handleDelete(user._id)} className="action-button delete-button">
                             <Trash2 className="h-5 w-5" />
                           </button>
