@@ -21,11 +21,6 @@ export const useAddPlan = () => {
       toast.success("Plan added successfully!");
     },
     onError: (error) => {
-      // if (error.response?.status === 400) {
-      //   toast.error(error.response.data.message); // Shows "A plan with this name already exists"
-      // } else {
-      //   toast.error("Add Plan Failed");
-      // }
       const errorMessage =
         (error.response?.data as { message?: string })?.message || "Add Plan Failed";
 

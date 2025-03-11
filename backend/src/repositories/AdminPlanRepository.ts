@@ -35,6 +35,12 @@ export class PlansRepository implements IPlanRepository{
     return await Plan.findById(planId)
   }
   async updatePlan(planId: string, updateData: Partial<IPlan>): Promise<IPlan | null> {
+    if (updateData.name) {
+      const existingPlan = await Plan.findOne({ name: updateData.name, _id: { $ne: planId } });
+      if (existingPlan) {
+          throw new Error("A plan with this name already exists.");
+      }
+  }
     return await Plan.findByIdAndUpdate(planId,updateData,{new:true})
   }
   async deletePlan(planId: string): Promise<boolean> {

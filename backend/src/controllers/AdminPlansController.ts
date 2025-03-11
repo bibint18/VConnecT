@@ -13,8 +13,10 @@ export const createPlan = async(req:Request,res:Response) => {
     console.log(error)
     if (error.message === "A plan with this name already exists") {
        res.status(400).json({ message: error.message });
+    }else{
+      res.status(500).json({ message: "Internal Server Error" });
     }
-    res.status(500).json({ message: "Internal Server Error" });
+    
   }
 }
 
@@ -49,9 +51,14 @@ export const updatePlan = async (req:Request,res:Response) => {
     const updateData = req.body
     const updatePlan = await planService.updatePlan(id,updateData)
     res.status(200).json(updatePlan)
-  } catch (error) {
+  } catch (error:any) {
     console.log(error)
-    res.status(500).json({error:"failed to edit plan"})
+    if (error.message === "A plan with this name already exists.") {
+       res.status(400).json({ error: error.message });
+    }else{
+       res.status(500).json({ error: "Failed to edit plan" });
+    }
+    
   }
 }
 

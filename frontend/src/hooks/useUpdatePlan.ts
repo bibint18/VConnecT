@@ -1,7 +1,7 @@
 import { useMutation,useQueryClient } from "@tanstack/react-query";
 import { updatePlan ,PlanFormData} from "../api/adminAuth";
-
-
+import {toast} from'react-toastify'
+import { AxiosError } from "axios";
 export const useUpdatePlan = () => {
   const queryClient = useQueryClient()
   return useMutation({
@@ -9,8 +9,13 @@ export const useUpdatePlan = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({queryKey:["plans"]})
     },
-    onError: (error) => {
-      console.log("error updating plan",error)
-    }
+    onError: (error: AxiosError<{ error?: string }>) => { // Type error as AxiosError
+      console.log("error updating plan", error);
+      if (error.response?.status === 400) {
+        toast.error(error.response.data.error); // Show error message
+      } else {
+        toast.error("Failed to update plan");
+      }
+    },
   })
 }
