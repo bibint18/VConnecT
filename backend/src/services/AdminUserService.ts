@@ -6,8 +6,8 @@ export class AdminUserService{
     this.AdminUserRepository=AdminUserRepository
   }
 
-  async getAllUsers (page:number,limit:number){
-    return await this.AdminUserRepository.getAllUsers(page,limit)
+  async getAllUsers (page:number,limit:number,searchTerm:string,sortOption:string){
+    return await this.AdminUserRepository.getAllUsers(page,limit,searchTerm,sortOption)
   }
 
   async blockUser(id:string){

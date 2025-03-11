@@ -1,8 +1,21 @@
 import { IUser,User } from "../models/User";
 import { IAdminUserRepository } from "../interfaces/IAdminUserRepository";
 export class AdminUserRepository implements IAdminUserRepository{
-  async getAllUsers(page:number,limit:number){
-    return await User.find({isAdmin:false,isDeleted:false})
+  async getAllUsers(page:number,limit:number,searchTerm:string,sortOption:string){
+    const query: any = {isAdmin:false,isDeleted:false}
+    if(searchTerm){
+      query.name={$regex:searchTerm,$options: "i"};
+    }
+    let sortQuery: any = {}
+    if(sortOption==="A-Z"){
+      sortQuery={name:1}
+    }else if(sortOption==='Z-A'){
+      sortQuery={name:-1}
+    }else if(sortOption==='recent'){
+      sortQuery={createdAt:-1}
+    }
+    return await User.find(query)
+    .sort(sortQuery)
     .skip((page-1) * limit)
     .limit(limit)
   }

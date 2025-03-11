@@ -1,5 +1,5 @@
 export interface IAdminUserRepository{
-  getAllUsers(page:number,limit:number):Promise<any>;
+  getAllUsers(page:number,limit:number,searchTerm:string,sortOption:string):Promise<any>;
   getUserById(id:string): Promise<any>
   blockUser(id:string) : Promise<any>
   unblockUser(id:string) : Promise<any>

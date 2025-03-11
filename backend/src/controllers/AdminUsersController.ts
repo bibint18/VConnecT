@@ -6,8 +6,9 @@ const adminUsersService = new AdminUserService(new AdminUserRepository())
 
 export const getAllUsers = async(req:Request,res:Response) => {
   try {
-    const {page=1,limit=6} = req.query
-    const users = await adminUsersService.getAllUsers(Number(page),Number(limit))
+    const {page=1,limit=6,searchTerm="",sortOption="A-Z"} = req.query
+    console.log("users query",req.query)
+    const users = await adminUsersService.getAllUsers(Number(page),Number(limit),String(searchTerm),String(sortOption))
     console.log("users",users)
     res.status(200).json(users)
   } catch (error) {
