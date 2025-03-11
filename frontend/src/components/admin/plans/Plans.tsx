@@ -317,7 +317,7 @@ export default function SubscriptionPlans() {
   const limit =4
   const {data={ plans: [], total: 0 },isPending,isError} = usePlans(page,limit,searchTerm,sortOption)
   console.log(data)
-  const totalPages=1
+  const totalPages=Math.ceil(data.total/limit)
   const {mutate} = useDeletePlan() 
   console.log("plans: ",data.plans)
   const handleDelete = (id: string) => {
