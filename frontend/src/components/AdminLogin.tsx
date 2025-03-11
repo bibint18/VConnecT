@@ -34,15 +34,46 @@ const AdminLogin: React.FC = () => {
   };
 
   return (
-    <div className="login-container">
-      <h2>Admin Login</h2>
-      {error && <p className="error">{error}</p>}
-      <form onSubmit={handleLogin}>
-        <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-        <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-        {/* <ReCAPTCHA sitekey="YOUR_RECAPTCHA_SITE_KEY" onChange={setCaptchaToken} /> */}
-        <button type="submit">Login</button>
-      </form>
+    <div className="min-h-screen bg-white flex items-center justify-center p-4">
+      <div className="bg-black rounded-lg shadow-2xl p-8 max-w-md w-full border border-gray-700">
+        <h2 className="text-3xl font-bold text-white mb-6 text-center">Admin Login</h2>
+        {error && <p className="text-red-500 text-sm mb-4 text-center">{error}</p>}
+        <form onSubmit={handleLogin} className="space-y-6">
+          <div>
+            <label htmlFor="email" className="block text-sm font-medium text-gray-300">
+              Email
+            </label>
+            <input
+              type="email"
+              id="email"
+              placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="mt-1 block w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white"
+            />
+          </div>
+          <div>
+            <label htmlFor="password" className="block text-sm font-medium text-gray-300">
+              Password
+            </label>
+            <input
+              type="password"
+              id="password"
+              placeholder="Enter your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="mt-1 block w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white"
+              
+            />
+          </div>
+          <button
+            type="submit"
+            className="w-full bg-white text-black py-2 px-4 rounded-md hover:bg-gray-100 transition-all duration-300"
+          >
+            Login
+          </button>
+        </form>
+      </div>
     </div>
   );
 };

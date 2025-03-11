@@ -11,8 +11,8 @@ const persistConfig = {
 };
 
 const rootReducer = combineReducers({
-  auth: persistReducer(persistConfig, authReducer),
-  user: persistReducer(persistConfig,userReducer)
+  auth: persistReducer({...persistConfig,key:"auth"}, authReducer),
+  user: persistReducer({...persistConfig,key:"user"},userReducer)
 });
 
 export const store = configureStore({
