@@ -261,7 +261,7 @@
 import React, { useState } from "react";
 import { useAddPlan } from "../../../hooks/useAddPlans";
 import "./addPlan.css";
-
+import {toast} from "react-toastify"
 interface PlanFormData {
   name: string;
   type: string;
@@ -287,6 +287,67 @@ const AddPlan: React.FC = () => {
 
   const { mutate, isPending } = useAddPlan();
 
+  const validateForm = async () => {
+    let isValid = true;
+
+    // Required fields check
+    if (!formData.name.trim()) {
+      toast.error("Plan name is required");
+      isValid = false;
+      return
+    }
+    if (!formData.type.trim()) {
+      toast.error("Plan type is required");
+      isValid = false;
+      return
+    }
+    if (!formData.description.trim()) {
+      toast.error("Description is required");
+      isValid = false;
+      return
+    }
+    if (!formData.duration.trim()) {
+      toast.error("Duration is required");
+      isValid = false;
+      return
+    }
+    const validBenefits = formData.benefits
+    .map((b) => b.trim()) // Remove spaces
+    .filter((b) => b.length > 0); // Remove empty lines
+
+  if (validBenefits.length === 0) {
+    toast.error("At least one benefit is required");
+    isValid = false;
+  }
+
+  for (const benefit of validBenefits) {
+    if (benefit.length < 3) {
+      toast.error("Each benefit must have at least 3 characters");
+      isValid = false;
+    }
+  }
+
+    // No spaces allowed in name and type
+    if (/\s/.test(formData.name)) {
+      toast.error("No spaces allowed in plan name");
+      isValid = false;
+      return
+    }
+    if (/\s/.test(formData.type)) {
+      toast.error("No spaces allowed in plan type");
+      isValid = false;
+      return
+    }
+
+    // Regular amount should be greater than discount amount
+    if (formData.regularAmount <= formData.discountAmount) {
+      toast.error("Regular amount must be greater than discount amount");
+      isValid = false;
+      return
+    }
+    return isValid;
+  };
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
@@ -306,6 +367,7 @@ const AddPlan: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!(validateForm())) return;
     mutate(formData);
   };
 
@@ -325,7 +387,7 @@ const AddPlan: React.FC = () => {
               onChange={handleChange}
               className="form-input"
               placeholder="Enter plan name"
-              required
+              
             />
           </div>
 
@@ -339,7 +401,7 @@ const AddPlan: React.FC = () => {
               onChange={handleChange}
               className="form-input"
               placeholder="Enter plan type"
-              required
+              
             />
           </div>
 
@@ -353,7 +415,7 @@ const AddPlan: React.FC = () => {
               onChange={handleChange}
               className="form-textarea"
               placeholder="Enter plan description"
-              required
+              
             />
           </div>
 
@@ -369,7 +431,7 @@ const AddPlan: React.FC = () => {
                 onChange={handleChange}
                 className="form-input"
                 placeholder="Enter regular amount"
-                required
+                
               />
             </div>
             <div className="form-group half-width">
@@ -382,7 +444,7 @@ const AddPlan: React.FC = () => {
                 onChange={handleChange}
                 className="form-input"
                 placeholder="Enter discount amount"
-                required
+                
               />
             </div>
           </div>
@@ -412,7 +474,7 @@ const AddPlan: React.FC = () => {
                 onChange={handleChange}
                 className="form-input"
                 placeholder="Enter duration"
-                required
+                
               />
             </div>
             <div className="form-group half-width">

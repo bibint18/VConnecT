@@ -3,9 +3,11 @@ import "./Signup.css";
 import { useSignup } from "../hooks/useSignup";
 import VerifyOTP from "./VerifyOTP";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 const Signup = () => {
   const [formData,setFormData] = useState({name:"",email:"",password:"",confirmpsw:''});
   const [isEmailVerified,setIsEmailVerified] = useState(false);
+  const navigate = useNavigate()
   const handleChange =(e:React.ChangeEvent<HTMLInputElement>) => {
     setFormData({...formData,[e.target.name]:e.target.value})
   }
@@ -67,6 +69,7 @@ const Signup = () => {
               {isPending ? "Signing up..." : "Sign Up"}
             </button>
           </form>
+          <p onClick={() => navigate('/login')}>Login</p>
         </div>
       </div>
     )}

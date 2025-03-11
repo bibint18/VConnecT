@@ -106,8 +106,9 @@ async login(email:string,password:string,isAdminLogin:boolean){
   console.log("at service as last password: ",password,password.length)
   
   const user = await this.userRepository.findByEmail(email)
+  if(!user) throw new Error("No user")
   if(user)console.log("Stored hashed password:", user.password);
-  
+  if(user?.isBlocked) throw new Error("User blocked")
   console.log("reached auth login,user: ",user)
   if(!user) throw new Error("Invalid credentials")
   if(isAdminLogin && !user.isAdmin) throw new Error("Unauthorized access")

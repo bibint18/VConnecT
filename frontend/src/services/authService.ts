@@ -1,7 +1,9 @@
 
 import axiosInstance from "../utils/axiosInterceptor";
 import {store} from '../redux/store'
+import { AxiosError } from "axios";
 export const loginUser = async(email:string,password:string,recaptchaToken:string) => {
+  try{
   console.log("hereeeeeeeeeeeeeee")
   console.log("datas: ",email,password,recaptchaToken)
   console.log("password and length",password,password.length)
@@ -12,6 +14,12 @@ export const loginUser = async(email:string,password:string,recaptchaToken:strin
   })
   console.log("passed from here")
   return response.data
+  }catch(error:unknown){
+    if (error instanceof AxiosError && error.response) {
+      throw new Error(error.response.data.message); // Forward backend error to frontend
+    }
+    throw new Error("Something went wrong. Please try again.");
+  } 
 }
 
 export const loginAdmin = async (email:string,password:string) => {

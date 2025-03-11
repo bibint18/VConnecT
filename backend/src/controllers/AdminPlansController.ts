@@ -9,9 +9,12 @@ export const createPlan = async(req:Request,res:Response) => {
     console.log("reached backend plan create body: ",req.body)
     const plan = await planService.createPlan(req.body)
       res.status(200).json(plan)
-  } catch (error) {
+  } catch (error:any) {
     console.log(error)
-    res.status(500).json({error:"failed to create plans"})
+    if (error.message === "A plan with this name already exists") {
+       res.status(400).json({ message: error.message });
+    }
+    res.status(500).json({ message: "Internal Server Error" });
   }
 }
 

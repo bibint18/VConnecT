@@ -3,6 +3,10 @@ import { IPlan,Plan } from "../models/PlansModel";
 
 export class PlansRepository implements IPlanRepository{
   async createPlan(planData: Partial<IPlan>): Promise<IPlan | null> {
+    const existingPlan = await Plan.findOne({ name: planData.name });
+  if (existingPlan) {
+    throw new Error("A plan with this name already exists");
+  }
     return await Plan.create(planData)
   }
   async getAllPlans(search:string,sort:string,page:number,limit:number): Promise<{ plans: IPlan[], total: number }> {
