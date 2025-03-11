@@ -75,10 +75,10 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchUsers, blockUser, unblockUser, deleteUser } from "../api/adminAuth";
 
 // Fetch users with pagination
-export const useUsers = (page: number, limit: number) => {
+export const useUsers = (page: number, limit: number,searchTerm:string,sortOption:string) => {
   return useQuery({
-    queryKey: ["users", page, limit],
-    queryFn: () => fetchUsers(page, limit),
+    queryKey: ["users", page, limit,searchTerm,sortOption],
+    queryFn: () => fetchUsers(page, limit,searchTerm,sortOption),
     keepPreviousData: true,
   });
 };

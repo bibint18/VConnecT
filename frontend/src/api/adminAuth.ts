@@ -5,9 +5,9 @@ const API_URL = "http://localhost:3000/api/auth"; // Adjust as needed
 
 
 //USERS API
-export const fetchUsers = async (page: number, limit: number) => {
+export const fetchUsers = async (page: number, limit: number,searchTerm:string,sortOption:string) => {
   const response = await axios.get(`${API_URL}/admin/users`, {
-    params: { page, limit },
+    params: { page, limit ,searchTerm,sortOption},
   });
   console.log(response)
   return response.data;

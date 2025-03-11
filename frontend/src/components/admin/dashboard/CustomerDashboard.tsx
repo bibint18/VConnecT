@@ -416,16 +416,17 @@ import { useState } from "react"
 import { Search, ChevronDown, BarChart2, Edit, Trash2, ChevronRight, ChevronLeft } from "lucide-react"
 import './customerDashboard.css'
 import { useUsers,useBlockUser,useDeleteUser,useUnblockUser } from "../../../hooks/useUsers"
-// import { Edit,Trash2 } from "lucide-react"
 import Swal from "sweetalert2";
 export default function CustomerDashboard() {
   const [page,setPage] = useState(1)
   const limit=6
-  const {data:users,isLoading,isError} = useUsers(page,limit) as useUserResponse
+  
   const blockMutation = useBlockUser()
   const unblockMutation = useUnblockUser()
   const deleteMutation = useDeleteUser()
   const [searchTerm,setSearchTerm] = useState('')
+  const [sortOption,setSortOption] = useState<string>("A-Z")
+  const {data:users,isLoading,isError} = useUsers(page,limit,searchTerm,sortOption) as useUserResponse
   const handleBlock = (id:string) => {
     console.log("handleBlock: ",id)
     blockMutation.mutate(id)
@@ -456,9 +457,22 @@ export default function CustomerDashboard() {
       }
     });
   };
+
   if(isLoading) return <p>Loading users...</p>
   if(isError) return <p>Error fetching users..</p>
- const filteredUsers:User[] = users ? users?.filter((user) => user.name.toLowerCase().includes(searchTerm.toLowerCase())) : []
+//  const filteredUsers:User[] = users ? users?.filter((user) => user.name.toLowerCase().includes(searchTerm.toLowerCase())) : []
+
+//  const sortedUsers: User[] = [...filteredUsers].sort((a,b) => {
+//   if(sortOption === "A-Z"){
+//     return a.name.localeCompare(b.name)
+//   }else if(sortOption === 'Z-A'){
+//     return b.name.localeCompare(a.name)
+//   }else if(sortOption === 'recent'){
+//     return new Date(b._id).getTime() - new Date(a._id).getTime()
+//   }
+//   return 0
+  
+//  })
 
   return (
     <div className="customer-dashboard flex-1">
@@ -473,6 +487,7 @@ export default function CustomerDashboard() {
                   className="search-input"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
+                  //venenkile refetch
                 />
                 <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-orange-500" />
               </div>
@@ -483,16 +498,24 @@ export default function CustomerDashboard() {
                   <span>Sort By</span>
                 </div>
                 <div className="sort-item">
-                  <span>Name</span>
-                  <ChevronDown className="h-4 w-4" />
+                  <select className="outline-none"
+                  value={sortOption}
+                  onChange={(e) => setSortOption(e.target.value)}
+                  >
+                    <ChevronDown className="h-4 w-4" />
+                    <option className="text-black" value="A-Z">A-Z</option>
+    <option className="text-black " value="Z-A">Z-A</option>
+    <option className="text-black " value="recent">Recently Joined</option>
+                  </select>
                 </div>
-                <div className="sort-item">
+
+                {/* <div className="sort-item">
                   <BarChart2 className="h-5 w-5 text-orange-500" />
                   <span>Points</span>
-                </div>
-                <div className="sort-item">
+                </div> */}
+                {/* <div className="sort-item">
                   <span>Streaks</span>
-                </div>
+                </div> */}
               </div>
             </div>
 
@@ -510,7 +533,7 @@ export default function CustomerDashboard() {
                 </thead>
                 <tbody>
                 
-                {filteredUsers?.length > 0 ? ( filteredUsers?.map((user: User,index:number) => (
+                {users?.length > 0 ? ( users?.map((user: User,index:number) => (
                     <tr key={user._id} className="table-row border-b border-gray-100 last:border-0">
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-2">
