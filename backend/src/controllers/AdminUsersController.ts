@@ -10,7 +10,9 @@ export const getAllUsers = async(req:Request,res:Response) => {
     console.log("users query",req.query)
     const users = await adminUsersService.getAllUsers(Number(page),Number(limit),String(searchTerm),String(sortOption))
     console.log("users",users)
-    res.status(200).json(users)
+    const totalUsers = await adminUsersService.getTotalUsers(String(searchTerm))
+    console.log("ottal usrs",totalUsers)
+    res.status(200).json({users,totalUsers})
   } catch (error) {
     res.status(500).json({error:"failed to fetch users"})
   }

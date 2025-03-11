@@ -19,6 +19,13 @@ export class AdminUserRepository implements IAdminUserRepository{
     .skip((page-1) * limit)
     .limit(limit)
   }
+  async getTotalUsers(search: string): Promise<number> {
+    let query:any = {isDeleted:false,isAdmin:false}
+    if(search){
+      query.name={$regex:search,$options:'i'}
+    }
+    return await User.countDocuments(query)
+  }
 
   async getUserById (id:string){
     return await User.findById(id)

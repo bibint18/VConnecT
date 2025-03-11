@@ -9,7 +9,7 @@ export const fetchUsers = async (page: number, limit: number,searchTerm:string,s
   const response = await axios.get(`${API_URL}/admin/users`, {
     params: { page, limit ,searchTerm,sortOption},
   });
-  console.log(response)
+  console.log("from auth",response.data)
   return response.data;
   
 };

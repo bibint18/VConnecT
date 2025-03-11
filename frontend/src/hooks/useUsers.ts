@@ -67,8 +67,26 @@
 
 
 
+interface User{
+  _id:string;
+  name:string,
+  email:string,
+  password:string,
+  otp?:string,
+  otpExpiry?:Date,
+  isVerified:boolean
+  isAdmin:boolean
+  failedLoginAttempts: number;
+  lockUntil: Date | null;
+  plan:string;
+  isDeleted:boolean;
+  isBlocked:boolean
+}
 
-
+interface UsersResponse {
+  users: User[];
+  totalUsers: number;
+}
 
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -76,10 +94,14 @@ import { fetchUsers, blockUser, unblockUser, deleteUser } from "../api/adminAuth
 
 // Fetch users with pagination
 export const useUsers = (page: number, limit: number,searchTerm:string,sortOption:string) => {
-  return useQuery({
+  return useQuery<UsersResponse,Error>({
     queryKey: ["users", page, limit,searchTerm,sortOption],
-    queryFn: () => fetchUsers(page, limit,searchTerm,sortOption),
-    keepPreviousData: true,
+    queryFn: async ():Promise<UsersResponse> => {
+      const response = await fetchUsers(page, limit, searchTerm, sortOption);
+      console.log('hook data ',response)
+      return response; 
+    },
+    placeholderData: (previousData) => previousData ?? { users: [], totalUsers: 0 },
   });
 };
 

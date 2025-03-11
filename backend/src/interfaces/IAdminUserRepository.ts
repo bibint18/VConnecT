@@ -4,4 +4,5 @@ export interface IAdminUserRepository{
   blockUser(id:string) : Promise<any>
   unblockUser(id:string) : Promise<any>
   deleteUser(id:string): Promise<any>
+  getTotalUsers(search:string): Promise<number>
 }

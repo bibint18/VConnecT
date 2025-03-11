@@ -407,11 +407,11 @@ interface User{
   isBlocked:boolean
 }
 
-interface useUserResponse{
-  data:User[] | undefined,
-  isLoading:boolean;
-  isError:boolean
-}
+// interface useUserResponse{
+//   data:User[] ,totalCount:number| undefined,
+//   isLoading:boolean;
+//   isError:boolean
+// }
 import { useState } from "react"
 import { Search, ChevronDown, BarChart2, Edit, Trash2, ChevronRight, ChevronLeft } from "lucide-react"
 import './customerDashboard.css'
@@ -426,7 +426,14 @@ export default function CustomerDashboard() {
   const deleteMutation = useDeleteUser()
   const [searchTerm,setSearchTerm] = useState('')
   const [sortOption,setSortOption] = useState<string>("A-Z")
-  const {data:users,isLoading,isError} = useUsers(page,limit,searchTerm,sortOption) as useUserResponse
+  // const {data:users,totalCount,isLoading,isError} = useUsers(page,limit,searchTerm,sortOption) as useUserResponse
+
+  const { data, isLoading, isError } = useUsers(page, limit, searchTerm, sortOption);
+  console.log("data from component ",data)
+  const users: User[] = data?.users ?? []; // Extract users array
+  const totalUsers: number = data?.totalUsers ?? 0; // Extract totalUsers count
+const totalPages = Math.ceil(totalUsers/limit)
+  console.log("totalCount",totalPages)
   const handleBlock = (id:string) => {
     console.log("handleBlock: ",id)
     blockMutation.mutate(id)
@@ -608,7 +615,9 @@ export default function CustomerDashboard() {
                 <ChevronLeft className="h-4 w-4" />
               </button>
               <span className="px-3 py-2">{page}</span>
-              <button onClick={() => setPage((prev) => prev + 1)} className="page-button">
+              <button disabled={page >= totalPages} 
+    onClick={() => setPage((prev) => prev + 1)} 
+    className="page-button">
                 <ChevronRight className="h-4 w-4" />
               </button>
             </div>
