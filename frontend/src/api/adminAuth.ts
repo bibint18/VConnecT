@@ -1,7 +1,7 @@
 import axios from "axios";
 
 
-const API_URL = "http://localhost:3000/api/auth"; // Adjust as needed
+const API_URL = "http://localhost:3000/api/auth"; 
 
 
 //USERS API

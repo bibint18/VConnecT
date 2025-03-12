@@ -1,11 +1,9 @@
 import { IUserRepository } from "../interfaces/IUserRepository";
 import { IUser,User } from "../models/User";
 import { OtpVerification } from "../models/OtpModel";
-import bcrypt from 'bcryptjs'
 
 export class UserRepository implements IUserRepository{
   async createUser(data: Partial<IUser>): Promise<IUser |null> {
-    // const password=data.password
     return await new User(data).save()
   }
 

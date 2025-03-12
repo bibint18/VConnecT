@@ -5,8 +5,6 @@ interface ResendOTPParams {
   email: string;
 }
 
-
-
 export const useResendOTP = () => {
   return useMutation<unknown, Error, ResendOTPParams>({
     mutationFn: async ({ email }) => {

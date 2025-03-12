@@ -9,10 +9,10 @@ export const useUpdatePlan = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({queryKey:["plans"]})
     },
-    onError: (error: AxiosError<{ error?: string }>) => { // Type error as AxiosError
+    onError: (error: AxiosError<{ error?: string }>) => { 
       console.log("error updating plan", error);
       if (error.response?.status === 400) {
-        toast.error(error.response.data.error); // Show error message
+        toast.error(error.response.data.error); 
       } else {
         toast.error("Failed to update plan");
       }

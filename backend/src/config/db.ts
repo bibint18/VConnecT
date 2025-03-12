@@ -5,7 +5,7 @@ dotenv.config()
 
 const conneectDB = async () => {
   try {
-    const mongoUri = process.env.MONGO_URI as string; // Type assertion to avoid TS error
+    const mongoUri = process.env.MONGO_URI as string; 
     if (!mongoUri) {
       throw new Error("MONGO_URI is not defined in .env file");
     }

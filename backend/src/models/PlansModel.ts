@@ -19,7 +19,7 @@ const PlanSchema:Schema = new Schema({
   type: { type: String, required: true },
   description: { type: String, required: true },
   regularAmount: { type: Number, required: true },
-  discountAmount: { type: Number, required: true, unique: true },
+  discountAmount: { type: Number, required: true },
   benefits: { type: [String], required: true },
   isListed: { type: Boolean, default: true },
   duration: { type: String, required: true},
