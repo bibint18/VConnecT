@@ -8,39 +8,6 @@ import { IUser } from '../models/User'
 import bcrypt from 'bcryptjs'
 const authService = new AuthService(new UserRepository())
 
-export const signup = async (req:Request,res:Response) => {
-  try {
-    const {name,email,password} = req.body;
-    console.log("signup details",req.body,password.length)
-    const response = await authService.singup(name,email,password)
-    res.json(response)
-  } catch (error:any) {
-    res.status(400).json({message:error.message})
-  }
-}
-
-export const verifyOTP = async (req:Request,res:Response) => {
-  try {
-    console.log("its here")
-    console.log("verofy: ",req.body)
-    const {email,otp,name,password} = req.body;
-    const response = await authService.verifyOTP(email,otp,name,password)
-    res.json(response)
-  } catch (error:any) {
-    res.status(400).json({message:error.message})
-  }
-}
-
-export const ResendOtp =async (req:Request,res:Response) => {
-  try {
-    const {email} = req.body
-    const response = await authService.resendOTP(email)
-    console.log("data passed from controller")
-  } catch (error:any) {
-    res.status(400).json({message:error.message})
-  }
-}
-
 export const login =async (req:Request,res:Response): Promise<void> => {
   try {
     console.log("reached login backend",req.body)
@@ -108,3 +75,37 @@ export const adminLogout = async (req:Request,res:Response) => {
 
 
 
+
+export const signup = async (req:Request,res:Response) => {
+  try {
+    const {name,email,password} = req.body;
+    console.log("signup details",req.body,password.length)
+    const response = await authService.singup(name,email,password)
+    res.json(response)
+  } catch (error:any) {
+    res.status(400).json({message:error.message})
+  }
+}
+
+export const verifyOTP = async (req:Request,res:Response) => {
+  try {
+    console.log("its here")
+    console.log("verofy: ",req.body)
+    
+    const {email,otp,name,password} = req.body;
+    const response = await authService.verifyOTP(email,otp,name,password)
+    res.json(response)
+  } catch (error:any) {
+    res.status(400).json({message:error.message})
+  }
+}
+
+export const ResendOtp =async (req:Request,res:Response) => {
+  try {
+    const {email} = req.body
+    const response = await authService.resendOTP(email)
+    console.log("data passed from controller")
+  } catch (error:any) {
+    res.status(400).json({message:error.message})
+  }
+}

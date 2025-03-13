@@ -1,12 +1,12 @@
-import axios from "axios";
 
+import axiosInstance from "../utils/axiosInterceptor";
 
 const API_URL = "http://localhost:3000/api/auth"; 
 
 
 //USERS API
 export const fetchUsers = async (page: number, limit: number,searchTerm:string,sortOption:string) => {
-  const response = await axios.get(`${API_URL}/admin/users`, {
+  const response = await axiosInstance.get(`${API_URL}/admin/users`, {
     params: { page, limit ,searchTerm,sortOption},
   });
   console.log("from auth",response.data)
@@ -17,19 +17,19 @@ export const fetchUsers = async (page: number, limit: number,searchTerm:string,s
 
 export const blockUser = async (id: string) => {
   console.log(id)
-  const response = await axios.post(`${API_URL}/admin/users/block/${id}`);
+  const response = await axiosInstance.post(`${API_URL}/admin/users/block/${id}`);
   return response.data;
 };
 
 
 export const unblockUser = async (id: string) => {
-  const response = await axios.post(`${API_URL}/admin/users/unblock/${id}`);
+  const response = await axiosInstance.post(`${API_URL}/admin/users/unblock/${id}`);
   return response.data;
 };
 
 
 export const deleteUser = async (id: string) => {
-  const response = await axios.post(`${API_URL}/admin/users/delete/${id}`);
+  const response = await axiosInstance.post(`${API_URL}/admin/users/delete/${id}`);
   return response.data;
 };
 
@@ -48,28 +48,28 @@ export interface PlanFormData {
   duration: string;
 }
 export const addNewPlan = async(PlanData:PlanFormData) =>{
-  const response = await axios.post(`${API_URL}/admin/plans/add`,PlanData)
+  const response = await axiosInstance.post(`${API_URL}/admin/plans/add`,PlanData)
   return response.data
 }
 
 export const fetchPlans = async (page=1,limit=4,search='',sort='A-Z') => {
-  const response = await axios.get(`${API_URL}/admin/plans`,{params:{page,limit,search,sort}})
+  const response = await axiosInstance.get(`${API_URL}/admin/plans`,{params:{page,limit,search,sort}})
   console.log("fetching plans response api ",response.data)
   return response.data
 }
 
 export const findPlanById =async (id:string) => {
-  const response = await axios.get(`${API_URL}/admin/plans/${id}`)
+  const response = await axiosInstance.get(`${API_URL}/admin/plans/${id}`)
   return response.data
 }
 
 export const updatePlan = async (id:string,planData:Partial<PlanFormData>) => {
   console.log("update api ",id,planData)
-  const response =await axios.put(`${API_URL}/admin/plans/edit/${id}`,planData)
+  const response =await axiosInstance.put(`${API_URL}/admin/plans/edit/${id}`,planData)
   return response.data
 }
 
 export const deletePlan = async (id:string) => {
-  const response = await axios.post(`${API_URL}/admin/plans/delete/${id}`)
+  const response = await axiosInstance.post(`${API_URL}/admin/plans/delete/${id}`)
   return response.data
 }

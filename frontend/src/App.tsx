@@ -18,6 +18,7 @@ import AdminAddPlan from "./pages/AdminAddPlans";
 import AdminEditPlan from "./pages/AdminEditPlan";
 // import Header from "./components/User/Header/Header";
 import HomePage from "./components/User/Header/HomePage";
+import LandingPage from './pages/LandingPage'
 function App() {
   return (
     <Router>
@@ -27,6 +28,7 @@ function App() {
 
         {/* <Route path="/addplans" element={<AddPlansPage/>} /> */}
         <Route path="/signup" element={<Signup />} />
+        <Route path="/landing" element={<LandingPage/>} />
         <Route path="/verify-otp" element={<VerifyOTP />} />
         <Route path="/login" element={<Login />} />
         <Route path="/adminLogin" element={<AdminLogin />} />

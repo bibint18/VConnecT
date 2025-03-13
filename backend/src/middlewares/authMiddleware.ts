@@ -16,7 +16,7 @@ export const verifyToken = async (req: AuthRequest, res: Response, next: NextFun
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET as string, async (err: any, decoded: any) => {
       if (err) {
         const refreshToken = req.cookies.refreshToken;
-        if (!refreshToken) return res.status(403).json({ message: "Forbidden - No refresh token" });
+        if (!refreshToken) return res.status(401).json({ message: "Forbidden - No refresh token" });
 
         try {
           const decodedRefresh: any = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET as string);

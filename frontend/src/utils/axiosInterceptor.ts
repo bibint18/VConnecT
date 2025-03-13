@@ -9,8 +9,9 @@ axiosInstance.interceptors.request.use(async (config) => {
 
 
 axiosInstance.interceptors.response.use((response) => response,async(error) => {
-  if(error.response.status ===403){
-    await axios.post("/auth/refresh")
+  if(error.response.status ===401){
+   const accessToken = await axios.post("/auth/refresh",{withCredentials:true})
+   
     return axiosInstance(error.config)
   }
   return Promise.reject(error)

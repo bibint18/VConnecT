@@ -20,6 +20,7 @@ export class AuthService {
 
       // await this.userRepository.createUser(data)
       const otp = crypto.randomInt(100000,999999).toString()
+      console.log("otp code ",otp)
     const otpExpiry= new Date(Date.now() + 10 * 60 * 1000)
     // await OtpVerification.updateOne(
     //   { email },

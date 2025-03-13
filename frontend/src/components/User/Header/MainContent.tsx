@@ -1,7 +1,8 @@
 import React from 'react';
 import './mainContent.css'
 import image1 from '../../../assets/home1.png'
-import image2 from '../../../assets/home2.png'
+// import image2 from '../../../assets/home2.png'
+import image3 from '../../../assets/meeting1.png'
 import { useAppSelector } from '../../../redux/store';
 import { useNavigate } from 'react-router-dom';
 const MainContent: React.FC = () => {
@@ -49,7 +50,7 @@ const MainContent: React.FC = () => {
         </div>
       </section>
 
-      <section className="bg-white text-black py-16 px-4 flex flex-col md:flex-row items-center justify-center">
+      {/* <section className="bg-white text-black py-16 px-4 flex flex-col md:flex-row items-center justify-center">
         <div className="w-full md:w-1/2 mb-8 md:mb-0">
           <div className="bg-gray-300 h-64 md:h-96 rounded-lg flex items-center justify-center">
             <img src={image2} alt="" />
@@ -64,7 +65,30 @@ const MainContent: React.FC = () => {
             Create Room
           </button>
         </div>
-      </section>
+      </section> */}
+
+<section className="bg-black text-white py-16 px-4 flex flex-col md:flex-row items-center justify-center">
+      <div className="w-full md:w-1/2 md:pr-8 text-left">
+        <h2 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
+          Create Your Professional Virtual Space
+        </h2>
+        <p className="text-gray-300 mb-8 max-w-lg">
+          Elevate your virtual presence with a sleek, customizable space. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        </p>
+        <button className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-gradient-to-r hover:from-purple-700 hover:to-indigo-700 transition-all duration-300 transform hover:scale-105">
+          Create Room
+        </button>
+      </div>
+      <div className="w-full md:w-1/2 mt-8 md:mt-0">
+        <div className="bg-gray-800 h-64 md:h-96 rounded-lg overflow-hidden shadow-lg border border-gray-700">
+          <img
+            src={image3}
+            alt="Virtual Space Preview"
+            className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+          />
+        </div>
+      </div>
+    </section>
     </main>
   );
 };
