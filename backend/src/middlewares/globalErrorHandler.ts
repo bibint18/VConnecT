@@ -1,11 +1,12 @@
 import { Request,Response,NextFunction } from "express";
 
-const globalErrorHandler = (err:Error,req:Request,res:Response,next:NextFunction):void => {
-  console.error(err.stack)
-  res.status(500).json({
-    message:"Something went wrong!",
-    error:process.env.NODE_ENV ==='develeopment' ? err.message :"Internal server Error"
-  })
-}
+export const errorHandler = (err:any ,req:Request,res:Response,next:NextFunction) => {
+  console.log("reaced error handler")
+  console.error("Error occured: ",err)
+  const statusCode = err.statusCode || 500;
+  const errorResponse = {
+    message:err.message || "Internal server Error", ...(process.env.NODE_ENV ==='development' && {stack: err.stack}),
 
-export default globalErrorHandler
+  }
+  res.status(statusCode).json(errorResponse)
+}

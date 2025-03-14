@@ -1,4 +1,4 @@
-import {Request,Response} from 'express'
+import {NextFunction, Request,Response} from 'express'
 import { AuthService } from '../services/AuthService'
 import { UserRepository } from '../repositories/userRepository'
 import  {generateAccessToken} from '../utils/generateToken'
@@ -8,7 +8,7 @@ import { IUser, User } from '../models/User'
 import bcrypt from 'bcryptjs'
 const authService = new AuthService(new UserRepository())
 
-export const login =async (req:Request,res:Response): Promise<void> => {
+export const login =async (req:Request,res:Response,next:NextFunction): Promise<void> => {
   try {
     console.log("reached login backend",req.body)
     const { email, password } = req.body;
@@ -25,8 +25,9 @@ export const login =async (req:Request,res:Response): Promise<void> => {
       sameSite: 'strict',
     });
     res.json({ message: "Login successful",accessToken, user });
-  } catch (error:any) {
-    res.status(400).json({ message: error.message });
+  } catch (error) {
+    // res.status(400).json({ message: error.message });
+    next(error)
   }
 }
 export const userLogout = async (req:Request,res:Response) => {
@@ -88,18 +89,18 @@ export const adminLogout = async (req:Request,res:Response) => {
 
 
 
-export const signup = async (req:Request,res:Response) => {
+export const signup = async (req:Request,res:Response,next:NextFunction) => {
   try {
     const {name,email,password} = req.body;
     console.log("signup details",req.body,password.length)
     const response = await authService.singup(name,email,password)
     res.json(response)
-  } catch (error:any) {
-    res.status(400).json({message:error.message})
+  } catch (error) {
+    next(error)
   }
 }
 
-export const verifyOTP = async (req:Request,res:Response) => {
+export const verifyOTP = async (req:Request,res:Response,next:NextFunction) => {
   try {
     console.log("its here")
     console.log("verofy: ",req.body)
@@ -107,18 +108,18 @@ export const verifyOTP = async (req:Request,res:Response) => {
     const {email,otp,name,password} = req.body;
     const response = await authService.verifyOTP(email,otp,name,password)
     res.json(response)
-  } catch (error:any) {
-    res.status(400).json({message:error.message})
+  } catch (error) {
+    next(error)
   }
 }
 
-export const ResendOtp =async (req:Request,res:Response) => {
+export const ResendOtp =async (req:Request,res:Response,next:NextFunction) => {
   try {
     const {email} = req.body
     const response = await authService.resendOTP(email)
     console.log("data passed from controller")
   } catch (error:any) {
-    res.status(400).json({message:error.message})
+   next(error)
   }
 }
 

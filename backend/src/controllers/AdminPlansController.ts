@@ -1,4 +1,4 @@
-import { Request,Response } from "express";
+import { NextFunction, Request,Response } from "express";
 import { PlanService } from "../services/AdminPlanService";
 import { PlansRepository } from "../repositories/AdminPlanRepository";
 
@@ -20,7 +20,7 @@ export const createPlan = async(req:Request,res:Response) => {
   }
 }
 
-export const getAllPlans = async (req:Request,res:Response) => {
+export const getAllPlans = async (req:Request,res:Response,next:NextFunction) => {
   try {
     
     console.log("reached backend fetch plans",req.query)
@@ -28,19 +28,17 @@ export const getAllPlans = async (req:Request,res:Response) => {
     const {plans,total} = await planService.gettAllPlans(String(search),String(sort),Number(page),Number(limit))
     res.status(200).json({plans,total})
   } catch (error) {
-    console.log(error)
-    res.status(500).json({error:"Failed to fetch plans"})
+    next(error)
   }
 }
 
-export const getPlanById = async(req:Request,res:Response) => {
+export const getPlanById = async(req:Request,res:Response,next:NextFunction) => {
   try {
     const {id} = req.params
     const plan = await planService.getPlanById(id)
     res.status(200).json(plan)
   } catch (error) {
-    console.log(error)
-    res.status(500).json({error:"failed to find plan"})
+    next(error)
   }
 }
 
@@ -62,13 +60,12 @@ export const updatePlan = async (req:Request,res:Response) => {
   }
 }
 
-export const deletePlan = async (req:Request,res:Response) => {
+export const deletePlan = async (req:Request,res:Response,next:NextFunction) => {
   try {
     const {id} = req.params
     const plan = await planService.deletePlan(id)
     res.status(200).json(plan)
   } catch (error) {
-    console.log(error)
-    res.status(500).json({error:"failed to delete"})
+    next(error)
   }
 }
