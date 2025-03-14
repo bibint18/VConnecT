@@ -7,7 +7,8 @@ import
   refresh,
   LoginAdmin,
   adminLogout,
-  userLogout
+  userLogout,
+  getAbout
 } 
 from '../controllers/AuthController'
 import {
@@ -22,7 +23,7 @@ import {
    deletePlan
   }
 from '../controllers/AdminPlansController'
-// import { verifyAdmin, verifyToken } from '../middlewares/authMiddleware'
+import { authenticateToken,restrictToAdmin} from '../middlewares/authMiddleware'
 import verifyRecaptcha from '../middlewares/recaptchaMiddleware'
 
 const router = express.Router()
@@ -37,7 +38,7 @@ router.post('logout',userLogout)
 
 
 //adminUser MAnagement
-router.get('/admin/users',getAllUsers)
+router.get('/admin/users',authenticateToken,restrictToAdmin,getAllUsers )
 router.post('/admin/users/block/:id',blockUser)
 router.post('/admin/users/unblock/:id',unblockUser)
 router.post('/admin/users/delete/:id',deleteUser)
@@ -49,5 +50,5 @@ router.get('/admin/plans/:id',getPlanById)
 router.put('/admin/plans/edit/:id',updatePlan)
 router.post('/admin/plans/delete/:id',deletePlan)
 
-
+router.get('/user/about',authenticateToken,getAbout)
 export default router

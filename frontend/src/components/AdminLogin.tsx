@@ -21,8 +21,9 @@ const AdminLogin: React.FC = () => {
     // if (!captchaToken) return setError("Please complete the CAPTCHA");
 
     try {
-      await loginAdmin(email, password);
-      dispatch(login())
+      const response = await loginAdmin(email, password);
+      console.log("adminLogin: ",response.accessToken)
+      dispatch(login({accessToken: response.accessToken}))
       navigate("/dashboard");
     } catch (error: unknown) {
       if (error instanceof Error) {

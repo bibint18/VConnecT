@@ -8,10 +8,10 @@ const API_URL = "http://localhost:3000/api/auth";
 export const fetchUsers = async (page: number, limit: number,searchTerm:string,sortOption:string) => {
   const response = await axiosInstance.get(`${API_URL}/admin/users`, {
     params: { page, limit ,searchTerm,sortOption},
+    withCredentials:true
   });
   console.log("from auth",response.data)
-  return response.data;
-  
+  return response.data; 
 };
 
 

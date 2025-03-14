@@ -296,6 +296,7 @@ import { usePlans } from "../../../hooks/useAdminPlans";
 import { useDeletePlan } from "../../../hooks/useDeletePlan";
 import Swal from "sweetalert2";
 import {ChevronDown,BarChart2,ChevronRight,ChevronLeft} from 'lucide-react'
+import { useAppSelector } from "../../../redux/store";
 interface Plan {
   _id: string;
   serialNumber: string;
@@ -311,6 +312,8 @@ interface Plan {
 
 export default function SubscriptionPlans() {
   const navigate = useNavigate();
+  const {isAuthenticated,accessToken} = useAppSelector((state) => state.user)
+  console.log("Admin state redux ",isAuthenticated,accessToken)
   const [searchTerm,setSearchTerm] = useState('')
   const [sortOption,setSortOption] = useState('A-Z')
   const [page,setPage] = useState(1)
