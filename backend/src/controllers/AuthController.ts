@@ -132,3 +132,21 @@ export const getAbout = async (req:Request,res:Response) => {
     console.log(error)
   }
 }
+
+export const googleLogin = async (req:Request,res:Response,next:NextFunction) => {
+  try {
+    console.log("reached google backend")
+    const {idToken} = req.body
+    console.log("idTOkrn",idToken)
+    const {accessToken,refreshToken,user} = await authService.googleLogin(idToken)
+    console.log("access,refres,user",accessToken,refreshToken,user)
+    res.cookie('refreshToken',refreshToken,{
+      httpOnly:true,
+      secure:process.env.NODE_ENV ==='production',
+      sameSite:'strict'
+    })
+    res.status(200).json({message:"Google login successfull",accessToken,user})
+  } catch (error) {
+    next(error)
+  }
+}

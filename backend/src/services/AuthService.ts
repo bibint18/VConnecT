@@ -1,10 +1,14 @@
 import { IUserRepository } from "../interfaces/IUserRepository";
 import nodemailer from 'nodemailer'
 import crypto, { hash } from 'crypto'
-import { IUser } from "../models/User";
+import { IUser, User } from "../models/User";
 import bcrypt from 'bcryptjs'
 import { OtpVerification } from "../models/OtpModel";
 import { generateAccessToken,generateRefreshToken } from "../utils/generateToken";
+import { OAuth2Client } from "google-auth-library";
+import { AppError } from "../utils/AppError";
+
+const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
 export class AuthService {
   private userRepository:IUserRepository;
   constructor(userRepo:IUserRepository){
@@ -129,6 +133,46 @@ async login(email:string,password:string,isAdminLogin:boolean){
   const accessToken = generateAccessToken(user)
   console.log("service avcess token",accessToken)
   const refreshToken = generateRefreshToken(user)
+  return {accessToken,refreshToken,user}
+}
+
+async googleLogin(idToken:string){
+  const ticket = await googleClient.verifyIdToken({
+    idToken,
+    audience:process.env.GOOGLE_CLIENT_ID
+  });
+  console.log("at google service",ticket)
+  const payload = ticket.getPayload()
+  console.log("payloadd",payload)
+  if(!payload) throw new AppError('Invalid GOOGLE TOKEN',401);
+
+  const {email,name,sub:googleId} = payload
+  if (!email) {
+    throw new AppError("Email not provided by Google", 400);
+  }
+  let user = await this.userRepository.findByEmail(email)
+  if(user){
+    if(user?.isBlocked){
+      throw new AppError("User is blocked",403)
+    }
+  }else{
+    user = await this.userRepository.createUser({
+      email,
+      name:name || "Google User",
+      password:'',
+      isVerified:true,
+      googleId,
+      isAdmin:false,
+      isBlocked:false,
+      failedLoginAttempts:0,
+      lockUntil:null
+    })
+  }
+  if (!user) {
+    throw new AppError("User creation failed", 500);
+  }
+  const accessToken = generateAccessToken(user)
+  const refreshToken=generateRefreshToken(user)
   return {accessToken,refreshToken,user}
 }
 

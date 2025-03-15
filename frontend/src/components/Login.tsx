@@ -8,10 +8,12 @@ import {toast} from "react-toastify"
 import './styles.css'
 import { signInWithPopup } from "firebase/auth";
 import { auth, googleProvider } from "../firebase/Setup";
+import GoogleLoginButton from "../pages/GoogleLoginButton";
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const [error,setError] = useState<string | null>(null)
   const {isAuthenticated} = useAppSelector((state) => state.user)
   // const [error, setError] = useState("");
   const navigate = useNavigate();
@@ -54,6 +56,18 @@ const Login: React.FC = () => {
       await signInWithPopup(auth,googleProvider)
     } catch (error) {
       console.error(error)
+    }
+  }
+
+  const handleGoogleLogin = async () => {
+    try {
+      setError(null)
+    } catch (error:unknown) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError('An unknown error occurred');
+      }
     }
   }
   return (
@@ -121,6 +135,10 @@ const Login: React.FC = () => {
            with Google
           </span>
         </p>
+        <div onClick={handleGoogleLogin}>
+        <GoogleLoginButton />
+      </div>
+      {error && <p style={{ color: 'red' }}>{error}</p>}
       </div>
     </div>
   );

@@ -13,13 +13,14 @@ export interface IUser extends Document{
   lockUntil: Date | null;
   plan:string;
   isDeleted:boolean;
-  isBlocked:boolean
+  isBlocked:boolean;
+  googleId?:string;
 }
 
 const userSchema = new Schema <IUser> ({
   name:{type:String,required:true},
   email:{type:String,required:true,unique:true},
-  password:{type:String,required:true},
+  password:{type:String,default:''},
   otp:String,
   otpExpiry:Date,
   isVerified:{type:Boolean,default:false},
@@ -28,7 +29,8 @@ const userSchema = new Schema <IUser> ({
   lockUntil: { type: Date, default: null },
   plan:{type:String,default:"BASIC"},
   isDeleted:{type:Boolean,default:false},
-  isBlocked:{type:Boolean,default:false}
+  isBlocked:{type:Boolean,default:false},
+  googleId:{type:String,sparse:true}
 })
 
 export const User = mongoose.model<IUser>("User",userSchema)

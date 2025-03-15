@@ -4,6 +4,7 @@ import { OtpVerification } from "../models/OtpModel";
 
 export class UserRepository implements IUserRepository{
   async createUser(data: Partial<IUser>): Promise<IUser |null> {
+    console.log("reached create user reposiory")
     return await new User(data).save()
   }
 

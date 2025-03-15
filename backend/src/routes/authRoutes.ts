@@ -8,7 +8,8 @@ import
   LoginAdmin,
   adminLogout,
   userLogout,
-  getAbout
+  getAbout,
+  googleLogin
 } 
 from '../controllers/AuthController'
 import {
@@ -35,7 +36,7 @@ router.post('/refresh',refresh)
 router.post("/adminLogin",LoginAdmin)
 router.post('/adminLogout',adminLogout)
 router.post('logout',userLogout)
-
+router.post('/google-login',googleLogin)
 
 //adminUser MAnagement
 router.get('/admin/users',authenticateToken,restrictToAdmin,getAllUsers )
