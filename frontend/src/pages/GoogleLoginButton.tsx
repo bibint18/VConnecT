@@ -2,12 +2,13 @@ import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
 import { useAppDispatch } from '../redux/store';
 import { loginTheUser } from '../redux/userSlice';
 import axiosInstance from '../utils/axiosInterceptor';
+import { toast } from 'react-toastify';
 
 const GoogleLoginButton = () => {
   const dispatch = useAppDispatch();
-
   const handleSuccess = async (credentialResponse: { credential?: string }) => {
     try {
+      
       const response = await axiosInstance.post('/google-login', {
         idToken: credentialResponse.credential,
       });
@@ -21,7 +22,7 @@ const GoogleLoginButton = () => {
     (error as { response?: { data?: { message?: string } } }).response?.data?.message || 
     'Google login failed';
 
-  throw new Error(errorMessage);
+  toast.error(errorMessage)
     }
   };
 

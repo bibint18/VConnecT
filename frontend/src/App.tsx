@@ -19,6 +19,7 @@ import AdminEditPlan from "./pages/AdminEditPlan";
 // import Header from "./components/User/Header/Header";
 import HomePage from "./components/User/Header/HomePage";
 import LandingPage from './pages/LandingPage'
+import ProfilePage from "./components/User/Profile/Page";
 function App() {
   return (
     <Router>
@@ -27,6 +28,7 @@ function App() {
         {/* <Route path="/header" element={<HomePage/>} /> */}
 
         {/* <Route path="/addplans" element={<AddPlansPage/>} /> */}
+        <Route path="/profile" element={<ProfilePage/>} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/landing" element={<LandingPage/>} />
         <Route path="/verify-otp" element={<VerifyOTP />} />
