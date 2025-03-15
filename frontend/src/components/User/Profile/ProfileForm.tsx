@@ -323,9 +323,10 @@
 
 
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Edit, Check } from 'react-feather';
-
+import { useState } from 'react';
+import { getUserProfile } from '@/services/ProfileService';
 interface VerifiedItemProps {
   value: string;
   timestamp: string;
@@ -347,10 +348,51 @@ const VerifiedItem: React.FC<VerifiedItemProps> = ({ value, timestamp }) => (
     </div>
   </div>
 );
-
+interface User {
+  name:string;
+  email:string;
+  googleId?:string;
+  mobile?:string;
+  username?:string;
+  country?:string;
+  description?:string;
+  gender?:string
+}
 export const ProfileContent = () => {
+  const [user,setUser] = useState<User | null>(null)
+  const [error,setError] = useState<string | null>(null)
+  const [loading,setLoading] = useState(true)
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const userData = await getUserProfile()
+        setUser({
+          name: userData.name || '',
+          email: userData.email || '',
+          googleId:userData.googleId || '',
+          mobile: userData.mobile || '',
+          username: userData.username || '',
+          country: userData.country || '',
+          description: userData.description || '',
+          gender: userData.gender || '',
+        })
+      } catch (error:unknown) {
+        if (error instanceof Error) {
+          setError(error.message);
+      } else {
+          setError("Failed to load profile");
+      }
+      }finally{
+        setLoading(false)
+      }
+    };
+    fetchProfile();
+  },[])
+
+  if (loading) return <div className="text-white">Loading...</div>;
+  if (error) return <div className="text-red-500">{error}</div>;
   return (
-    <div className="min-h-screen bg-black text-white px-6 py-6 pl-24 md:pl-72"> {/* Increased padding */}
+    <div className="min-h-screen bg-black text-white px-6 py-6 pl-24 md:pl-72">
       {/* Check-in Banner */}
       <div className="bg-gradient-to-r from-pink-500/30 to-purple-500/30 rounded-xl p-4 mb-8">
         <div className="flex items-start space-x-4">
@@ -372,13 +414,13 @@ export const ProfileContent = () => {
       <div className="flex justify-between items-start mb-8">
         <div className="flex items-center space-x-4">
           <img
-            src="/placeholder.svg?height=80&width=80"
+            src={user?.googleId ? `https://lh3.googleusercontent.com/a/${user.googleId}` : '/placeholder.svg?height=80&width=80'}
             alt="Profile"
             className="w-20 h-20 rounded-full"
           />
           <div>
-            <h1 className="text-2xl font-semibold">Alexa Rawles</h1>
-            <p className="text-gray-400">alexarawles@gmail.com</p>
+            <h1 className="text-2xl font-semibold">{user?.name || ''}</h1>
+            <p className="text-gray-400">{user?.email || ''}</p>
           </div>
         </div>
         <button className="bg-blue-600 text-white px-6 py-2 rounded-lg flex items-center space-x-2">
@@ -395,24 +437,26 @@ export const ProfileContent = () => {
             <input
               type="text"
               className="w-full bg-gray-900 rounded-lg px-4 py-3 text-white"
-              placeholder="Enter your full name"
+              value={user?.name || ''}
+              readOnly
             />
           </div>
           <div>
             <label className="block text-sm text-gray-400 mb-2">Gender</label>
-            <select className="w-full bg-gray-900 rounded-lg px-4 py-3 text-white appearance-none">
-              <option>Select gender</option>
-              <option>Male</option>
-              <option>Female</option>
-              <option>Other</option>
-            </select>
+            <input
+              type="text"
+              className="w-full bg-gray-900 rounded-lg px-4 py-3 text-white"
+              value={user?.gender || ''}
+              readOnly
+            />
           </div>
           <div>
             <label className="block text-sm text-gray-400 mb-2">Mobile</label>
             <input
               type="tel"
               className="w-full bg-gray-900 rounded-lg px-4 py-3 text-white"
-              placeholder="Enter your mobile number"
+              value={user?.mobile || ''}
+              readOnly
             />
           </div>
         </div>
@@ -423,7 +467,8 @@ export const ProfileContent = () => {
             <input
               type="text"
               className="w-full bg-gray-900 rounded-lg px-4 py-3 text-white"
-              placeholder="Enter your username"
+              value={user?.username || ''}
+              readOnly
             />
           </div>
           <div>
@@ -431,7 +476,8 @@ export const ProfileContent = () => {
             <input
               type="text"
               className="w-full bg-gray-900 rounded-lg px-4 py-3 text-white"
-              placeholder="Enter your country"
+              value={user?.country || ''}
+              readOnly
             />
           </div>
           <div>
@@ -439,7 +485,8 @@ export const ProfileContent = () => {
             <textarea
               className="w-full bg-gray-900 rounded-lg px-4 py-3 text-white resize-none"
               rows={3}
-              placeholder="Enter a description"
+              value={user?.description || ''}
+              readOnly
             />
           </div>
         </div>
@@ -448,8 +495,8 @@ export const ProfileContent = () => {
       {/* Verified Information */}
       <div className="mt-8">
         <h2 className="text-lg font-semibold mb-4">Verified Information</h2>
-        <VerifiedItem value="alexarawles@gmail.com" timestamp="1 month ago" />
-        <VerifiedItem value="+91 6282004567" timestamp="1 month ago" />
+        <VerifiedItem value={user?.email || ''} timestamp="Verified" />
+        {user?.mobile && <VerifiedItem value={user.mobile} timestamp="Verified" />}
       </div>
     </div>
   );

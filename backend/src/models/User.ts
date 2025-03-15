@@ -15,6 +15,11 @@ export interface IUser extends Document{
   isDeleted:boolean;
   isBlocked:boolean;
   googleId?:string;
+  mobile?: string;
+  username?: string;
+  country?: string;
+  description?: string;
+  gender?: string;
 }
 
 const userSchema = new Schema <IUser> ({
@@ -30,7 +35,12 @@ const userSchema = new Schema <IUser> ({
   plan:{type:String,default:"BASIC"},
   isDeleted:{type:Boolean,default:false},
   isBlocked:{type:Boolean,default:false},
-  googleId:{type:String,sparse:true}
+  googleId:{type:String,sparse:true},
+  mobile:{type:String} ,
+  username: {type:String},
+  country: {type:String},
+  description: {type:String},
+  gender:{type:String}
 })
 
 export const User = mongoose.model<IUser>("User",userSchema)

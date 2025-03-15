@@ -24,6 +24,7 @@ import {
    deletePlan
   }
 from '../controllers/AdminPlansController'
+import { getProfile } from '../controllers/ProfileController'
 import { authenticateToken,restrictToAdmin} from '../middlewares/authMiddleware'
 import verifyRecaptcha from '../middlewares/recaptchaMiddleware'
 
@@ -52,4 +53,11 @@ router.put('/admin/plans/edit/:id',updatePlan)
 router.post('/admin/plans/delete/:id',deletePlan)
 
 router.get('/user/about',authenticateToken,getAbout)
+
+
+//user Profile
+router.get('/user/profile',authenticateToken,getProfile)
+
+
+
 export default router
