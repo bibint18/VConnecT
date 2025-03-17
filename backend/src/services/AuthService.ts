@@ -7,6 +7,7 @@ import { OtpVerification } from "../models/OtpModel";
 import { generateAccessToken,generateRefreshToken } from "../utils/generateToken";
 import { OAuth2Client } from "google-auth-library";
 import { AppError } from "../utils/AppError";
+import { StringifyOptions } from "querystring";
 
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
 export class AuthService {
@@ -72,8 +73,6 @@ export class AuthService {
         console.log("OTP Expired");
         throw new Error("OTP has expired. Request a new one.");
     }
-
-    // ✅ Check if name or password is undefined
     if (!name || !password) {
         console.log("Name or password is missing", { name, password });
         throw new Error("Invalid request: Missing name or password.");
@@ -86,11 +85,13 @@ export class AuthService {
     console.log("Password hashed:", hashedPassword);
     const isMatch = await bcrypt.compare(password,hashedPassword)
     console.log("Ismatch after the hashing",isMatch)
+    const username = await this.generateUniqueUsername(name)
     const newUser = await this.userRepository.createUser({
         name,
         email,
         password:hashedPassword,
-        isVerified: true
+        isVerified: true,
+        username:username
     });
 
     console.log("User created successfully:", newUser);
@@ -156,6 +157,7 @@ async googleLogin(idToken:string){
       throw new AppError("User is blocked",403)
     }
   }else{
+    const username = await this.generateUniqueUsername(email)
     user = await this.userRepository.createUser({
       email,
       name:name || "Google User",
@@ -165,7 +167,8 @@ async googleLogin(idToken:string){
       isAdmin:false,
       isBlocked:false,
       failedLoginAttempts:0,
-      lockUntil:null
+      lockUntil:null,
+      username:username
     })
   }
   if (!user) {
@@ -174,6 +177,27 @@ async googleLogin(idToken:string){
   const accessToken = generateAccessToken(user)
   const refreshToken=generateRefreshToken(user)
   return {accessToken,refreshToken,user}
+}
+
+async generateUniqueUsername (base:string): Promise<string> {
+  const prefix = base.slice(0,4).toLowerCase()
+  let username:string
+  let isUnique = false
+  let attempts =0
+  const maxAttempts = 10
+  while(!isUnique && attempts<maxAttempts){
+    const randomNum = Math.floor(1000 + Math.random() * 9000)
+    username = `${prefix}${randomNum}`;
+    const existingUsername = await this.userRepository.findByUsername(username)
+    if(!existingUsername){
+      isUnique=true
+    }
+    attempts++;
+  }
+  if(!isUnique){
+    throw new AppError("cant generate unique username",500)
+  }
+  return username!
 }
 
 }

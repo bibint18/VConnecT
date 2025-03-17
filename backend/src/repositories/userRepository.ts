@@ -31,4 +31,14 @@ export class UserRepository implements IUserRepository{
     console.log("reached updateUser repository",email,updateData)
     return await User.findOneAndUpdate({email},updateData,{new:true})
   }
+
+  async findByUsername(username:string):Promise<IUser | null> {
+    try {
+      const userName = await User.findOne({username}).exec()
+      return userName
+    } catch (error) {
+      console.log('error finding user by username',error)
+      throw Error
+    }
+  }
 }
