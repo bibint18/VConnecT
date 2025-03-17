@@ -92,16 +92,17 @@ interface NavItem {
   name: string;
   icon: React.ElementType;
   isActive?: boolean;
+  path:string
 }
 
 const navItems: NavItem[] = [
-  { name: 'Profile', icon: Home, isActive: true },
-  { name: 'Stats', icon: BarChart2 },
-  { name: 'Posts', icon: FileText },
-  { name: 'Rooms', icon: MessageSquare },
-  { name: 'Friends', icon: Users },
-  { name: 'Premium', icon: Star },
-  { name: 'Setting', icon: Settings },
+  { name: 'Profile', icon: Home, isActive: true,path:'/profile' },
+  { name: 'Stats', icon: BarChart2,path:'/stats' },
+  { name: 'Posts', icon: FileText,path:'/posts' },
+  { name: 'Rooms', icon: MessageSquare,path:'/rooms' },
+  { name: 'Friends', icon: Users ,path:'/friends'},
+  { name: 'Premium', icon: Star ,path:'/premium'},
+  { name: 'Setting', icon: Settings ,path:"/settings"},
 ];
 
 export const Sidebar = () => {
@@ -112,7 +113,7 @@ export const Sidebar = () => {
           {navItems.map((item) => (
             <a
               key={item.name}
-              href="#"
+              href={item.path}
               className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors
                 ${item.isActive 
                   ? 'bg-blue-600 text-white' 

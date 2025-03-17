@@ -20,6 +20,9 @@ import AdminEditPlan from "./pages/AdminEditPlan";
 import HomePage from "./components/User/Header/HomePage";
 import LandingPage from './pages/LandingPage'
 import ProfilePage from "./components/User/Profile/Page";
+// import ListRoom from "./components/User/Room/ListRoom";
+import RoomPage from "./components/User/Room/RoomPage";
+import AddRoom from "./components/User/Room/AddRoom";
 function App() {
   return (
     <Router>
@@ -28,14 +31,16 @@ function App() {
         {/* <Route path="/header" element={<HomePage/>} /> */}
 
         {/* <Route path="/addplans" element={<AddPlansPage/>} /> */}
+
         <Route path="/profile" element={<ProfilePage/>} />
+        <Route path="/addRoom" element={<AddRoom/>} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/landing" element={<LandingPage/>} />
         <Route path="/verify-otp" element={<VerifyOTP />} />
         <Route path="/login" element={<Login />} />
         <Route path="/adminLogin" element={<AdminLogin />} />
         <Route path="/" element={<HomePage />} />
-        
+        <Route path="/rooms" element={<RoomPage/>} />
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<AdminDashboard />} />
           <Route path="/plans" element={<AdminPlans />} />
