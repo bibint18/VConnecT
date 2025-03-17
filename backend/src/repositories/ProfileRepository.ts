@@ -11,4 +11,13 @@ export class ProfileRepository implements IProfileRepository{
       throw error
     }
   }
+  async updateProfile(id: string, data: Partial<IUser>): Promise<IUser | null> {
+    try {
+      const updatedUser = await User.findByIdAndUpdate(id,data,{new:true}).exec()
+      return updatedUser
+    } catch (error) {
+      console.error("error updating user",error)
+      throw error
+    }
+  }
 }

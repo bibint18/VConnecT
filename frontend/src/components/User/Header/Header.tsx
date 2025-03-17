@@ -22,10 +22,10 @@ const Header: React.FC = () => {
         <img className='w-36' src={logo} alt="" />
       </div>
       <nav className="hidden md:flex space-x-6">
-        <a href="/home" className="hover:text-purple-500">Home</a>
+        <a href="/" className="hover:text-purple-500">Home</a>
         <a href="#" className="hover:text-purple-500" onClick={fetchAbout}>About</a>
         <a href="#" className="hover:text-purple-500">Community</a>
-        <a href="#" className="hover:text-purple-500">Daily Trivia</a>
+        <a href="/profile" className="hover:text-purple-500">Daily Trivia</a>
         <a href="#" className="hover:text-purple-500">Contact us</a>
       </nav>
 

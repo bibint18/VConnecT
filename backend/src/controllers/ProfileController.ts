@@ -15,3 +15,14 @@ export const getProfile = async(req:Request,res:Response,next:NextFunction) => {
     next(error)
   }
 }
+
+export const updateProfile = async(req:Request,res:Response,next:NextFunction) => {
+try {
+  const id = (req as any ).user?.id
+  const profileData = req.body
+  const updatedUser = await profileService.updateUserProfile(id,profileData)
+  res.status(200).json({user:updatedUser,message:"Profile updated"})
+} catch (error) {
+  
+}
+}

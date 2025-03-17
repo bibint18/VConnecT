@@ -28,9 +28,12 @@ const userSlice = createSlice({
       state.email=null;
       state.isAuthenticated=false
       state.accessToken=null
+    },
+    updateProfile:(state,action: PayloadAction<{name:string}>) => {
+      state.name=action.payload.name ?? state.name
     }
   }
 })
 
-export const {loginTheUser,logoutTheUser} = userSlice.actions
+export const {loginTheUser,logoutTheUser,updateProfile} = userSlice.actions
 export default userSlice.reducer

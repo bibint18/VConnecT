@@ -14,4 +14,10 @@ export class ProfileService {
     if(!user) throw new AppError("user not found",403)
       return user
   }
+
+  async updateUserProfile(userId:string,data:Partial<IUser>):Promise<IUser>{
+    const updatedUser= await this.profileRepository.updateProfile(userId,data)
+    if(!updatedUser) throw new AppError("Failed to update User",500)
+      return updatedUser
+  }
 }
