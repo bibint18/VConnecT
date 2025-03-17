@@ -24,7 +24,7 @@ import {
    deletePlan
   }
 from '../controllers/AdminPlansController'
-import { getProfile,updateProfile } from '../controllers/ProfileController'
+import { getProfile,updateProfile,getCloudinarySignature,updateProfileImage } from '../controllers/ProfileController'
 import { authenticateToken,restrictToAdmin} from '../middlewares/authMiddleware'
 import verifyRecaptcha from '../middlewares/recaptchaMiddleware'
 
@@ -58,5 +58,6 @@ router.get('/user/about',authenticateToken,getAbout)
 //user Profile
 router.get('/user/profile',authenticateToken,getProfile)
 router.put('/user/profile/edit',authenticateToken,updateProfile)
-
+router.get('/user/profile/signature',authenticateToken,getCloudinarySignature)
+router.post('/user/profile/image',authenticateToken,updateProfileImage)
 export default router

@@ -13,7 +13,9 @@ export class ProfileRepository implements IProfileRepository{
   }
   async updateProfile(id: string, data: Partial<IUser>): Promise<IUser | null> {
     try {
+      console.log("reached profile update repository",id,data)   
       const updatedUser = await User.findByIdAndUpdate(id,data,{new:true}).exec()
+      console.log("updated user from repo ",updatedUser)
       return updatedUser
     } catch (error) {
       console.error("error updating user",error)

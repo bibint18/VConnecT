@@ -5,6 +5,7 @@ export interface IUser extends Document{
   name:string,
   email:string,
   password:string,
+  profileImage?:string,
   otp?:string,
   otpExpiry?:Date,
   isVerified:boolean
@@ -26,6 +27,7 @@ const userSchema = new Schema <IUser> ({
   name:{type:String,required:true},
   email:{type:String,required:true,unique:true},
   password:{type:String,default:''},
+  profileImage:{type:String},
   otp:String,
   otpExpiry:Date,
   isVerified:{type:Boolean,default:false},
@@ -37,7 +39,7 @@ const userSchema = new Schema <IUser> ({
   isBlocked:{type:Boolean,default:false},
   googleId:{type:String,sparse:true},
   mobile:{type:String} ,
-  username: {type:String},
+  username: {type:String,unique:true},
   country: {type:String},
   description: {type:String},
   gender:{type:String}

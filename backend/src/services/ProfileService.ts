@@ -20,4 +20,11 @@ export class ProfileService {
     if(!updatedUser) throw new AppError("Failed to update User",500)
       return updatedUser
   }
+
+  async updateProfileImage(userId:string,imageurl:string):Promise<IUser | null>{
+      console.log("reached profile image service",userId,imageurl)
+      const updatedUser = await this.profileRepository.updateProfile(userId,{profileImage:imageurl})
+      if(!updatedUser) throw new AppError("failed to update profile image",500)
+        return updatedUser
+  }
 }

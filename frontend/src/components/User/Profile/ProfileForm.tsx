@@ -5,10 +5,34 @@ import { useState } from 'react';
 import { getUserProfile,updateUserProfile } from '@/services/ProfileService';
 import { useAppDispatch } from '@/redux/store';
 import { updateProfile } from '@/redux/userSlice';
+import axiosInstance from '@/utils/axiosInterceptor';
 interface VerifiedItemProps {
   value: string;
   timestamp: string;
   icon?: React.ReactNode;
+}
+declare global {
+  interface Window {
+    cloudinary: {
+      createUploadWidget: (
+        options: {
+          cloudName: string;
+          apiKey: string;
+          uploadSignature: string;
+          uploadSignatureTimestamp: number;
+          cropping: boolean;
+          croppingAspectRatio: number;
+          croppingShowDimensions: boolean;
+          multiple: boolean;
+          maxFileSize: number;
+          resourceType: string;
+          folder: string;
+          sources: string[];
+        },
+        callback: (error: Error | null, result: CloudinaryUploadResult) => void
+      ) => { open: () => void; close: () => void };
+    };
+  }
 }
 
 const VerifiedItem: React.FC<VerifiedItemProps> = ({ value, timestamp }) => (
@@ -29,6 +53,7 @@ const VerifiedItem: React.FC<VerifiedItemProps> = ({ value, timestamp }) => (
 interface User {
   name:string;
   email:string;
+  profileImage?: string;
   googleId?:string;
   mobile?:string;
   username?:string;
@@ -52,6 +77,7 @@ export const ProfileContent = () => {
           name: userData.name || '',
           email: userData.email || '',
           googleId:userData.googleId || '',
+          profileImage: userData.profileImage || '',
           mobile: userData.mobile || '',
           username: userData.username || '',
           country: userData.country || '',
@@ -103,10 +129,283 @@ export const ProfileContent = () => {
     }
   }
 
+//   const handleImageUpload = async () => {
+//     try {
+//       const { data } = await axiosInstance.get('/user/profile/signature');
+//       const { signature, timestamp } = data;
+//       console.log('from handleImageUpload',signature,timestamp)
+//       if (!window.cloudinary) {
+//         console.log('Cloudinary widget not loaded. Please try again later.');
+//         return;
+//       }
+//       if(window.cloudinary){
+//         console.log("cloudinary present")
+//       }
+//       console.log('Cloud Name:', process.env.VITE_CLOUDINARY_CLOUD_NAME);
+//       console.log('API Key:', process.env.VITE_CLOUDINARY_API_KEY);
+//       const cloudinaryWidget = window.cloudinary.createUploadWidget(
+//         {
+//           cloudName: process.env.VITE_CLOUDINARY_CLOUD_NAME as string,
+//           apiKey: process.env.VITE_CLOUDINARY_API_KEY as string,
+//           uploadSignature: signature,
+//           uploadSignatureTimestamp: timestamp,
+//           cropping: true, // Enable cropping
+//           croppingAspectRatio: 1, // Fixed 1:1 ratio
+//           croppingShowDimensions: true,
+//           multiple: false, // Single file only
+//           maxFileSize: 5 * 1024 * 1024, // 5MB limit
+//           resourceType: 'image', // Only images
+//           folder: 'profile_images', // Organize in Cloudinary
+//           sources: ['local'], // Only local uploads
+//         },
+//         (error: Error | null, result: CloudinaryUploadResult) => {
+//           if (!error && result && result.event === 'success') {
+//             const imageUrl = result.info.secure_url;
+//             axiosInstance
+//               .post('/user/profile/image', { imageUrl })
+//               .then((response) => {
+//                 setUser(response.data.user);
+//                 setFormData(response.data.user);
+//               })
+//               .catch((err) => setError(err.message || 'Failed to update image'));
+//           } else if (error) {
+//             console.error(error)
+//             setError(error.message || 'Image upload failed');
+//           }
+//         }
+//       );
+//       console.log("cloudnary widget",cloudinaryWidget)
+//       console.log('Cloud Name:', process.env.VITE_CLOUDINARY_CLOUD_NAME);
+// console.log('API Key:', process.env.VITE_CLOUDINARY_API_KEY);
+//       cloudinaryWidget.open();
+//     } catch (error: unknown) {
+//       if (error instanceof Error) {
+//         setError(error.message);
+//       } else {
+//         setError('Failed to initiate upload');
+//       }
+//     }
+//   };
+
+const handleImageUpload = async () => {
+  console.log('handleImageUpload triggered');
+  try {
+    console.log('window.cloudinary:', window.cloudinary);
+    if (!window.cloudinary) {
+      setError('Cloudinary widget not loaded. Please try again later.');
+      console.log('Error: Cloudinary not loaded');
+      return;
+    }
+
+    console.log('Cloud Name:', import.meta.env.VITE_CLOUDINARY_CLOUD_NAME);
+    console.log('API Key:', import.meta.env.VITE_CLOUDINARY_API_KEY);
+    const { data } = await axiosInstance.get('/user/profile/signature');
+    console.log('Signature Data:', data);
+    const { signature, timestamp } = data;
+
+    const cloudinaryWidget = window.cloudinary.createUploadWidget(
+      {
+        cloudName: import.meta.env.VITE_CLOUDINARY_CLOUD_NAME as string,
+        apiKey: import.meta.env.VITE_CLOUDINARY_API_KEY as string,
+        uploadSignature: signature,
+        uploadSignatureTimestamp: timestamp,
+        cropping: true,
+        croppingAspectRatio: 1,
+        croppingShowDimensions: true,
+        multiple: false,
+        maxFileSize: 5 * 1024 * 1024,
+        resourceType: 'image',
+        folder: 'profile_images',
+        sources: ['local'],
+      },
+      (error: Error | null, result) => {
+        console.log('Widget callback:', { error, result });
+        if (!error && result && result.event === 'success') {
+          const imageUrl = result.info.secure_url;
+          console.log('Upload success:', imageUrl);
+          axiosInstance
+            .post('/user/profile/image',{imageUrl})
+            .then((response) => {
+              console.log("post reference ",response)
+              setUser(response.data.user);
+              setFormData(response.data.user);
+            })
+            .catch((err) => {
+              setError(err.message || 'Failed to update image');
+              console.log('Post error:', err);
+            });
+        } else if (error) {
+          setError(error.message || 'Image upload failed');
+          console.log('Upload error:', error);
+        }
+      }
+    );
+
+    console.log('Widget created:', cloudinaryWidget);
+    cloudinaryWidget.open();
+    console.log('Widget opened');
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      setError(error.message);
+      console.log('Caught error:', error.message);
+    } else {
+      setError('Failed to initiate upload');
+      console.log('Unknown error:', error);
+    }
+  }
+};
+
   if (loading) return <div className="text-white">Loading...</div>;
   if (error) return <div className="text-red-500">{error}</div>;
   return (
-    <div className="min-h-screen bg-black text-white px-6 py-6 pl-24 md:pl-72">
+  //   <div className="min-h-screen bg-black text-white px-6 py-6 pl-24 md:pl-72">
+  //     {/* Check-in Banner */}
+  //     <div className="bg-gradient-to-r from-pink-500/30 to-purple-500/30 rounded-xl p-4 mb-8">
+  //       <div className="flex items-start space-x-4">
+  //         <div className="bg-gradient-to-r from-pink-400 to-purple-400 text-white px-4 py-2 rounded-lg">
+  //           Check in
+  //         </div>
+  //         <div>
+  //           <p className="text-gray-300 text-sm">
+  //             ⭐ Check in daily to maintain your streak and stay on the leaderboard!
+  //           </p>
+  //           <p className="text-gray-400 text-xs">
+  //             Keep your progress going and secure your top spot.
+  //           </p>
+  //         </div>
+  //       </div>
+  //     </div>
+
+  //     {/* Profile Header */}
+  //     <div className="flex justify-between items-start mb-8">
+  //       <div className="flex items-center space-x-4">
+  //         <img
+  //           src={user?.googleId ? `https://lh3.googleusercontent.com/a/${user.googleId}` : '/placeholder.svg?height=80&width=80'}
+  //           alt="Profile"
+  //           className="w-20 h-20 rounded-full"
+  //         />
+  //         <div>
+  //           <h1 className="text-2xl font-semibold">{user?.name || ''}</h1>
+  //           <p className="text-gray-400">{user?.email || ''}</p>
+  //         </div>
+  //       </div>
+  //       <button onClick={handleEditToggle} className="bg-blue-600 text-white px-6 py-2 rounded-lg flex items-center space-x-2">
+  //         <Edit className="w-4 h-4" />
+  //         <span>Edit</span>
+  //       </button>
+  //     </div>
+
+  //     {/* Form Grid */}
+  //     <form onSubmit={handleSubmit}>
+  //       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+  //         <div className="space-y-4">
+  //           <div>
+  //             <label className="block text-sm text-gray-400 mb-2">Full Name</label>
+  //             <input
+  //               type="text"
+  //               name="name"
+  //               className="w-full bg-gray-900 rounded-lg px-4 py-3 text-white"
+  //               value={formData?.name || ''}
+  //               onChange={handleChange}
+  //               readOnly={!isEditing}
+  //             />
+  //           </div>
+  //           <div>
+  //             <label className="block text-sm text-gray-400 mb-2">Gender</label>
+  //             {isEditing ? (
+  //               <select
+  //                 name="gender"
+  //                 className="w-full bg-gray-900 rounded-lg px-4 py-3 text-white appearance-none"
+  //                 value={formData?.gender || ''}
+  //                 onChange={handleChange}
+  //               >
+  //                 <option value="">Select gender</option>
+  //                 <option value="Male">Male</option>
+  //                 <option value="Female">Female</option>
+  //                 <option value="Other">Other</option>
+  //               </select>
+  //             ) : (
+  //               <input
+  //                 type="text"
+  //                 name="gender"
+  //                 className="w-full bg-gray-900 rounded-lg px-4 py-3 text-white"
+  //                 value={formData?.gender || ''}
+  //                 readOnly
+  //               />
+  //             )}
+  //           </div>
+  //           <div>
+  //             <label className="block text-sm text-gray-400 mb-2">Mobile</label>
+  //             <input
+  //               type="tel"
+  //               name="mobile"
+  //               className="w-full bg-gray-900 rounded-lg px-4 py-3 text-white"
+  //               value={formData?.mobile || ''}
+  //               onChange={handleChange}
+  //               readOnly={!isEditing}
+  //             />
+  //           </div>
+  //         </div>
+
+  //         <div className="space-y-4">
+  //           <div>
+  //             <label className="block text-sm text-gray-400 mb-2">User Name</label>
+  //             <input
+  //               type="text"
+  //               name="username"
+  //               className="w-full bg-gray-900 rounded-lg px-4 py-3 text-white"
+  //               value={formData?.username || ''}
+  //               disabled // Always disabled
+  //             />
+  //           </div>
+  //           <div>
+  //             <label className="block text-sm text-gray-400 mb-2">Country</label>
+  //             <input
+  //               type="text"
+  //               name="country"
+  //               className="w-full bg-gray-900 rounded-lg px-4 py-3 text-white"
+  //               value={formData?.country || ''}
+  //               onChange={handleChange}
+  //               readOnly={!isEditing}
+  //             />
+  //           </div>
+  //           <div>
+  //             <label className="block text-sm text-gray-400 mb-2">Description</label>
+  //             <textarea
+  //               name="description"
+  //               className="w-full bg-gray-900 rounded-lg px-4 py-3 text-white resize-none"
+  //               rows={3}
+  //               value={formData?.description || ''}
+  //               onChange={handleChange}
+  //               readOnly={!isEditing}
+  //             />
+  //           </div>
+  //         </div>
+  //       </div>
+
+  //       {isEditing && (
+  //         <div className="mt-6">
+  //           <button
+  //             type="submit"
+  //             className="bg-green-600 text-white px-6 py-2 rounded-lg"
+  //           >
+  //             Submit
+  //           </button>
+  //         </div>
+  //       )}
+  //     </form>
+
+  //     {/* Verified Information */}
+  //     <div className="mt-8">
+  //       <h2 className="text-lg font-semibold mb-4">Verified Information</h2>
+  //       <VerifiedItem value={user?.email || ''} timestamp="Verified" />
+  //       {user?.mobile && <VerifiedItem value={user.mobile} timestamp="Verified" />}
+  //     </div>
+
+  //     {error && <p className="text-red-500 mt-4">{error}</p>}
+  //   </div>
+  // );
+  <div className="min-h-screen bg-black text-white px-6 py-6 pl-24 md:pl-72">
       {/* Check-in Banner */}
       <div className="bg-gradient-to-r from-pink-500/30 to-purple-500/30 rounded-xl p-4 mb-8">
         <div className="flex items-start space-x-4">
@@ -127,19 +426,33 @@ export const ProfileContent = () => {
       {/* Profile Header */}
       <div className="flex justify-between items-start mb-8">
         <div className="flex items-center space-x-4">
-          <img
-            src={user?.googleId ? `https://lh3.googleusercontent.com/a/${user.googleId}` : '/placeholder.svg?height=80&width=80'}
-            alt="Profile"
-            className="w-20 h-20 rounded-full"
-          />
+          <div className="relative">
+            <img
+              src={
+                user?.profileImage ||
+                (user?.googleId ? `https://lh3.googleusercontent.com/a/${user.googleId}` : '/placeholder.svg?height=80&width=80')
+              }
+              alt="Profile"
+              className="w-20 h-20 rounded-full object-cover"
+            />
+            <button
+              onClick={handleImageUpload}
+              className="absolute bottom-0 right-0 bg-blue-600 text-white w-6 h-6 rounded-full flex items-center justify-center"
+            >
+              +
+            </button>
+          </div>
           <div>
             <h1 className="text-2xl font-semibold">{user?.name || ''}</h1>
             <p className="text-gray-400">{user?.email || ''}</p>
           </div>
         </div>
-        <button onClick={handleEditToggle} className="bg-blue-600 text-white px-6 py-2 rounded-lg flex items-center space-x-2">
+        <button
+          onClick={handleEditToggle}
+          className="bg-blue-600 text-white px-6 py-2 rounded-lg flex items-center space-x-2"
+        >
           <Edit className="w-4 h-4" />
-          <span>Edit</span>
+          <span>{isEditing ? 'Cancel' : 'Edit'}</span>
         </button>
       </div>
 
@@ -203,8 +516,7 @@ export const ProfileContent = () => {
                 name="username"
                 className="w-full bg-gray-900 rounded-lg px-4 py-3 text-white"
                 value={formData?.username || ''}
-                onChange={handleChange}
-                readOnly={!isEditing}
+                disabled
               />
             </div>
             <div>
@@ -253,5 +565,5 @@ export const ProfileContent = () => {
 
       {error && <p className="text-red-500 mt-4">{error}</p>}
     </div>
-  );
+  )
 };
