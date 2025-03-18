@@ -1,5 +1,5 @@
 import axiosInstance from "@/utils/axiosInterceptor";
-import { Axios, AxiosError } from "axios";
+import { AxiosError } from "axios";
 import { FormData } from "@/components/User/Room/AddRoom";
 // interface RoomData{
 //   title:string;
@@ -20,4 +20,9 @@ export const createRoom = async (RoomData:FormData) => {
       throw Error("Failed to create Room")
     }
   }
+}
+
+export const getAllRooms = async () => {
+  const response = await axiosInstance.get('/user/rooms')
+  return response.data
 }

@@ -9,6 +9,8 @@ export interface IRoom{
   type: 'PUBLIC' | 'PRIVATE';
   description: string;
   createdAt?: Date; // Optiona
+  createdBy:string;
+  secretCode?:string;
 }
 
 const RoomSchema:Schema = new Schema({
@@ -18,6 +20,8 @@ const RoomSchema:Schema = new Schema({
   type: { type: String, enum: ['PUBLIC', 'PRIVATE'], required: true },
   description: { type: String, required: true },
   createdAt: { type: Date, default: Date.now },
+  createdBy:{type:String},
+  secretCode:{type:String},
 })
 
 export const Room = mongoose.model<IRoom>('Room',RoomSchema)

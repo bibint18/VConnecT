@@ -104,7 +104,7 @@
 
 .featured-room-card .user-count {
   font-size: 0.75rem;
-  color: var(--gray);
+  color: black;
   margin-right: 0.5rem;
 }
 
@@ -359,7 +359,7 @@
 
 .room-card .user-count {
   font-size: 0.75rem;
-  color: var(--gray);
+  color: black;
   margin-right: 0.25rem; /* Reduced margin */
 }
 

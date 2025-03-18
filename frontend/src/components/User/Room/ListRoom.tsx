@@ -1,112 +1,45 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FiEdit2, FiTrash2 } from 'react-icons/fi';
-import { motion } from 'framer-motion'; // For animations
+import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import { getAllRooms } from '@/services/roomService';
 import './ListRoom.css';
 
-interface User {
-  id: string;
-  avatar: string;
-}
-
+// Interface matching backend IRoom
 interface Room {
   id: string;
-  name: string;
+  title: string;
   description: string;
-  userCount: number;
-  users: User[];
-  featured?: boolean;
+  limit: number;
+  premium: boolean;
+  type: 'PUBLIC' | 'PRIVATE';
+  createdAt: string;
 }
 
 const ListRoom: React.FC = () => {
   const [secretCode, setSecretCode] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
+  // const [currentPage, setCurrentPage] = useState(1);
   const [filter, setFilter] = useState('');
-  const navigate = useNavigate()
-  // Mock data for rooms
-  const rooms: Room[] = [
-    {
-      id: '1',
-      name: 'CodeCrafters Hub',
-      description:
-        'A space for developers to discuss programming languages, best practices, and code optimization techniques. Share your projects, get feedback, and collaborate on open-source contributions.',
-      userCount: 1020,
-      users: [
-        { id: '1', avatar: 'https://randomuser.me/api/portraits/men/32.jpg' },
-        { id: '2', avatar: 'https://randomuser.me/api/portraits/women/44.jpg' },
-        { id: '3', avatar: 'https://randomuser.me/api/portraits/men/46.jpg' },
-        { id: '4', avatar: 'https://randomuser.me/api/portraits/women/65.jpg' },
-      ],
-    },
-    {
-      id: '2',
-      name: 'CodeCrafters Hub',
-      description:
-        'A space for developers to discuss programming languages, best practices, and code optimization techniques. Share your projects, get feedback, and collaborate on open-source contributions.',
-      userCount: 1020,
-      users: [
-        { id: '1', avatar: 'https://randomuser.me/api/portraits/men/32.jpg' },
-        { id: '2', avatar: 'https://randomuser.me/api/portraits/women/44.jpg' },
-        { id: '3', avatar: 'https://randomuser.me/api/portraits/men/46.jpg' },
-        { id: '4', avatar: 'https://randomuser.me/api/portraits/women/65.jpg' },
-      ],
-      featured: true,
-    },
-    {
-      id: '3',
-      name: 'CodeCrafters Hub',
-      description:
-        'A space for developers to discuss programming languages, best practices, and code optimization techniques. Share your projects, get feedback, and collaborate on open-source contributions.',
-      userCount: 1020,
-      users: [
-        { id: '1', avatar: 'https://randomuser.me/api/portraits/men/32.jpg' },
-        { id: '2', avatar: 'https://randomuser.me/api/portraits/women/44.jpg' },
-        { id: '3', avatar: 'https://randomuser.me/api/portraits/men/46.jpg' },
-        { id: '4', avatar: 'https://randomuser.me/api/portraits/women/65.jpg' },
-      ],
-    },
-    {
-      id: '4',
-      name: 'CodeCrafters Hub',
-      description:
-        'A space for developers to discuss programming languages, best practices, and code optimization techniques. Share your projects, get feedback, and collaborate on open-source contributions.',
-      userCount: 1020,
-      users: [
-        { id: '1', avatar: 'https://randomuser.me/api/portraits/men/32.jpg' },
-        { id: '2', avatar: 'https://randomuser.me/api/portraits/women/44.jpg' },
-        { id: '3', avatar: 'https://randomuser.me/api/portraits/men/46.jpg' },
-        { id: '4', avatar: 'https://randomuser.me/api/portraits/women/65.jpg' },
-      ],
-      featured: true,
-    },
-    {
-      id: '5',
-      name: 'CodeCrafters Hub',
-      description:
-        'A space for developers to discuss programming languages, best practices, and code optimization techniques. Share your projects, get feedback, and collaborate on open-source contributions.',
-      userCount: 1020,
-      users: [
-        { id: '1', avatar: 'https://randomuser.me/api/portraits/men/32.jpg' },
-        { id: '2', avatar: 'https://randomuser.me/api/portraits/women/44.jpg' },
-        { id: '3', avatar: 'https://randomuser.me/api/portraits/men/46.jpg' },
-        { id: '4', avatar: 'https://randomuser.me/api/portraits/women/65.jpg' },
-      ],
-      featured: true,
-    },
-    {
-      id: '6',
-      name: 'CodeCrafters Hub',
-      description:
-        'A space for developers to discuss programming languages, best practices, and code optimization techniques. Share your projects, get feedback, and collaborate on open-source contributions.',
-      userCount: 1020,
-      users: [
-        { id: '1', avatar: 'https://randomuser.me/api/portraits/men/32.jpg' },
-        { id: '2', avatar: 'https://randomuser.me/api/portraits/women/44.jpg' },
-        { id: '3', avatar: 'https://randomuser.me/api/portraits/men/46.jpg' },
-        { id: '4', avatar: 'https://randomuser.me/api/portraits/women/65.jpg' },
-      ],
-    },
-  ];
+  const navigate = useNavigate();
+  const [rooms, setRooms] = useState<Room[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Fetch rooms from backend on mount
+  useEffect(() => {
+    const fetchRooms = async () => {
+      try {
+        const data = await getAllRooms();
+        // No need to map; Room interface matches backend response
+        setRooms(data.rooms);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to load rooms');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchRooms();
+  }, []);
 
   const handleJoinRoom = (roomId: string) => {
     console.log(`Joining room ${roomId}`);
@@ -114,9 +47,8 @@ const ListRoom: React.FC = () => {
   };
 
   const handleCreateRoom = () => {
-    navigate('/addRoom')
+    navigate('/addRoom');
     console.log('Creating a new room');
-    // Implement your create room logic here
   };
 
   const handleJoinWithCode = () => {
@@ -125,9 +57,9 @@ const ListRoom: React.FC = () => {
     setSecretCode('');
   };
 
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
+  // const handlePageChange = (page: number) => {
+  //   setCurrentPage(page);
+  // };
 
   // Animation Variants
   const cardVariants = {
@@ -150,6 +82,10 @@ const ListRoom: React.FC = () => {
     visible: { opacity: 1, x: 0, transition: { duration: 0.5 } },
   };
 
+  // Loading and error states
+  if (loading) return <div className="text-center mt-10">Loading rooms...</div>;
+  if (error) return <div className="text-red-500 text-center mt-10">{error}</div>;
+
   return (
     <div className="list-room-container">
       <div className="list-room-inner">
@@ -160,7 +96,7 @@ const ListRoom: React.FC = () => {
           initial="hidden"
           animate="visible"
         >
-          {/* Featured Room Card */}
+          {/* Featured Room Card (unchanged) */}
           <motion.div
             className="featured-room-card"
             variants={cardVariants}
@@ -307,7 +243,7 @@ const ListRoom: React.FC = () => {
                 whileHover="hover"
                 custom={index}
               >
-                {room.featured && (
+                {room.premium && (
                   <div className="featured-star">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -336,7 +272,7 @@ const ListRoom: React.FC = () => {
                   </svg>
                   Description:
                 </div>
-                <h3 className="room-title">{room.name}</h3>
+                <h3 className="room-title">{room.title}</h3>
                 <p className="description">{room.description}</p>
                 <div className="action-section">
                   <motion.button
@@ -349,16 +285,10 @@ const ListRoom: React.FC = () => {
                     Join
                   </motion.button>
                   <div className="flex items-center">
-                    <span className="user-count">{room.userCount}</span>
+                    <span className="user-count ">{room.limit}</span>
+                    {/* No users field from backend */}
                     <div className="avatars">
-                      {room.users.map((user, index) => (
-                        <img
-                          key={index}
-                          className="w-6 h-6 rounded-full border border-gray-800"
-                          src={user.avatar || '/placeholder.svg'}
-                          alt="User avatar"
-                        />
-                      ))}
+                      {/* Placeholder for future users */}
                     </div>
                   </div>
                 </div>
@@ -368,7 +298,7 @@ const ListRoom: React.FC = () => {
         </motion.div>
 
         {/* Pagination */}
-        <motion.div
+        {/* <motion.div
           className="pagination"
           variants={sectionVariants}
           initial="hidden"
@@ -410,16 +340,13 @@ const ListRoom: React.FC = () => {
               {'>'}
             </motion.button>
           </nav>
-        </motion.div>
+        </motion.div> */}
       </div>
     </div>
   );
 };
 
 export default ListRoom;
-
-
-
 
 
 // import React, { useState } from 'react';

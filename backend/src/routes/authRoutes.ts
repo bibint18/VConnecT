@@ -66,7 +66,7 @@ router.post('/user/profile/image',authenticateToken,updateProfileImage)
 //ROOMs
 
 router.post('/user/room/create',RoomController.createRoom.bind(RoomController))
-
+router.get('/user/rooms',authenticateToken,RoomController.getAllRooms.bind(RoomController))
 
 
 export default router

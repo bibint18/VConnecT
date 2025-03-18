@@ -7,4 +7,10 @@ export class RoomRepository implements IRoomRepository{
     const savedRoom=await room.save()
     return savedRoom
   }
+
+  async getAllRooms(): Promise<IRoom[] | null> {
+    const rooms = await Room.find().exec()
+    console.log("rooms from service ",rooms)
+    return rooms
+  }
 }
