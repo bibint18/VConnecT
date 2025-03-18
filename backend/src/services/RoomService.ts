@@ -19,4 +19,9 @@ export class RoomService {
     const rooms = await this.roomRepository.getAllRooms()
     return rooms
   }
+
+  async joinRoom(RoomId:string,userId:string,secretCode:string):Promise<IRoom | null>{
+    const room = await this.roomRepository.joinRoom(RoomId,userId,secretCode)
+    return room
+  }
 }

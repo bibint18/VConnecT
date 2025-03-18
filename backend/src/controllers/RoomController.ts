@@ -19,6 +19,7 @@ export class RoomController {
         type: req.body.type,
         description: req.body.description,
         createdBy:userId,
+        participants:[userId]
       }
       const newRoom =await this.roomService.createRoom(roomData)
       res.status(200).json({room:newRoom})
@@ -31,6 +32,20 @@ export class RoomController {
     try {
       const rooms = await this.roomService.getAllRooms()
       res.status(200).json({rooms})
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  async joinRoom(req:Request,res:Response,next:NextFunction){
+    try {
+      const userId=(req as any).user.id
+      const {roomId,secretCode} = req.body
+      if(!roomId){
+        throw new Error("Room id is required")
+      }
+      const updatedRoom = await this.roomService.joinRoom(roomId,userId,secretCode)
+      res.status(200).json({room:updatedRoom,message:"Joined room successfully!"})
     } catch (error) {
       next(error)
     }

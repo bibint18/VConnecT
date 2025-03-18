@@ -1,4 +1,4 @@
-import mongoose,{Schema} from "mongoose";
+import mongoose,{Schema, Types} from "mongoose";
 import { title } from "process";
 
 export interface IRoom{
@@ -11,6 +11,7 @@ export interface IRoom{
   createdAt?: Date; // Optiona
   createdBy:string;
   secretCode?:string;
+  participants: Types.ObjectId[]
 }
 
 const RoomSchema:Schema = new Schema({
@@ -22,6 +23,7 @@ const RoomSchema:Schema = new Schema({
   createdAt: { type: Date, default: Date.now },
   createdBy:{type:String},
   secretCode:{type:String},
+  participants:[{type:Schema.Types.ObjectId,ref:'User'}]
 })
 
 export const Room = mongoose.model<IRoom>('Room',RoomSchema)
