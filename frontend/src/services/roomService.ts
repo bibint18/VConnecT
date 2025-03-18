@@ -26,3 +26,17 @@ export const getAllRooms = async () => {
   const response = await axiosInstance.get('/user/rooms')
   return response.data
 }
+
+export const joinRoom = async(roomId:string,secretCode?:string) => {
+  try {
+    console.log("join rookm service",roomId,secretCode)
+    const response = await axiosInstance.post('/user/room/join',{roomId,secretCode})
+    return response.data
+  } catch (error:unknown) {
+    if(error instanceof AxiosError){
+      throw new Error(error.response?.data.message)
+    }else{
+      throw new Error("Failed to join room")
+    }
+  }
+}

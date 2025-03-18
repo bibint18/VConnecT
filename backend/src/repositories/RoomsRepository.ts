@@ -17,6 +17,7 @@ export class RoomRepository implements IRoomRepository{
   async joinRoom(RoomId: string, userId: string, secretCode: string): Promise<IRoom | null> {
     try {
       const room = await Room.findById(RoomId)
+      console.log("repository rooom",room)
       if(!room){
         throw new Error("Room not found...")
       }

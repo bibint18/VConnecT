@@ -21,7 +21,9 @@ export class RoomService {
   }
 
   async joinRoom(RoomId:string,userId:string,secretCode:string):Promise<IRoom | null>{
+    console.log("serice layer room",RoomId,userId,secretCode)
     const room = await this.roomRepository.joinRoom(RoomId,userId,secretCode)
+    console.log("room",room)
     return room
   }
 }

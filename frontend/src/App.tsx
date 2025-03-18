@@ -24,9 +24,11 @@ import ProfilePage from "./components/User/Profile/Page";
 import RoomPage from "./components/User/Room/RoomPage";
 // import AddRoom from "./components/User/Room/AddRoom";
 import AddRoomPage from "./components/User/Room/AddRoomPage";
+import {Toaster} from 'react-hot-toast'
 function App() {
   return (
     <Router>
+      <Toaster position="top-right" />
       <ToastContainer />   
       <Routes>
         {/* <Route path="/header" element={<HomePage/>} /> */}

@@ -2,12 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { FiEdit2, FiTrash2 } from 'react-icons/fi';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { getAllRooms } from '@/services/roomService';
+import { getAllRooms, joinRoom } from '@/services/roomService';
 import './ListRoom.css';
+import toast from 'react-hot-toast';
 
 // Interface matching backend IRoom
 interface Room {
-  id: string;
+  _id: string;
   title: string;
   description: string;
   limit: number;
@@ -19,6 +20,9 @@ interface Room {
 const ListRoom: React.FC = () => {
   const [secretCode, setSecretCode] = useState('');
   // const [currentPage, setCurrentPage] = useState(1);
+  const [modalSecretCode, setModalSecretCode] = useState(''); // Secret code for modal
+  const [showModal, setShowModal] = useState(false); // Modal visibility
+  const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null);
   const [filter, setFilter] = useState('');
   const navigate = useNavigate();
   const [rooms, setRooms] = useState<Room[]>([]);
@@ -41,9 +45,52 @@ const ListRoom: React.FC = () => {
     fetchRooms();
   }, []);
 
-  const handleJoinRoom = (roomId: string) => {
-    console.log(`Joining room ${roomId}`);
-    // Implement your join room logic here
+  // const handleJoinRoom =async (roomId: string,roomType:string) => {
+  //   try {
+  //     console.log("handlejoin rooo  rromid,roomType",roomId,roomType)
+  //     const code = roomType==='PRIVATE' ? secretCode : undefined
+  //     const response = await joinRoom(roomId,code)
+  //     toast.success(`user joined Room "${response.room.title}"`,{duration:3000})
+  //     const data = await getAllRooms()
+  //     setRooms(data.rooms)
+  //   } catch (error:unknown) {
+  //     toast.error(error instanceof Error ? error.message : 'Failed to join room');
+  //   }
+  // };
+
+  const handleJoinRoom = async (roomId: string, roomType: string) => {
+    if (roomType === 'PRIVATE') {
+      // Show modal for private rooms
+      setSelectedRoomId(roomId);
+      setShowModal(true);
+      return;
+    }
+
+    // Handle public rooms directly
+    try {
+      const response = await joinRoom(roomId);
+      toast.success(`User joined "${response.room.title}"`, { duration: 3000 });
+      const data = await getAllRooms();
+      setRooms(data.rooms);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Failed to join room');
+    }
+  };
+
+  const handleModalJoin = async () => {
+    if (!selectedRoomId || !modalSecretCode) return;
+
+    try {
+      const response = await joinRoom(selectedRoomId, modalSecretCode);
+      toast.success(`User joined "${response.room.title}"`, { duration: 3000 });
+      const data = await getAllRooms();
+      setRooms(data.rooms);
+      setShowModal(false);
+      setModalSecretCode('');
+      setSelectedRoomId(null);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Failed to join room');
+    }
   };
 
   const handleCreateRoom = () => {
@@ -80,6 +127,10 @@ const ListRoom: React.FC = () => {
   const sectionVariants = {
     hidden: { opacity: 0, x: -50 },
     visible: { opacity: 1, x: 0, transition: { duration: 0.5 } },
+  };
+  const modalVariants = {
+    hidden: { opacity: 0, scale: 0.8 },
+    visible: { opacity: 1, scale: 1, transition: { duration: 0.3 } },
   };
 
   // Loading and error states
@@ -139,7 +190,7 @@ const ListRoom: React.FC = () => {
             <div className="action-section">
               <motion.button
                 className="enter-button"
-                onClick={() => handleJoinRoom('featured')}
+                // onClick={() => handleJoinRoom('featured')}
                 variants={buttonVariants}
                 whileHover="hover"
                 whileTap="tap"
@@ -235,7 +286,7 @@ const ListRoom: React.FC = () => {
           <div className="room-grid">
             {rooms.map((room, index) => (
               <motion.div
-                key={room.id}
+                key={room._id}
                 className="room-card"
                 variants={cardVariants}
                 initial="hidden"
@@ -277,7 +328,7 @@ const ListRoom: React.FC = () => {
                 <div className="action-section">
                   <motion.button
                     className="join-button"
-                    onClick={() => handleJoinRoom(room.id)}
+                    onClick={() => handleJoinRoom(room._id,room.type)}
                     variants={buttonVariants}
                     whileHover="hover"
                     whileTap="tap"
@@ -341,6 +392,53 @@ const ListRoom: React.FC = () => {
             </motion.button>
           </nav>
         </motion.div> */}
+
+{showModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <motion.div
+            className="bg-white rounded-lg p-6 max-w-sm w-full shadow-lg"
+            variants={modalVariants}
+            initial="hidden"
+            animate="visible"
+          >
+            <h3 className="text-lg font-semibold text-gray-800 mb-2">Join Private Room</h3>
+            <p className="text-gray-600 mb-4">
+              Enter the secret code to join this private room:
+            </p>
+            <input
+              type="text"
+              value={modalSecretCode}
+              onChange={(e) => setModalSecretCode(e.target.value)}
+              placeholder="Enter secret code"
+              className="w-full p-2 border border-gray-300 rounded-md mb-4 focus:ring-indigo-500 focus:border-indigo-500"
+            />
+            <div className="flex justify-between gap-4">
+              <motion.button
+                onClick={handleModalJoin}
+                className="flex-1 bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-700 transition"
+                variants={buttonVariants}
+                whileHover="hover"
+                whileTap="tap"
+              >
+                Join
+              </motion.button>
+              <motion.button
+                onClick={() => {
+                  setShowModal(false);
+                  setModalSecretCode('');
+                  setSelectedRoomId(null);
+                }}
+                className="flex-1 bg-gray-300 text-gray-800 py-2 rounded-md hover:bg-gray-400 transition"
+                variants={buttonVariants}
+                whileHover="hover"
+                whileTap="tap"
+              >
+                Cancel
+              </motion.button>
+            </div>
+          </motion.div>
+        </div>
+      )}
       </div>
     </div>
   );

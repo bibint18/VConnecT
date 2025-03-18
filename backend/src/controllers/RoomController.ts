@@ -12,6 +12,7 @@ export class RoomController {
   async createRoom(req:Request,res:Response,next:NextFunction) {
     try {
       const userId = (req as any).user?.id
+      console.log(userId)
       const roomData :IRoom ={
         title:(req as any).body.title,
         limit: req.body.limit,
@@ -41,6 +42,7 @@ export class RoomController {
     try {
       const userId=(req as any).user.id
       const {roomId,secretCode} = req.body
+      console.log('backend join room controller',roomId,secretCode)
       if(!roomId){
         throw new Error("Room id is required")
       }
