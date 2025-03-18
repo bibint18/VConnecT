@@ -22,7 +22,8 @@ import LandingPage from './pages/LandingPage'
 import ProfilePage from "./components/User/Profile/Page";
 // import ListRoom from "./components/User/Room/ListRoom";
 import RoomPage from "./components/User/Room/RoomPage";
-import AddRoom from "./components/User/Room/AddRoom";
+// import AddRoom from "./components/User/Room/AddRoom";
+import AddRoomPage from "./components/User/Room/AddRoomPage";
 function App() {
   return (
     <Router>
@@ -33,7 +34,7 @@ function App() {
         {/* <Route path="/addplans" element={<AddPlansPage/>} /> */}
 
         <Route path="/profile" element={<ProfilePage/>} />
-        <Route path="/addRoom" element={<AddRoom/>} />
+        <Route path="/addRoom" element={<AddRoomPage/>} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/landing" element={<LandingPage/>} />
         <Route path="/verify-otp" element={<VerifyOTP />} />

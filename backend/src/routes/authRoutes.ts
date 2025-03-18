@@ -25,6 +25,7 @@ import {
   }
 from '../controllers/AdminPlansController'
 import { getProfile,updateProfile,getCloudinarySignature,updateProfileImage } from '../controllers/ProfileController'
+import RoomController from '../controllers/RoomController'
 import { authenticateToken,restrictToAdmin} from '../middlewares/authMiddleware'
 import verifyRecaptcha from '../middlewares/recaptchaMiddleware'
 
@@ -60,4 +61,12 @@ router.get('/user/profile',authenticateToken,getProfile)
 router.put('/user/profile/edit',authenticateToken,updateProfile)
 router.get('/user/profile/signature',authenticateToken,getCloudinarySignature)
 router.post('/user/profile/image',authenticateToken,updateProfileImage)
+
+
+//ROOMs
+
+router.post('/user/room/create',RoomController.createRoom.bind(RoomController))
+
+
+
 export default router
