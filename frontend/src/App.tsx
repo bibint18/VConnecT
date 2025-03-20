@@ -25,6 +25,7 @@ import RoomPage from "./components/User/Room/RoomPage";
 // import AddRoom from "./components/User/Room/AddRoom";
 import AddRoomPage from "./components/User/Room/AddRoomPage";
 import {Toaster} from 'react-hot-toast'
+import RoomCall from "./components/User/Room/Calls/RoomCall";
 function App() {
   return (
     <Router>
@@ -34,7 +35,7 @@ function App() {
         {/* <Route path="/header" element={<HomePage/>} /> */}
 
         {/* <Route path="/addplans" element={<AddPlansPage/>} /> */}
-
+        <Route path="/room/:roomId/call" element={<RoomCall/>} />
         <Route path="/profile" element={<ProfilePage/>} />
         <Route path="/addRoom" element={<AddRoomPage/>} />
         <Route path="/signup" element={<Signup />} />

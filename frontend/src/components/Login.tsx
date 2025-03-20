@@ -39,7 +39,7 @@ const Login: React.FC = () => {
       const response = await loginUser(email, password, captchaToken);
       if(response && response.user){
         console.log(response)
-        dispatch(loginTheUser({name:response.user.name,email:response.user.email,accessToken:response.accessToken}))
+        dispatch(loginTheUser({userId:response.user._id,name:response.user.name,email:response.user.email,accessToken:response.accessToken}))
         navigate("/");
       }
       

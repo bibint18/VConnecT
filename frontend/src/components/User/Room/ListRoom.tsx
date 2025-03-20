@@ -70,6 +70,7 @@ const ListRoom: React.FC = () => {
     try {
       const response = await joinRoom(roomId);
       toast.success(`User joined "${response.room.title}"`, { duration: 3000 });
+      navigate(`/room/${roomId}/call`)
       const data = await getAllRooms();
       setRooms(data.rooms);
     } catch (err) {
@@ -83,11 +84,12 @@ const ListRoom: React.FC = () => {
     try {
       const response = await joinRoom(selectedRoomId, modalSecretCode);
       toast.success(`User joined "${response.room.title}"`, { duration: 3000 });
-      const data = await getAllRooms();
-      setRooms(data.rooms);
+      // const data = await getAllRooms();
+      // setRooms(data.rooms);
       setShowModal(false);
       setModalSecretCode('');
       setSelectedRoomId(null);
+      navigate(`/room/${selectedRoomId}/call`)
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Failed to join room');
     }
