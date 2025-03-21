@@ -459,6 +459,15 @@ export class CallManager {
     console.log('Call left');
   }
 
+  public toggleAudio(enabled:boolean){
+    if(this.localStream){
+      this.localStream.getAudioTracks().forEach((track) => {
+        track.enabled=enabled
+        console.log(`Audio track ${enabled ? 'enabled' : 'disabled'} for user ${this.userId}`);
+      })
+    }
+  }
+
   public toggleVideo(enabled: boolean) {
     if (this.localStream) {
       this.localStream.getVideoTracks().forEach((track) => (track.enabled = enabled));
@@ -614,5 +623,9 @@ export class CallManager {
     });
     console.log('Streams updated:', Array.from(streams.entries()));
     this.onStreamUpdate(streams);
+  }
+
+  public isAudioEnabled():boolean{
+    return this.localStream ? this.localStream.getAudioTracks().some((track) => track.enabled) : false
   }
 }

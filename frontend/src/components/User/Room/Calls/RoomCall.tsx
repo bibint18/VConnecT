@@ -405,6 +405,7 @@ const RoomCall: React.FC = () => {
   const navigate = useNavigate();
   const [streams, setStreams] = useState<Map<string, MediaStream>>(new Map());
   const [videoEnabled, setVideoEnabled] = useState(true);
+  const [audioEnabled,setAudioEnabled] = useState(true)
   const videoRefs = useRef<Map<string, HTMLVideoElement>>(new Map());
   const callManagerRef = useRef<CallManager | null>(null);
   const { userId, isAuthenticated } = useAppSelector((state) => state.user);
@@ -467,6 +468,13 @@ const RoomCall: React.FC = () => {
     }
   };
 
+  const handleToggleAudio = () => {
+    if(callManagerRef.current){
+      setAudioEnabled(!audioEnabled);
+      callManagerRef.current.toggleAudio(!audioEnabled)
+    }
+  }
+
   const handleLeaveCall = () => {
     if (callManagerRef.current) {
       callManagerRef.current.leaveCall();
@@ -503,6 +511,17 @@ const RoomCall: React.FC = () => {
         >
           {videoEnabled ? 'Turn Off Video' : 'Turn On Video'}
         </motion.button>
+
+        <motion.button
+          onClick={handleToggleAudio}
+          className={`px-4 py-2 rounded-md text-white ${audioEnabled ? 'bg-red-600' : 'bg-green-600'}`}
+          variants={buttonVariants}
+          whileHover="hover"
+          whileTap="tap"
+        >
+          {audioEnabled ? 'Mute Audio' : 'Unmute Audio'}
+        </motion.button>
+
         <motion.button
           onClick={handleLeaveCall}
           className="px-4 py-2 bg-gray-600 text-white rounded-md"
