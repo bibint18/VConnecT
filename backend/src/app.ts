@@ -8,6 +8,7 @@ import authRoutes from "./routes/authRoutes"
 import { errorHandler } from "./middlewares/globalErrorHandler"
 import { CallService } from "./services/CallService"
 import { CallRepository } from "./repositories/CallRepository"
+import cookieParser from "cookie-parser"
 
 dotenv.config();
 const app = express()
@@ -24,6 +25,7 @@ app.use(cors({
   credentials: true, 
 }));
 app.use(express.json())
+app.use(cookieParser())
 app.use("/api/auth",authRoutes)
 // app.use("/api/user",adminRoutes)
 app.use(errorHandler)

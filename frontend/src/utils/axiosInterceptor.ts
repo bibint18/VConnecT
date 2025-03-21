@@ -58,6 +58,7 @@ axiosInstance.interceptors.request.use(
     console.log('Redux state:', state);
     console.log('isAdminRoute:', isAdminRoute);
     console.log('accessToken:', accessToken);
+    console.log('Cookies: on request ', document.cookie);
     if (accessToken) {
       config.headers = config.headers || {};
       config.headers['Authorization'] = `Bearer ${accessToken}`;
@@ -70,8 +71,11 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
+    console.log("on response use")
     const originalRequest = error.config;
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    console.log("original request",originalRequest)
+    console.log('Cookies: on response', document.cookie);
+    if ((error.response?.status === 401 || error.response?.status === 403) && !originalRequest._retry) {
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
           failedQueue.push({ resolve, reject });
@@ -88,14 +92,15 @@ axiosInstance.interceptors.response.use(
       const isAdminRoute = originalRequest.url.includes('admin');
       try {
         const state = store.getState();
-        
-        const refreshResponse = await axios.post(
-          'http://localhost:3000/api/auth/refresh',
+        console.log('state from axiosInstance ',state)
+        console.log('Cookies: posting to refresh', document.cookie);
+        const refreshResponse = await axiosInstance.post(
+          'refresh',
           {},
           { withCredentials: true }
         );
         const newAccessToken = refreshResponse.data.accessToken;
-
+        console.log("new access token from rerfrsh")
         // Update Redux with new access token
         if (isAdminRoute) {
           store.dispatch(login({ accessToken: newAccessToken }));

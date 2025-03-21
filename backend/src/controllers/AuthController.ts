@@ -23,7 +23,9 @@ export const login =async (req:Request,res:Response,next:NextFunction): Promise<
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
+      path:'/'
     });
+    console.log("Cookie added")
     res.json({ message: "Login successful",accessToken, user });
   } catch (error) {
     // res.status(400).json({ message: error.message });
@@ -31,22 +33,26 @@ export const login =async (req:Request,res:Response,next:NextFunction): Promise<
   }
 }
 export const userLogout = async (req:Request,res:Response) => {
-  res.clearCookie('accessToken')
+  res.clearCookie('refreshToken')
   res.status(200).json({message:"user logged out"})
 }
 
 
 export const refresh = async(req:Request,res:Response) => {
   try {
+    console.log("Reached backend refresh Token")
+    console.log("refresh token",(req as any).cookies.refreshToken)
     const refreshToken=req.cookies.refreshToken
+    console.log("refresh Token: ",refreshToken)
     if(!refreshToken){
       res.status(403).json({message:"NO refresh token provided"})
     }
     if(refreshToken){
       const decoded: any = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET as string);
+      console.log("decoded ",decoded)
     // const accessToken = generateAccessToken(decoded);
     const accessToken = generateAccessToken({_id:decoded.id,isAdmin:decoded.isAdmin})
-    console.log("accessToken",accessToken)
+    console.log(" new CcessToken from refresh accessToken",accessToken)
     // res.cookie("accessToken", accessToken, { httpOnly: true });
     res.json({ accessToken });
     }else{
