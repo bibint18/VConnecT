@@ -2,10 +2,7 @@
 import axiosInstance from "../utils/axiosInterceptor";
 import {store} from '../redux/store'
 import { AxiosError } from "axios";
-// import { loginTheUser,logoutTheUser } from "../redux/userSlice";
 import {logoutTheUser } from "../redux/userSlice";
-
-// import { login,logout } from "../redux/authSlice";
 import { logout } from "../redux/authSlice";
 
 export const loginUser = async(email:string,password:string,recaptchaToken:string) => {

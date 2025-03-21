@@ -102,6 +102,7 @@ axiosInstance.interceptors.response.use(
         } else {
           store.dispatch(
             loginTheUser({
+              userId:state.user.userId || '',
               name: state.user.name || '',
               email: state.user.email || '',
               accessToken: newAccessToken,

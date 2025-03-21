@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Socket.IO Test</title>
+</head>
+<body>
+  <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io('http://localhost:3000');
+    socket.on('connect', () => {
+      console.log('Connected to server');
+      socket.emit('join-call', { roomId: 'test-room-id', userId: 'test-user' });
+    });
+    socket.on('user-joined', (data) => {
+      console.log('User joined:', data);
+    });
+    socket.on('error', (data) => {
+      console.log('Error:', data);
+    });
+  </script>
+</body>
+</html>
