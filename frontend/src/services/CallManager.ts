@@ -415,6 +415,7 @@ interface PeerConnection {
   pc: RTCPeerConnection;
   userId: string;
   socketId: string;
+  username:string;
   stream?: MediaStream;
 }
 
@@ -424,28 +425,69 @@ export class CallManager {
   private peerConnections: Map<string, PeerConnection> = new Map(); // Key: socketId
   private roomId: string;
   private userId: string;
-  private onStreamUpdate: (streams: Map<string, MediaStream>) => void;
+  private username:string;
+  private onStreamUpdate: (streams: Map<string, { stream: MediaStream; username: string }>) => void;
 
-  constructor(roomId: string, userId: string, onStreamUpdate: (streams: Map<string, MediaStream>) => void) {
+  constructor(roomId: string, userId: string,username:string, onStreamUpdate: (streams: Map<string, { stream: MediaStream; username: string }>) => void) {
     this.roomId = roomId;
     this.userId = userId;
+    this.username=username
     this.onStreamUpdate = onStreamUpdate;
     this.socket = io('http://localhost:3000', { withCredentials: true });
     this.setupSocketEvents();
   }
 
-  public async startCall() {
+  // public async startCall() {
+  //   try {
+
+  //     this.localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+  //     console.log('Local stream acquired:', this.localStream);
+  //     this.updateStreams();
+  //     this.socket.emit('join-call', { roomId: this.roomId, userId: this.userId });
+  //   } catch (error) {
+  //     console.error('Error starting call:', error);
+  //     toast.error('Failed to access media devices');
+  //   }
+  // }
+
+  public async startCall(audioDeviceId?:string){
     try {
-      this.localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-      console.log('Local stream acquired:', this.localStream);
-      this.updateStreams();
-      this.socket.emit('join-call', { roomId: this.roomId, userId: this.userId });
+      const constarints ={
+        video:true,
+        audio: audioDeviceId ? {deviceId: {exact:audioDeviceId}} : true
+      }
+      this.localStream=await navigator.mediaDevices.getUserMedia(constarints)
+      console.log('local streams acquired with constraints',constarints,this.localStream)
+      this.updateStreams()
+      this.socket.emit('join-call',{roomId:this.roomId,userId:this.userId,username:this.username})
     } catch (error) {
-      console.error('Error starting call:', error);
-      toast.error('Failed to access media devices');
+      console.log('Error starting call',error)
+      toast.error("Failed to access Media devices")
     }
   }
 
+  public async getAudioDevices() : Promise<MediaDeviceInfo[]>{
+    try {
+      const devices = await navigator.mediaDevices.enumerateDevices();
+      console.log("devices ",devices)
+      return devices.filter((device) => device.kind==='audioinput')
+    } catch (error) {
+      console.log('error enumurating devices',error)
+      toast.error("Failed to list audio devices")
+      return []
+    }
+  }
+
+  public async switchAudioDevice(deviceId:string){
+    if(!this.localStream) return
+    this.localStream.getTracks().forEach((track) => track.stop())
+    await this.startCall(deviceId)
+    this.peerConnections.forEach((peer) => {
+      peer.pc.getSenders().forEach((sender) => peer.pc.removeTrack(sender))
+      this.localStream!.getTracks().forEach((track) => peer.pc.addTrack(track,this.localStream!))
+      console.log("switched audio device to ",deviceId)
+    })
+  }
   public leaveCall() {
     this.socket.emit('leave-call', { roomId: this.roomId, userId: this.userId });
     this.peerConnections.forEach((peer) => peer.pc.close());
@@ -479,10 +521,10 @@ export class CallManager {
       console.log('Connected to signaling server');
     });
 
-    this.socket.on('user-joined', (data: { userId: string; socketId: string }) => {
+    this.socket.on('user-joined', (data: { userId: string; socketId: string,username:string }) => {
       console.log('User joined:', data);
       if (data.socketId !== this.socket.id) {
-        this.addPeerConnection(data.userId, data.socketId);
+        this.addPeerConnection(data.userId, data.socketId,data.username);
       }
     });
 
@@ -496,7 +538,7 @@ export class CallManager {
       const { offer, from } = data;
       let peer = this.peerConnections.get(from);
       if (!peer) {
-        peer = this.createPeerConnection(from, from); // Use socketId as userId for uniqueness
+        peer = this.createPeerConnection(from, from,'Unknown'); // Use socketId as userId for uniqueness
         this.peerConnections.set(from, peer);
       }
       try {
@@ -544,13 +586,13 @@ export class CallManager {
     });
   }
 
-  private async addPeerConnection(userId: string, socketId: string) {
+  private async addPeerConnection(userId: string, socketId: string,username:string) {
     if (this.peerConnections.has(socketId) || !this.localStream) {
       console.log('Skipping peer connection:', { userId, socketId, reason: 'Already exists or no local stream' });
       return;
     }
 
-    const peer = this.createPeerConnection(userId, socketId);
+    const peer = this.createPeerConnection(userId, socketId,username);
     this.peerConnections.set(socketId, peer);
 
     try {
@@ -563,13 +605,18 @@ export class CallManager {
     }
   }
 
-  private createPeerConnection(userId: string, socketId: string): PeerConnection {
+  private createPeerConnection(userId: string, socketId: string,username:string): PeerConnection {
     const pc = new RTCPeerConnection({
       iceServers: [
         { urls: 'stun:stun.l.google.com:19302' },
         { urls: 'stun:stun1.l.google.com:19302' },
-        // Add TURN server if needed: { urls: 'turn:your-turn-server', username: 'user', credential: 'pass' }
+        // Add TURN server if needed: { 
+      //urls:'turn:your-turn-server',  username: 'user', 
+      //credential: 'pass' 
+    // }
       ],
+      iceTransportPolicy: 'all', // Added: Allow both relay and direct connections
+      bundlePolicy: 'max-bundle',
     });
 
     this.localStream!.getTracks().forEach((track) => {
@@ -603,7 +650,7 @@ export class CallManager {
       }
     };
 
-    return { pc, userId, socketId };
+    return { pc, userId, socketId,username };
   }
 
   private removePeerConnection(socketId: string) {
@@ -615,11 +662,22 @@ export class CallManager {
     }
   }
 
+  // private updateStreams() {
+  //   const streams = new Map<string, MediaStream>();
+    
+  //   if (this.localStream) streams.set(this.userId, this.localStream);
+  //   this.peerConnections.forEach((peer) => {
+  //     if (peer.stream) streams.set(peer.userId, peer.stream);
+  //   });
+  //   console.log('Streams updated:', Array.from(streams.entries()));
+  //   this.onStreamUpdate(streams);
+  // }
+
   private updateStreams() {
-    const streams = new Map<string, MediaStream>();
-    if (this.localStream) streams.set(this.userId, this.localStream);
+    const streams = new Map<string, { stream: MediaStream; username: string }>();
+    if (this.localStream) streams.set(this.userId, { stream: this.localStream, username: this.username });
     this.peerConnections.forEach((peer) => {
-      if (peer.stream) streams.set(peer.userId, peer.stream);
+      if (peer.stream) streams.set(peer.userId, { stream: peer.stream, username: peer.username });
     });
     console.log('Streams updated:', Array.from(streams.entries()));
     this.onStreamUpdate(streams);

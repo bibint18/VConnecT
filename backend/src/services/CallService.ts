@@ -230,14 +230,14 @@ export class CallService {
     this.io.on('connection', (socket: Socket) => {
       console.log('User connected to call:', socket.id);
 
-      socket.on('join-call', async (data: { roomId: string; userId: string }) => {
-        const { roomId, userId } = data;
-        console.log('Received join-call:', { roomId, userId, socketId: socket.id });
+      socket.on('join-call', async (data: { roomId: string; userId: string;username:string }) => {
+        const { roomId, userId,username } = data;
+        console.log('Received join-call:', { roomId, userId,username, socketId: socket.id });
 
         try {
           await this.callRepository.joinCall(roomId, userId);
           socket.join(roomId);
-          socket.to(roomId).emit('user-joined', { userId, socketId: socket.id });
+          socket.to(roomId).emit('user-joined', { userId, socketId: socket.id ,username});
           console.log(`User ${userId} joined call in room ${roomId}, notified others`);
         } catch (error) {
           const err = error instanceof AppError ? error : new AppError('Failed to join call', 500);
