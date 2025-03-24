@@ -262,14 +262,14 @@ export class CallService {
         }
       });
 
-      socket.on('offer', (data: { roomId: string; offer: RTCSessionDescriptionInit; to: string }) => {
-        console.log('Received offer:', { roomId: data.roomId, from: socket.id, to: data.to });
-        this.io.to(data.to).emit('offer', { offer: data.offer, from: socket.id });
+      socket.on('offer', (data: { roomId: string; offer: RTCSessionDescriptionInit; to: string ;username:string}) => {
+        console.log('Received offer:', { roomId: data.roomId, from: socket.id, to: data.to,username:data.username });
+        this.io.to(data.to).emit('offer', { offer: data.offer, from: socket.id,username:data.username });
       });
 
-      socket.on('answer', (data: { roomId: string; answer: RTCSessionDescriptionInit; to: string }) => {
-        console.log('Received answer:', { roomId: data.roomId, from: socket.id, to: data.to });
-        this.io.to(data.to).emit('answer', { answer: data.answer, from: socket.id });
+      socket.on('answer', (data: { roomId: string; answer: RTCSessionDescriptionInit; to: string ;username:string}) => {
+        console.log('Received answer:', { roomId: data.roomId, from: socket.id, to: data.to,username:data.username });
+        this.io.to(data.to).emit('answer', { answer: data.answer, from: socket.id,username:data.username });
       });
 
       socket.on('ice-candidate', (data: { roomId: string; candidate: RTCIceCandidateInit; to: string }) => {
@@ -279,8 +279,10 @@ export class CallService {
 
       socket.on('disconnect', () => {
         console.log('User disconnected:', socket.id);
-        // Optionally notify room of disconnect if user was in a call
-        // Requires tracking socket-to-room mapping
+        const rooms = Array.from(socket.rooms).filter(room => room !== socket.id);
+        rooms.forEach(roomId => {
+          socket.to(roomId).emit('user-left', { userId: 'unknown', socketId: socket.id });
+        });
       });
     });
   }

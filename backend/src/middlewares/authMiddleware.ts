@@ -51,6 +51,7 @@
 
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
+import { User } from '../models/User';
 
 interface DecodedUser {
   id: string;
@@ -66,7 +67,7 @@ declare module 'express' {
 //   user?: DecodedUser;
 // }
 
-export const authenticateToken = (req: Request, res: Response, next: NextFunction):void => {
+export const authenticateToken =async (req: Request, res: Response, next: NextFunction):Promise<void> => {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1]; // Expect "Bearer <token>"
   console.log("at middleware token ",token)
@@ -74,11 +75,15 @@ export const authenticateToken = (req: Request, res: Response, next: NextFunctio
     res.status(401).json({ message: 'No token provided' });
     return
   } 
-
   try {
     const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET as string) as DecodedUser;
     req.user = decoded;
     console.log("re.user",req.user)
+    const user = await User.findById(req.user.id)
+    if(user?.isBlocked){
+      res.status(403).json({ message: "User is blocked"})
+      return
+    }
     next();
   } catch (error) {
     res.status(401).json({ message: 'Invalid or expired token' });

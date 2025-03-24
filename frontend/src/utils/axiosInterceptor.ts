@@ -34,7 +34,7 @@ import axios, { InternalAxiosRequestConfig } from 'axios';
 import { store } from '../redux/store';
 import { login, logout } from '../redux/authSlice';
 import { loginTheUser, logoutTheUser } from '../redux/userSlice';
-
+import toast from 'react-hot-toast';
 const axiosInstance = axios.create({
   baseURL: 'http://localhost:3000/api/auth',
   withCredentials: true, 
@@ -75,6 +75,17 @@ axiosInstance.interceptors.response.use(
     const originalRequest = error.config;
     console.log("original request",originalRequest)
     console.log('Cookies: on response', document.cookie);
+    if (error.response?.status === 403 && error.response?.data?.message === 'User is blocked') {
+      console.log('User is blocked. Preventing logout.');
+      // You can show a custom message here or perform specific actions
+      toast.error('Your account is blocked. Please contact support.',{duration:3000});
+      setTimeout(() => {
+        store.dispatch(logoutTheUser())
+      window.location.href='/login'
+      },3000)
+      
+      return Promise.reject(error);
+    }
     if ((error.response?.status === 401 || error.response?.status === 403) && !originalRequest._retry) {
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
@@ -101,7 +112,7 @@ axiosInstance.interceptors.response.use(
         );
         const newAccessToken = refreshResponse.data.accessToken;
         console.log("new access token from rerfrsh")
-        // Update Redux with new access token
+        
         if (isAdminRoute) {
           store.dispatch(login({ accessToken: newAccessToken }));
         } else {
@@ -122,6 +133,9 @@ axiosInstance.interceptors.response.use(
       } catch (refreshError) {
         processQueue(refreshError instanceof Error ? refreshError : new Error(String(refreshError)), null);;
         isRefreshing = false;
+        if (error.response?.status !== 403 || error.response?.data?.message !== 'User is blocked') {
+          store.dispatch(isAdminRoute ? logout() : logoutTheUser());
+        }
         // Logout on refresh failure
         store.dispatch(isAdminRoute ? logout() : logoutTheUser());
         return Promise.reject(refreshError);

@@ -116,7 +116,7 @@ async login(email:string,password:string,isAdminLogin:boolean){
   if(user)console.log("Stored hashed password:", user.password);
   if(user?.isBlocked) throw new Error("User blocked")
   console.log("reached auth login,user: ",user)
-  if(!user) throw new Error("Invalid credentials")
+  if(!user) throw new AppError("Invalid credentials",403)
   if(isAdminLogin && !user.isAdmin) throw new Error("Unauthorized access")
   if(user.failedLoginAttempts >=3 && user.lockUntil && user.lockUntil> new Date()){
     throw new Error("account locked try again later")

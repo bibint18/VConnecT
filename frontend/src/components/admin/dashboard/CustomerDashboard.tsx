@@ -32,17 +32,56 @@ export default function CustomerDashboard() {
   const [sortOption,setSortOption] = useState<string>("A-Z")
   const { data, isLoading, isError } = useUsers(page, limit, searchTerm, sortOption);
   console.log("data from component ",data)
-  const users: User[] = data?.users ?? []; // Extract users array
-  const totalUsers: number = data?.totalUsers ?? 0; // Extract totalUsers count
+  const users: User[] = data?.users ?? []; 
+  const totalUsers: number = data?.totalUsers ?? 0; 
 const totalPages = Math.ceil(totalUsers/limit)
   console.log("totalCount",totalPages)
-  const handleBlock = (id:string) => {
-    console.log("handleBlock: ",id)
-    blockMutation.mutate(id)
-  }
-  const handleUnblock = (id:string) => {
-    unblockMutation.mutate(id)
-  }
+  const handleBlock = (id: string) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "Do you really want to block this user?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, Block",
+      cancelButtonText: "Cancel"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        blockMutation.mutate(id, {
+          onSuccess: () => {
+            Swal.fire("Blocked!", "The user has been blocked.", "success");
+          },
+          onError: () => {
+            Swal.fire("Error!", "Something went wrong.", "error");
+          },
+        });
+      }
+    });
+  };
+  const handleUnblock = (id: string) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "Do you want to unblock this user?",
+      icon: "info",
+      showCancelButton: true,
+      confirmButtonColor: "#28a745",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, Unblock",
+      cancelButtonText: "Cancel"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        unblockMutation.mutate(id, {
+          onSuccess: () => {
+            Swal.fire("Unblocked!", "The user has been unblocked.", "success");
+          },
+          onError: () => {
+            Swal.fire("Error!", "Something went wrong.", "error");
+          },
+        });
+      }
+    });
+  };
 
   const handleDelete = (id: string) => {
     Swal.fire({

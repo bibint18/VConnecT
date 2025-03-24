@@ -433,31 +433,25 @@ export class CallManager {
     this.userId = userId;
     this.username=username
     this.onStreamUpdate = onStreamUpdate;
-    this.socket = io('http://localhost:3000', { withCredentials: true });
+    this.socket = io('http://localhost:3000', { withCredentials: true, 
+     reconnection:true,
+     reconnectionAttempts:Infinity,
+     reconnectionDelay:1000, 
+    });
     this.setupSocketEvents();
   }
 
-  // public async startCall() {
-  //   try {
-
-  //     this.localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-  //     console.log('Local stream acquired:', this.localStream);
-  //     this.updateStreams();
-  //     this.socket.emit('join-call', { roomId: this.roomId, userId: this.userId });
-  //   } catch (error) {
-  //     console.error('Error starting call:', error);
-  //     toast.error('Failed to access media devices');
-  //   }
-  // }
 
   public async startCall(audioDeviceId?:string){
     try {
+      if(!this.localStream){
       const constarints ={
         video:true,
         audio: audioDeviceId ? {deviceId: {exact:audioDeviceId}} : true
       }
       this.localStream=await navigator.mediaDevices.getUserMedia(constarints)
       console.log('local streams acquired with constraints',constarints,this.localStream)
+    }
       this.updateStreams()
       this.socket.emit('join-call',{roomId:this.roomId,userId:this.userId,username:this.username})
     } catch (error) {
@@ -521,6 +515,13 @@ export class CallManager {
       console.log('Connected to signaling server');
     });
 
+    this.socket.on('reconnect', () => {
+      console.log('Reconnected to signaling server');
+      if (this.localStream) {
+        this.socket.emit('join-call', { roomId: this.roomId, userId: this.userId, username: this.username });
+      }
+    });
+
     this.socket.on('user-joined', (data: { userId: string; socketId: string,username:string }) => {
       console.log('User joined:', data);
       if (data.socketId !== this.socket.id) {
@@ -533,36 +534,45 @@ export class CallManager {
       this.removePeerConnection(data.socketId);
     });
 
-    this.socket.on('offer', async (data: { offer: RTCSessionDescriptionInit; from: string }) => {
+    this.socket.on('offer', async (data: { offer: RTCSessionDescriptionInit; from: string;username:string }) => {
       console.log('Received offer from:', data.from, data.offer);
-      const { offer, from } = data;
+      const { offer, from,username } = data;
       let peer = this.peerConnections.get(from);
       if (!peer) {
-        peer = this.createPeerConnection(from, from,'Unknown'); // Use socketId as userId for uniqueness
+        peer = this.createPeerConnection(from, from,username); // Use socketId as userId for uniqueness
         this.peerConnections.set(from, peer);
+      }else if(peer.username !== username){
+        peer.username = username
+        this.updateStreams()
       }
       try {
         await peer.pc.setRemoteDescription(new RTCSessionDescription(offer));
         const answer = await peer.pc.createAnswer();
         await peer.pc.setLocalDescription(answer);
-        this.socket.emit('answer', { roomId: this.roomId, answer, to: from });
+        this.socket.emit('answer', { roomId: this.roomId, answer, to: from,username:this.username });
         console.log('Sent answer to:', from, answer);
       } catch (err) {
         console.error('Error handling offer:', err);
       }
     });
 
-    this.socket.on('answer', async (data: { answer: RTCSessionDescriptionInit; from: string }) => {
+    this.socket.on('answer', async (data: { answer: RTCSessionDescriptionInit; from: string;username:string }) => {
       console.log('Received answer from:', data.from, data.answer);
-      const { answer, from } = data;
+      const { answer, from ,username} = data;
       const peer = this.peerConnections.get(from);
-      if (peer && peer.pc.signalingState === 'have-local-offer') {
+      if(peer){
+        if(peer.username !==username){
+          peer.username=username
+          this.updateStreams()
+        }
+      if (peer.pc.signalingState === 'have-local-offer') {
         try {
           await peer.pc.setRemoteDescription(new RTCSessionDescription(answer));
         } catch (err) {
           console.error('Error setting remote answer:', err);
         }
       }
+    }
     });
 
     this.socket.on('ice-candidate', async (data: { candidate: RTCIceCandidateInit; from: string }) => {
@@ -584,6 +594,11 @@ export class CallManager {
       console.error('Server error:', data.message);
       toast.error(data.message);
     });
+
+    this.socket.on('disconnect', (reason) => {
+      console.log('Socket disconnected:', reason);
+      toast.warn('Disconnected from server, attempting to reconnect...');
+    });
   }
 
   private async addPeerConnection(userId: string, socketId: string,username:string) {
@@ -598,7 +613,7 @@ export class CallManager {
     try {
       const offer = await peer.pc.createOffer();
       await peer.pc.setLocalDescription(offer);
-      this.socket.emit('offer', { roomId: this.roomId, offer, to: socketId });
+      this.socket.emit('offer', { roomId: this.roomId, offer, to: socketId ,username:this.username});
       console.log('Sent offer to:', socketId, offer);
     } catch (err) {
       console.error('Offer creation error:', err);
@@ -610,12 +625,8 @@ export class CallManager {
       iceServers: [
         { urls: 'stun:stun.l.google.com:19302' },
         { urls: 'stun:stun1.l.google.com:19302' },
-        // Add TURN server if needed: { 
-      //urls:'turn:your-turn-server',  username: 'user', 
-      //credential: 'pass' 
-    // }
       ],
-      iceTransportPolicy: 'all', // Added: Allow both relay and direct connections
+      iceTransportPolicy: 'all', 
       bundlePolicy: 'max-bundle',
     });
 
@@ -640,18 +651,34 @@ export class CallManager {
       }
     };
 
-    pc.onconnectionstatechange = () => {
-      console.log('Peer connection state for', socketId, ':', pc.connectionState);
-      if (pc.connectionState === 'connected') {
-        this.updateStreams();
-      } else if (pc.connectionState === 'failed' || pc.connectionState === 'disconnected') {
-        console.log('Peer connection failed/disconnected for:', socketId);
-        this.removePeerConnection(socketId);
-      }
-    };
+  //   pc.onconnectionstatechange = () => {
+  //     console.log('Peer connection state for', socketId, ':', pc.connectionState);
+  //     if (pc.connectionState === 'connected') {
+  //       this.updateStreams();
+  //     } else if (pc.connectionState === 'failed' || pc.connectionState === 'disconnected') {
+  //       console.log('Peer connection failed/disconnected for:', socketId);
+  //       this.removePeerConnection(socketId);
+  //     }
+  //   };
 
-    return { pc, userId, socketId,username };
-  }
+  //   return { pc, userId, socketId,username };
+  // }
+  pc.onconnectionstatechange = () => {
+    console.log('Peer connection state for', socketId, ':', pc.connectionState);
+    if (pc.connectionState === 'connected') {
+      this.updateStreams();
+    } else if (pc.connectionState === 'failed') {
+      console.error('Peer connection failed for:', socketId);
+      this.removePeerConnection(socketId);
+      toast.error('A peer connection failed');
+    } else if (pc.connectionState === 'disconnected') {
+      console.warn('Peer temporarily disconnected for:', socketId);
+      // Don’t remove immediately; wait for persistent failure
+    }
+  };
+
+  return { pc, userId, socketId, username };
+}
 
   private removePeerConnection(socketId: string) {
     const peer = this.peerConnections.get(socketId);
@@ -662,16 +689,6 @@ export class CallManager {
     }
   }
 
-  // private updateStreams() {
-  //   const streams = new Map<string, MediaStream>();
-    
-  //   if (this.localStream) streams.set(this.userId, this.localStream);
-  //   this.peerConnections.forEach((peer) => {
-  //     if (peer.stream) streams.set(peer.userId, peer.stream);
-  //   });
-  //   console.log('Streams updated:', Array.from(streams.entries()));
-  //   this.onStreamUpdate(streams);
-  // }
 
   private updateStreams() {
     const streams = new Map<string, { stream: MediaStream; username: string }>();
