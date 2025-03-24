@@ -24,7 +24,7 @@ import {
    deletePlan
   }
 from '../controllers/AdminPlansController'
-import { getProfile,updateProfile,getCloudinarySignature,updateProfileImage } from '../controllers/ProfileController'
+import { getProfile,updateProfile,getCloudinarySignature,updateProfileImage ,updateStreak} from '../controllers/ProfileController'
 import RoomController from '../controllers/RoomController'
 import { authenticateToken,restrictToAdmin} from '../middlewares/authMiddleware'
 import verifyRecaptcha from '../middlewares/recaptchaMiddleware'
@@ -61,7 +61,7 @@ router.get('/user/profile',authenticateToken,getProfile)
 router.put('/user/profile/edit',authenticateToken,updateProfile)
 router.get('/user/profile/signature',authenticateToken,getCloudinarySignature)
 router.post('/user/profile/image',authenticateToken,updateProfileImage)
-
+router.post('/user/profile/streak',authenticateToken,updateStreak)
 
 //ROOMs
 

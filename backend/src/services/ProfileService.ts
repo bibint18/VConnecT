@@ -27,4 +27,10 @@ export class ProfileService {
       if(!updatedUser) throw new AppError("failed to update profile image",500)
         return updatedUser
   }
+
+  async updateStreak(id:string) : Promise<IUser| null> {
+    const updatedUser = await this.profileRepository.updateStreak(id)
+    if (!updatedUser) throw new AppError("Failed to update streak", 500);
+    return updatedUser;
+  }
 }

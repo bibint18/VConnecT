@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 import { Edit, Check } from 'react-feather';
 import { useState } from 'react';
-import { getUserProfile,updateUserProfile } from '@/services/ProfileService';
+import { getUserProfile,updateUserProfile ,userCheckin} from '@/services/ProfileService';
 import { useAppDispatch } from '@/redux/store';
 import { updateProfile } from '@/redux/userSlice';
 import axiosInstance from '@/utils/axiosInterceptor';
@@ -59,7 +59,9 @@ interface User {
   username?:string;
   country?:string;
   description?:string;
-  gender?:string
+  gender?:string;
+  streak?:number;
+  lastStreakUpdate?:string;
 }
 export const ProfileContent = () => {
   const dispatch = useAppDispatch()
@@ -72,7 +74,7 @@ export const ProfileContent = () => {
     const fetchProfile = async () => {
       try {
         const userData = await getUserProfile()
-
+        console.log("userdta profilr",userData)
         const userProfile ={
           name: userData.name || '',
           email: userData.email || '',
@@ -83,9 +85,12 @@ export const ProfileContent = () => {
           country: userData.country || '',
           description: userData.description || '',
           gender: userData.gender || '',
+          streak: userData.streak || 0,
+          lastStreakUpdate:userData.lastStreakUpdate || ''
         }
         setUser(userProfile)
         setFormData(userProfile)
+      
       } catch (error:unknown) {
         if (error instanceof Error) {
           setError(error.message);
@@ -197,6 +202,29 @@ const handleImageUpload = async () => {
   }
 };
 
+const handleCheckin = async () => {
+  try{
+  const updatedUser = await userCheckin()
+  setUser((prev) => prev ? {...prev,streak:updatedUser.streak,lastStreakUpdate:updatedUser.lastStreakUpdate} : null)
+  setFormData((prev) => prev ? {...prev,streak:updatedUser.streak,lastStreakUpdate: updatedUser.lastStreakUpdate} : null)
+  }catch(error){
+    if (error instanceof Error) {
+      setError(error.message);
+    } else {
+      setError("Failed to update streak");
+    }
+  }
+}
+
+const isCheckInDisabled = () => {
+  if (!user?.lastStreakUpdate) return false; // Enable if no previous check-in
+  const now = new Date();
+  const lastUpdate = new Date(user.lastStreakUpdate);
+  const timeDiff = now.getTime() - lastUpdate.getTime();
+  const twentyFourHours = 24 * 60 * 60 * 1000;
+  return timeDiff < twentyFourHours; // Disable if less than 24 hours
+};
+
   if (loading) return <div className="text-white">Loading...</div>;
   if (error) return <div className="text-red-500">{error}</div>;
   return (
@@ -204,9 +232,9 @@ const handleImageUpload = async () => {
       {/* Check-in Banner */}
       <div className="bg-gradient-to-r from-pink-500/30 to-purple-500/30 rounded-xl p-4 mb-8">
         <div className="flex items-start space-x-4">
-          <div className="bg-gradient-to-r from-pink-400 to-purple-400 text-white px-4 py-2 rounded-lg">
+          <div onClick={handleCheckin} className="bg-gradient-to-r from-pink-400 to-purple-400 text-white px-4 py-2 rounded-lg cursor-pointer">
             Check in
-          </div>
+          </div  >
           <div>
             <p className="text-gray-300 text-sm">
               ⭐ Check in daily to maintain your streak and stay on the leaderboard!
@@ -214,6 +242,12 @@ const handleImageUpload = async () => {
             <p className="text-gray-400 text-xs">
               Keep your progress going and secure your top spot.
             </p>
+            <p>Streaks:{user?.streak || 0} ⚡</p>
+            {isCheckInDisabled() && (
+              <p className="text-gray-500 text-xs">
+                Next check-in available: {new Date(new Date(user!.lastStreakUpdate!).getTime() + 24 * 60 * 60 * 1000).toLocaleString()}
+              </p>
+            )}
           </div>
         </div>
       </div>

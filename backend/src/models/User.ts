@@ -21,6 +21,8 @@ export interface IUser extends Document{
   country?: string;
   description?: string;
   gender?: string;
+  streak:number;
+  lastStreakUpdate:Date;
 }
 
 const userSchema = new Schema <IUser> ({
@@ -42,7 +44,9 @@ const userSchema = new Schema <IUser> ({
   username: {type:String,unique:true},
   country: {type:String},
   description: {type:String},
-  gender:{type:String}
+  gender:{type:String},
+  streak:{type:Number,default:0},
+  lastStreakUpdate:{type:Date,default:null}
 })
 
 export const User = mongoose.model<IUser>("User",userSchema)

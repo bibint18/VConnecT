@@ -34,3 +34,16 @@ export const updateUserProfile = async (profileData: Partial<IUserProfile>) => {
     throw new Error("Failed to update user Profile")
   }
 }
+
+export const userCheckin = async () => {
+  try {
+    const response = await axiosInstance.post('/user/profile/streak')
+    return response.data.user
+  } catch (error) {
+    if(error instanceof AxiosError){
+      throw new Error(error.response?.data.message)
+    }else{
+      throw new Error("Failed to update Streaks")
+    }
+  }
+}

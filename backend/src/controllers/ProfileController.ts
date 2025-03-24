@@ -65,3 +65,16 @@ export const updateProfileImage = async (req:Request,res:Response,next:NextFunct
     next(error)  
   }
 }
+
+
+export const updateStreak = async (req:Request,res:Response,next:NextFunction) => {
+  try {
+    console.log("reached backend streak")
+    const userId = (req as any).user.id
+    const updatedUser = await profileService.updateStreak(userId)
+    console.log(updatedUser)
+    res.status(200).json({user:updatedUser,message:"Streaks updated"})
+  } catch (error) {
+    next(error)
+  }
+}
