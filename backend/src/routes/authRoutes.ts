@@ -28,7 +28,8 @@ import { getProfile,updateProfile,getCloudinarySignature,updateProfileImage ,upd
 import RoomController from '../controllers/RoomController'
 import { authenticateToken,restrictToAdmin} from '../middlewares/authMiddleware'
 import verifyRecaptcha from '../middlewares/recaptchaMiddleware'
-
+import { FriendController } from '../controllers/FriendController'
+import { FriendRepository } from '../repositories/FriendRepository'
 const router = express.Router()
 router.post("/signup",signup)
 router.post("/verify-otp",verifyOTP)
@@ -68,5 +69,12 @@ router.post('/user/profile/streak',authenticateToken,updateStreak)
 router.post('/user/room/create',authenticateToken,RoomController.createRoom.bind(RoomController))
 router.get('/user/rooms',authenticateToken,RoomController.getAllRooms.bind(RoomController))
 router.post('/user/room/join',authenticateToken,RoomController.joinRoom.bind(RoomController))
+
+
+
+//friends
+const friendRepository = new FriendRepository();
+const friendController = new FriendController(friendRepository);
+router.get('/user/friend/requests',authenticateToken,friendController.getPendingRequests)
 
 export default router

@@ -26,6 +26,8 @@ import RoomPage from "../User/Room/AddRoomPage";
 import AddRoomPage from "../User/Room/AddRoomPage";
 
 import RoomCall from "../User/Room/Calls/RoomCall";
+import FriendRequests from "../User/Friends/FriendRequest";
+import AdminRoom from "@/pages/AdminRoom";
 
 function AppRoute() {
   return (
@@ -34,6 +36,7 @@ function AppRoute() {
         {/* <Route path="/header" element={<HomePage/>} /> */}
 
         {/* <Route path="/addplans" element={<AddPlansPage/>} /> */}
+        <Route path="/friends/request" element={<FriendRequests/>} />
         <Route path="/room/:roomId/call" element={<RoomCall/>} />
         <Route path="/profile" element={<ProfilePage/>} />
         <Route path="/addRoom" element={<AddRoomPage/>} />
@@ -50,6 +53,8 @@ function AppRoute() {
           <Route path="/users" element={<AdminCustomers />} />
           <Route path="/plans/edit/:id" element={<AdminEditPlan />} />
           <Route path="/plans/add" element={<AdminAddPlan />} />
+          <Route path="/admin/rooms" element={<AdminRoom />} />
+        
         </Route>
       </Routes>
   )

@@ -100,7 +100,7 @@ const navItems: NavItem[] = [
   { name: 'Stats', icon: BarChart2,path:'/stats' },
   { name: 'Posts', icon: FileText,path:'/posts' },
   { name: 'Rooms', icon: MessageSquare,path:'/rooms' },
-  { name: 'Friends', icon: Users ,path:'/friends'},
+  { name: 'Friends', icon: Users ,path:'/friends/request'},
   { name: 'Premium', icon: Star ,path:'/premium'},
   { name: 'Setting', icon: Settings ,path:"/settings"},
 ];

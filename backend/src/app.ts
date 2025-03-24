@@ -9,6 +9,8 @@ import { errorHandler } from "./middlewares/globalErrorHandler"
 import { CallService } from "./services/CallService"
 import { CallRepository } from "./repositories/CallRepository"
 import cookieParser from "cookie-parser"
+import { FriendService } from "./services/FriendService"
+import { FriendRepository } from "./repositories/FriendRepository"
 
 dotenv.config();
 const app = express()
@@ -30,6 +32,6 @@ app.use("/api/auth",authRoutes)
 // app.use("/api/user",adminRoutes)
 app.use(errorHandler)
 const callService = new CallService(new CallRepository(),io)
-
+const friendService = new FriendService(new FriendRepository(),io)
 conneectDB()
 export default httpServer

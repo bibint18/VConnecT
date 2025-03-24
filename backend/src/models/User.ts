@@ -1,4 +1,4 @@
-import mongoose,{Document,Schema} from "mongoose";
+import mongoose,{Document,Schema, Types} from "mongoose";
 
 export interface IUser extends Document{
   _id:string
@@ -23,6 +23,7 @@ export interface IUser extends Document{
   gender?: string;
   streak:number;
   lastStreakUpdate:Date;
+  friends: Types.ObjectId[]
 }
 
 const userSchema = new Schema <IUser> ({
@@ -46,7 +47,8 @@ const userSchema = new Schema <IUser> ({
   description: {type:String},
   gender:{type:String},
   streak:{type:Number,default:0},
-  lastStreakUpdate:{type:Date,default:null}
+  lastStreakUpdate:{type:Date,default:null},
+  friends:[{type:Schema.Types.ObjectId,ref:"User"}]
 })
 
 export const User = mongoose.model<IUser>("User",userSchema)
