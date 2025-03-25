@@ -3,8 +3,12 @@ import { PlanService } from "../services/AdminPlanService";
 import { PlansRepository } from "../repositories/AdminPlanRepository";
 
 const planService = new PlanService(new PlansRepository())
-
-export const createPlan = async(req:Request,res:Response) => {
+export class AdminPlansController{
+  private adminPlanService:PlanService
+  constructor(adminPlanService:PlanService){
+    this.adminPlanService=adminPlanService
+  }
+async createPlan(req:Request,res:Response) {
   try {
     console.log("reached backend plan create body: ",req.body)
     const plan = await planService.createPlan(req.body)
@@ -20,7 +24,7 @@ export const createPlan = async(req:Request,res:Response) => {
   }
 }
 
-export const getAllPlans = async (req:Request,res:Response,next:NextFunction) => {
+ async getAllPlans (req:Request,res:Response,next:NextFunction){
   try {
     
     console.log("reached backend fetch plans",req.query)
@@ -32,7 +36,7 @@ export const getAllPlans = async (req:Request,res:Response,next:NextFunction) =>
   }
 }
 
-export const getPlanById = async(req:Request,res:Response,next:NextFunction) => {
+ async getPlanById(req:Request,res:Response,next:NextFunction){
   try {
     const {id} = req.params
     const plan = await planService.getPlanById(id)
@@ -42,7 +46,7 @@ export const getPlanById = async(req:Request,res:Response,next:NextFunction) => 
   }
 }
 
-export const updatePlan = async (req:Request,res:Response) => {
+async updatePlan  (req:Request,res:Response) {
   try {
     console.log("reached edit backend")
     const {id} = req.params
@@ -60,7 +64,7 @@ export const updatePlan = async (req:Request,res:Response) => {
   }
 }
 
-export const deletePlan = async (req:Request,res:Response,next:NextFunction) => {
+async deletePlan(req:Request,res:Response,next:NextFunction) {
   try {
     const {id} = req.params
     const plan = await planService.deletePlan(id)
@@ -69,3 +73,6 @@ export const deletePlan = async (req:Request,res:Response,next:NextFunction) => 
     next(error)
   }
 }
+}
+
+export default new AdminPlansController(new PlanService(new PlansRepository()))

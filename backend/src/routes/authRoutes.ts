@@ -1,86 +1,28 @@
 import express from 'express'
-import 
-{ signup,
-  verifyOTP ,
-  ResendOtp,
-  login,
-  refresh,
-  LoginAdmin,
-  adminLogout,
-  userLogout,
-  getAbout,
-  googleLogin
-} 
-from '../controllers/AuthController'
-import {
-   getAllUsers,blockUser,unblockUser,deleteUser 
-  }
-from '../controllers/AdminUsersController'
-import {
-   createPlan ,
-   getAllPlans,
-   getPlanById,
-   updatePlan,
-   deletePlan
-  }
-from '../controllers/AdminPlansController'
-import { getProfile,updateProfile,getCloudinarySignature,updateProfileImage ,updateStreak} from '../controllers/ProfileController'
-import RoomController from '../controllers/RoomController'
+import AdminUsersController from '../controllers/AdminUsersController'
+import AdminPlansController from '../controllers/AdminPlansController'
 import { authenticateToken,restrictToAdmin} from '../middlewares/authMiddleware'
-import verifyRecaptcha from '../middlewares/recaptchaMiddleware'
-import { FriendController } from '../controllers/FriendController'
-import { FriendRepository } from '../repositories/FriendRepository'
-import { getAllRooms,blockRoom,unblockRoom,deleteRoom } from '../controllers/AdminRoomController'
+import AdminRoomController from '../controllers/AdminRoomController'
 const router = express.Router()
-router.post("/signup",signup)
-router.post("/verify-otp",verifyOTP)
-router.post('/resend-otp',ResendOtp)
-router.post('/login',verifyRecaptcha,login)
-router.post('/refresh',refresh)
-router.post("/adminLogin",LoginAdmin)
-router.post('/adminLogout',adminLogout)
-router.post('logout',userLogout)
-router.post('/google-login',googleLogin)
+
 
 //adminUser MAnagement
-router.get('/admin/users',authenticateToken,restrictToAdmin,getAllUsers )
-router.post('/admin/users/block/:id',blockUser)
-router.post('/admin/users/unblock/:id',unblockUser)
-router.post('/admin/users/delete/:id',deleteUser)
+router.get('/admin/users',authenticateToken,restrictToAdmin,AdminUsersController.getAllUsers.bind(AdminUsersController) )
+router.post('/admin/users/block/:id',authenticateToken,restrictToAdmin,AdminUsersController.blockUser.bind(AdminUsersController))
+router.post('/admin/users/unblock/:id',authenticateToken,restrictToAdmin,AdminUsersController.unblockUser.bind(AdminUsersController))
+router.post('/admin/users/delete/:id',authenticateToken,restrictToAdmin,AdminUsersController.deleteUser.bind(AdminUsersController))
 
 //admin plans management
-router.post('/admin/plans/add',createPlan)
-router.get('/admin/plans',getAllPlans)
-router.get('/admin/plans/:id',getPlanById)
-router.put('/admin/plans/edit/:id',updatePlan)
-router.post('/admin/plans/delete/:id',deletePlan)
+router.post('/admin/plans/add',authenticateToken,restrictToAdmin,AdminPlansController.createPlan.bind(AdminPlansController))
+router.get('/admin/plans',authenticateToken,restrictToAdmin,AdminPlansController.getAllPlans.bind(AdminPlansController))
+router.get('/admin/plans/:id',authenticateToken,restrictToAdmin,AdminPlansController.getPlanById.bind(AdminPlansController))
+router.put('/admin/plans/edit/:id',authenticateToken,restrictToAdmin,AdminPlansController.updatePlan.bind(AdminPlansController))
+router.post('/admin/plans/delete/:id',authenticateToken,restrictToAdmin,AdminPlansController.deletePlan.bind(AdminPlansController))
 
-router.get('/user/about',authenticateToken,getAbout)
-
-
-//user Profile
-router.get('/user/profile',authenticateToken,getProfile)
-router.put('/user/profile/edit',authenticateToken,updateProfile)
-router.get('/user/profile/signature',authenticateToken,getCloudinarySignature)
-router.post('/user/profile/image',authenticateToken,updateProfileImage)
-router.post('/user/profile/streak',authenticateToken,updateStreak)
-
-//ROOMs
-
-router.post('/user/room/create',authenticateToken,RoomController.createRoom.bind(RoomController))
-router.get('/user/rooms',authenticateToken,RoomController.getAllRooms.bind(RoomController))
-router.post('/user/room/join',authenticateToken,RoomController.joinRoom.bind(RoomController))
-
-
-
-//friends
-const friendRepository = new FriendRepository();
-const friendController = new FriendController(friendRepository);
-router.get('/user/friend/requests',authenticateToken,friendController.getPendingRequests)
 
 //admin room
-router.get("/admin/rooms", authenticateToken, getAllRooms);
-router.post("/admin/rooms/block/:id", authenticateToken, blockRoom);
-router.post("/admin/rooms/unblock/:id", authenticateToken, unblockRoom);
-router.post("/admin/rooms/delete/:id", authenticateToken, deleteRoom);
+router.get("/admin/rooms", authenticateToken,restrictToAdmin, AdminRoomController.getAllRooms.bind(AdminRoomController));
+router.post("/admin/rooms/block/:id", authenticateToken,restrictToAdmin,AdminRoomController.blockRoom.bind(AdminRoomController));
+router.post("/admin/rooms/unblock/:id", authenticateToken,restrictToAdmin,AdminRoomController.unblockRoom.bind(AdminRoomController));
+router.post("/admin/rooms/delete/:id", authenticateToken,restrictToAdmin,AdminRoomController.deleteRoom.bind(AdminRoomController));
 export default router

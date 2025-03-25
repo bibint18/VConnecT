@@ -3,8 +3,12 @@ import { AdminRoomService } from "../services/AdminRoomService";
 import { AdminRoomRepository } from "../repositories/AdminRoomRepository";
 
 const roomService = new AdminRoomService(new AdminRoomRepository());
-
-export const getAllRooms = async (req: Request, res: Response, next: NextFunction) => {
+export class AdminRoomController{
+  private adminRoomService:AdminRoomService
+  constructor(adminRoomService:AdminRoomService){
+    this.adminRoomService=adminRoomService
+  }
+async getAllRooms (req: Request, res: Response, next: NextFunction) {
   try {
     console.log('reached')
     const { page = 1, limit = 6, searchTerm = "", sortOption = "public" } = req.query;
@@ -18,7 +22,7 @@ export const getAllRooms = async (req: Request, res: Response, next: NextFunctio
   }
 };
 
-export const blockRoom = async (req: Request, res: Response, next: NextFunction) => {
+async blockRoom (req: Request, res: Response, next: NextFunction) {
   try {
     const { id } = req.params;
     const room = await roomService.blockRoom(id);
@@ -28,7 +32,7 @@ export const blockRoom = async (req: Request, res: Response, next: NextFunction)
   }
 };
 
-export const unblockRoom = async (req: Request, res: Response, next: NextFunction) => {
+async unblockRoom (req: Request, res: Response, next: NextFunction) {
   try {
     const { id } = req.params;
     const room = await roomService.unblockRoom(id);
@@ -38,7 +42,7 @@ export const unblockRoom = async (req: Request, res: Response, next: NextFunctio
   }
 };
 
-export const deleteRoom = async (req: Request, res: Response, next: NextFunction) => {
+async deleteRoom (req: Request, res: Response, next: NextFunction){
   try {
     const { id } = req.params;
     const room = await roomService.deleteRoom(id);
@@ -47,3 +51,6 @@ export const deleteRoom = async (req: Request, res: Response, next: NextFunction
     next(error);
   }
 };
+}
+
+export default new AdminRoomController(new AdminRoomService(new AdminRoomRepository()))

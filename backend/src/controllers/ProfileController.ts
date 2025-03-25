@@ -11,7 +11,13 @@ cloudinary.v2.config({
   api_secret:process.env.CLOUDINARY_API_SECRET
 })
 
-export const getProfile = async(req:Request,res:Response,next:NextFunction) => {
+export class ProfileController{
+  private profileService:ProfileService
+  constructor(profileService:ProfileService){
+      this.profileService=profileService
+    }
+
+async getProfile(req:Request,res:Response,next:NextFunction){
   try {
     console.log("reached backend fetch profile")
     const userId = (req as any).user.id
@@ -23,7 +29,7 @@ export const getProfile = async(req:Request,res:Response,next:NextFunction) => {
   }
 }
 
-export const updateProfile = async(req:Request,res:Response,next:NextFunction) => {
+async updateProfile(req:Request,res:Response,next:NextFunction) {
 try {
   const id = (req as any ).user?.id
   const profileData = req.body
@@ -34,7 +40,7 @@ try {
 }
 }
 
-export const getCloudinarySignature = async(req:Request,res:Response,next:NextFunction) => {
+ async getCloudinarySignature(req:Request,res:Response,next:NextFunction) {
   try {
     const timestamp = Math.round(new Date().getTime()/1000)
     const paramsToSign = {
@@ -49,7 +55,7 @@ export const getCloudinarySignature = async(req:Request,res:Response,next:NextFu
   }
 }
 
-export const updateProfileImage = async (req:Request,res:Response,next:NextFunction) => {
+async updateProfileImage (req:Request,res:Response,next:NextFunction) {
   try {
     console.log("backend update Profile image")
     const id = (req as any).user?.id
@@ -67,7 +73,7 @@ export const updateProfileImage = async (req:Request,res:Response,next:NextFunct
 }
 
 
-export const updateStreak = async (req:Request,res:Response,next:NextFunction) => {
+async updateStreak (req:Request,res:Response,next:NextFunction) {
   try {
     console.log("reached backend streak")
     const userId = (req as any).user.id
@@ -78,3 +84,6 @@ export const updateStreak = async (req:Request,res:Response,next:NextFunction) =
     next(error)
   }
 }
+}
+
+export default new ProfileController(new ProfileService(new ProfileRepository()))

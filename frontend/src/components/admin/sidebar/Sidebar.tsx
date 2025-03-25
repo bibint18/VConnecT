@@ -75,8 +75,8 @@ const Sidebar: React.FC = () => {
 
       {/* Logout Button (Always Visible) */}
       <div className="p-2 border-t bg-black" onClick={adminLogout}>
-        <a
-          href="#"
+        <p
+          
           className={`flex items-center p-3 text-gray-700 hover:bg-gray-100 rounded-lg transition-all ${
             isCollapsed ? "justify-center" : "pl-4"
           }`}
@@ -85,7 +85,7 @@ const Sidebar: React.FC = () => {
           <span className={`ml-3 transition-all duration-300 ${isCollapsed ? "hidden" : "block"}`}>
             Logout
           </span>
-        </a>
+        </p>
       </div>
       
     </aside>

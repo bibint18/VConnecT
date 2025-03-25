@@ -23,7 +23,7 @@ const ListRoom: React.FC = () => {
   const [modalSecretCode, setModalSecretCode] = useState(''); // Secret code for modal
   const [showModal, setShowModal] = useState(false); // Modal visibility
   const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null);
-  const [filter, setFilter] = useState('');
+  // const [filter, setFilter] = useState('');
   const navigate = useNavigate();
   const [rooms, setRooms] = useState<Room[]>([]);
   const [loading, setLoading] = useState(true);
@@ -265,7 +265,7 @@ const ListRoom: React.FC = () => {
         >
           <div className="available-rooms-header">
             <h2>Available Rooms</h2>
-            <div className="filter-select-wrapper">
+            {/* <div className="filter-select-wrapper">
               <select
                 className="filter-select"
                 value={filter}
@@ -281,7 +281,7 @@ const ListRoom: React.FC = () => {
                   <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
                 </svg>
               </div>
-            </div>
+            </div> */}
           </div>
 
           {/* Room Grid */}

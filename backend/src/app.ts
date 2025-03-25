@@ -5,13 +5,15 @@ import cors from 'cors'
 import dotenv from 'dotenv'
 import conneectDB from "./config/db"
 import authRoutes from "./routes/authRoutes"
+import publicRoutes from './routes/publicRoute'
+import userRoutes from './routes/userRoute'
 import { errorHandler } from "./middlewares/globalErrorHandler"
 import { CallService } from "./services/CallService"
 import { CallRepository } from "./repositories/CallRepository"
 import cookieParser from "cookie-parser"
 import { FriendService } from "./services/FriendService"
 import { FriendRepository } from "./repositories/FriendRepository"
-
+import { authenticateToken,restrictToAdmin } from "./middlewares/authMiddleware"
 dotenv.config();
 const app = express()
 const httpServer = createServer(app)
@@ -29,7 +31,8 @@ app.use(cors({
 app.use(express.json())
 app.use(cookieParser())
 app.use("/api/auth",authRoutes)
-// app.use("/api/user",adminRoutes)
+app.use('/api/auth',publicRoutes)
+app.use("/api/auth",userRoutes)
 app.use(errorHandler)
 const callService = new CallService(new CallRepository(),io)
 const friendService = new FriendService(new FriendRepository(),io)

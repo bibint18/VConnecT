@@ -55,6 +55,7 @@ export const loginAdmin = async (email:string,password:string) => {
 
 export const adminLogout = async () => {
   try {
+    
     await axiosInstance.post('/adminLogout')
     store.dispatch(logout())
     window.location.href='/adminLogin'

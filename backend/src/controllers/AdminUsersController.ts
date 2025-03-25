@@ -3,8 +3,13 @@ import { AdminUserService } from "../services/AdminUserService";
 import {Response,Request, NextFunction} from 'express'
 const adminUsersService = new AdminUserService(new AdminUserRepository())
 
+export class AdminUsersController{
+  private adminUserService:AdminUserService
+  constructor(adminUserService:AdminUserService){
+    this.adminUserService=adminUserService
+  }
 
-export const getAllUsers = async(req:Request,res:Response,next:NextFunction) => {
+async getAllUsers(req:Request,res:Response,next:NextFunction) {
   try {
     const {page=1,limit=6,searchTerm="",sortOption="A-Z"} = req.query
     console.log("users query",req.query)
@@ -19,7 +24,7 @@ export const getAllUsers = async(req:Request,res:Response,next:NextFunction) => 
 }
 
 
-export const blockUser = async(req:Request,res:Response,next:NextFunction) => {
+async blockUser(req:Request,res:Response,next:NextFunction) {
   try {
     console.log("backend block user")
     const {id} = req.params
@@ -31,7 +36,7 @@ export const blockUser = async(req:Request,res:Response,next:NextFunction) => {
   }
 }
 
-export const unblockUser = async(req:Request,res:Response,next:NextFunction) => {
+ async unblockUser(req:Request,res:Response,next:NextFunction){
   try {
     const {id} = req.params
     const user = await adminUsersService.unblockUser(id)
@@ -41,7 +46,7 @@ export const unblockUser = async(req:Request,res:Response,next:NextFunction) => 
   }
 }
 
-export const deleteUser = async(req:Request,res:Response,next:NextFunction) => {
+async deleteUser(req:Request,res:Response,next:NextFunction) {
   try {
     const {id} = req.params
     const user = await adminUsersService.deleteUser(id)
@@ -50,3 +55,6 @@ export const deleteUser = async(req:Request,res:Response,next:NextFunction) => {
     next(error)
   }
 }
+}
+
+export default new AdminUsersController(new AdminUserService(AdminUserRepository()))
