@@ -1,40 +1,41 @@
 
 "use client"
-interface User{
-  _id:string;
-  name:string,
-  email:string,
-  password:string,
-  otp?:string,
-  otpExpiry?:Date,
-  isVerified:boolean
-  isAdmin:boolean
-  failedLoginAttempts: number;
-  lockUntil: Date | null;
-  plan:string;
-  isDeleted:boolean;
-  isBlocked:boolean
-}
+// interface User{
+//   _id:string;
+//   name:string,
+//   email:string,
+//   password:string,
+//   otp?:string,
+//   otpExpiry?:Date,
+//   isVerified:boolean
+//   isAdmin:boolean
+//   failedLoginAttempts: number;
+//   lockUntil: Date | null;
+//   plan:string;
+//   isDeleted:boolean;
+//   isBlocked:boolean
+// }
 
 import { useState } from "react"
 import { Search, ChevronDown, BarChart2,ScanSearch, ChevronRight, ChevronLeft } from "lucide-react"
 
-import { useUsers,useBlockUser,useDeleteUser,useUnblockUser } from "../../../hooks/useUsers"
+import { useRooms,useBlockRoom,useUnblockRoom,useDeleteRoom } from "../../../hooks/useRooms"
 import Swal from "sweetalert2";
+import { Room } from "@/api/adminAuth";
 export default function RoomlistAdmin() {
   const [page,setPage] = useState(1)
   const limit=6
   
-  const blockMutation = useBlockUser()
-  const unblockMutation = useUnblockUser()
-  const deleteMutation = useDeleteUser()
+  const blockMutation = useBlockRoom()
+  const unblockMutation = useUnblockRoom()
+  const deleteMutation = useDeleteRoom()
   const [searchTerm,setSearchTerm] = useState('')
-  const [sortOption,setSortOption] = useState<string>("A-Z")
-  const { data, isLoading, isError } = useUsers(page, limit, searchTerm, sortOption);
+  const [sortOption,setSortOption] = useState<string>('all')
+  const { data, isLoading, isError } = useRooms(page, limit, searchTerm, sortOption);
   console.log("data from component ",data)
-  const users: User[] = data?.users ?? []; 
-  const totalUsers: number = data?.totalUsers ?? 0; 
-const totalPages = Math.ceil(totalUsers/limit)
+  const rooms: Room[] = data?.rooms ?? []; 
+  const totalRooms: number = data?.totalRooms ?? 0; 
+const totalPages = Math.ceil(totalRooms/limit)
   console.log("totalCount",totalPages)
   const handleBlock = (id: string) => {
     Swal.fire({
@@ -114,11 +115,11 @@ const totalPages = Math.ceil(totalUsers/limit)
         <div className="grid-layout">
           <div>
             <div className="mb-6 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
-              <div className="search-container">
+              <div className="search-container text-black">
                 <input
                   type="text"
                   placeholder="Search users here"
-                  className="search-input"
+                  className="search-input !text-black "
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   //venenkile refetch
@@ -137,9 +138,10 @@ const totalPages = Math.ceil(totalUsers/limit)
                   onChange={(e) => setSortOption(e.target.value)}
                   >
                     <ChevronDown className="h-4 w-4" />
-                    <option className="text-black" value="A-Z">A-Z</option>
-    <option className="text-black " value="Z-A">Z-A</option>
-    <option className="text-black " value="recent">Recently Joined</option>
+                    <option className="text-black" value="all">ALL</option>
+                    <option className="text-black" value="public">PUBLIC</option>
+    <option className="text-black " value="private">PRIVATE</option>
+    {/* <option className="text-black " value="recent">Premium</option> */}
                   </select>
                 </div>
 
@@ -167,44 +169,42 @@ const totalPages = Math.ceil(totalUsers/limit)
                 </thead>
                 <tbody>
                 
-                {users?.length > 0 ? ( users?.map((user: User,index:number) => (
-                    <tr key={user._id} className="table-row border-b border-gray-100 last:border-0">
-                      <td className="px-4 py-3">
-                        <div className="flex items-center gap-2">
-                          <div className="h-8 w-8 overflow-hidden rounded-full">
-                            {/* <img src={user.avatar} alt={user.name} width={32} height={32} className="h-full w-full object-cover" /> */}
-                          </div>
-                          <span className="font-bold">{index+1}</span>
-                        </div>
-                      </td>
-                      <td className="px-4 py-3">{user.name}</td>
-                      <td className="px-4 py-3">{user.email}</td>
-                      <td className="px-4 py-3">{user.plan}</td>
-                      
-
+                {rooms?.length > 0 ? ( rooms?.map((room: Room,index:number) => (
+                    <tr key={room._id} className="table-row border-b border-gray-100 last:border-0">
                         <td className="px-4 py-3">
-                        {user.isBlocked ? (
-                          <button onClick={() => handleUnblock(user._id)} className="status-button status-blocked">
-                            Unblock
-                          </button>
-                        ) : (
-                          <button onClick={() => handleBlock(user._id)} className="status-button status-unblocked">
-                            Block
-                          </button>
-                        )}
-                      </td>
-
-                      <td className="px-4 py-3">
-                        <div className="flex items-center gap-2">
-                          {/* <button className="action-button edit-button">
-                            <Edit className="h-5 w-5" />
-                          </button> */}
-                          <button  onClick={() => handleDelete(user._id)} className="action-button delete-button">
+                          <span className="font-bold">{index + 1}</span>
+                        </td>
+                        <td className="px-4 py-3">{room.title}</td>
+                        <td className="px-4 py-3">{(room.createdBy as any)?.name || "Unknown"}</td>
+                        <td className="px-4 py-3">{room.type}</td>
+                        <td className="px-4 py-3">{room.limit}</td>
+                        <td className="px-4 py-3">{room.participants.length}</td>
+                        <td className="px-4 py-3">
+                          {room.isBlocked ? (
+                            <button
+                              onClick={() => handleUnblock(room._id)}
+                              className="status-button status-unblocked bg-green-500 text-white px-2 py-1 rounded"
+                            >
+                              Unblock
+                            </button>
+                          ) : (
+                            <button
+                              onClick={() => handleBlock(room._id)}
+                              className="status-button status-blocked bg-red-500 text-white px-2 py-1 rounded"
+                            >
+                              Block
+                            </button>
+                          )}
+                        </td>
+                        <td className="px-4 py-3">
+                          <button
+                            onClick={() => handleDelete(room._id)}
+                            className="action-button delete-button"
+                          >
                             <ScanSearch className="h-5 w-5" />
                           </button>
-                        </div>
-                      </td>
-                    </tr>
+                        </td>
+                      </tr>
                   ))): (
                     <tr>
                       <td colSpan={6} className="text-center py-4 text-gray-500">

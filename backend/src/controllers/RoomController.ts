@@ -20,7 +20,9 @@ export class RoomController {
         type: req.body.type,
         description: req.body.description,
         createdBy:userId,
-        participants:[userId]
+        participants:[userId],
+        isDeleted:false,
+        isBlocked:false
       }
       const newRoom =await this.roomService.createRoom(roomData)
       res.status(200).json({room:newRoom})

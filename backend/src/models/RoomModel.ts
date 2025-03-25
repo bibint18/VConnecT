@@ -1,6 +1,6 @@
 import mongoose,{Schema, Types} from "mongoose";
 import { title } from "process";
-
+import { IUser } from "./User";
 export interface IRoom{
   id?: string; // Optional for creation, added by DB
   title: string;
@@ -9,9 +9,11 @@ export interface IRoom{
   type: 'PUBLIC' | 'PRIVATE';
   description: string;
   createdAt?: Date; // Optiona
-  createdBy:string;
+  createdBy:Partial<IUser>;
   secretCode?:string;
-  participants: Types.ObjectId[]
+  participants: Types.ObjectId[];
+  isDeleted:boolean;
+  isBlocked:boolean
 }
 
 const RoomSchema:Schema = new Schema({
@@ -21,9 +23,11 @@ const RoomSchema:Schema = new Schema({
   type: { type: String, enum: ['PUBLIC', 'PRIVATE'], required: true },
   description: { type: String, required: true },
   createdAt: { type: Date, default: Date.now },
-  createdBy:{type:String},
+  createdBy:{ type: Schema.Types.ObjectId, ref: "User", required: true },
   secretCode:{type:String},
-  participants:[{type:Schema.Types.ObjectId,ref:'User'}]
+  participants:[{type:Schema.Types.ObjectId,ref:'User'}],
+  isDeleted:{type:Boolean,default:false},
+  isBlocked:{type:Boolean,default:false}
 })
 
 export const Room = mongoose.model<IRoom>('Room',RoomSchema)

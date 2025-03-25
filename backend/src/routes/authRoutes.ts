@@ -30,6 +30,7 @@ import { authenticateToken,restrictToAdmin} from '../middlewares/authMiddleware'
 import verifyRecaptcha from '../middlewares/recaptchaMiddleware'
 import { FriendController } from '../controllers/FriendController'
 import { FriendRepository } from '../repositories/FriendRepository'
+import { getAllRooms,blockRoom,unblockRoom,deleteRoom } from '../controllers/AdminRoomController'
 const router = express.Router()
 router.post("/signup",signup)
 router.post("/verify-otp",verifyOTP)
@@ -77,4 +78,9 @@ const friendRepository = new FriendRepository();
 const friendController = new FriendController(friendRepository);
 router.get('/user/friend/requests',authenticateToken,friendController.getPendingRequests)
 
+//admin room
+router.get("/admin/rooms", authenticateToken, getAllRooms);
+router.post("/admin/rooms/block/:id", authenticateToken, blockRoom);
+router.post("/admin/rooms/unblock/:id", authenticateToken, unblockRoom);
+router.post("/admin/rooms/delete/:id", authenticateToken, deleteRoom);
 export default router

@@ -6,7 +6,7 @@ const API_URL = "http://localhost:3000/api/auth";
 
 //USERS API
 export const fetchUsers = async (page: number, limit: number,searchTerm:string,sortOption:string) => {
-  const response = await axiosInstance.get(`${API_URL}/admin/users`, {
+  const response = await axiosInstance.get(`/admin/users`, {
     params: { page, limit ,searchTerm,sortOption},
     withCredentials:true
   });
@@ -17,19 +17,19 @@ export const fetchUsers = async (page: number, limit: number,searchTerm:string,s
 
 export const blockUser = async (id: string) => {
   console.log(id)
-  const response = await axiosInstance.post(`${API_URL}/admin/users/block/${id}`);
+  const response = await axiosInstance.post(`/admin/users/block/${id}`);
   return response.data;
 };
 
 
 export const unblockUser = async (id: string) => {
-  const response = await axiosInstance.post(`${API_URL}/admin/users/unblock/${id}`);
+  const response = await axiosInstance.post(`/admin/users/unblock/${id}`);
   return response.data;
 };
 
 
 export const deleteUser = async (id: string) => {
-  const response = await axiosInstance.post(`${API_URL}/admin/users/delete/${id}`);
+  const response = await axiosInstance.post(`/admin/users/delete/${id}`);
   return response.data;
 };
 
@@ -73,3 +73,47 @@ export const deletePlan = async (id:string) => {
   const response = await axiosInstance.post(`${API_URL}/admin/plans/delete/${id}`)
   return response.data
 }
+
+
+
+
+//Rooms
+export interface Room {
+  _id: string;
+  title: string;
+  createdBy: string; // User ID
+  limit: number;
+  participants: string[]; // Array of User IDs
+  createdAt: Date;
+  isDeleted?: boolean;
+  isBlocked: boolean; // New field for blocking
+  type: "public" | "private" | "premium"; // New field for room type
+}
+
+export interface RoomsResponse {
+  rooms: Room[];
+  totalRooms: number;
+}
+
+export const fetchRooms = async (page: number, limit: number, searchTerm: string, sortOption: string): Promise<RoomsResponse> => {
+  const response = await axiosInstance.get(`/admin/rooms`, {
+    params: { page, limit, searchTerm, sortOption },
+    withCredentials: true,
+  });
+  return response.data;
+};
+
+export const blockRoom = async (id: string) => {
+  const response = await axiosInstance.post(`/admin/rooms/block/${id}`);
+  return response.data;
+};
+
+export const unblockRoom = async (id: string) => {
+  const response = await axiosInstance.post(`/admin/rooms/unblock/${id}`);
+  return response.data;
+};
+
+export const deleteRoom = async (id: string) => {
+  const response = await axiosInstance.post(`/admin/rooms/delete/${id}`);
+  return response.data;
+};
