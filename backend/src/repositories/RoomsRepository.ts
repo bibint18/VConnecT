@@ -18,6 +18,9 @@ export class RoomRepository implements IRoomRepository{
     try {
       const room = await Room.findById(RoomId)
       console.log("repository rooom",room)
+      if(room?.isBlocked){
+        throw new Error("Room is Blocked")
+      }
       if(!room){
         throw new Error("Room not found...")
       }
