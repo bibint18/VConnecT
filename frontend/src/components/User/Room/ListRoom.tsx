@@ -45,28 +45,13 @@ const ListRoom: React.FC = () => {
     fetchRooms();
   }, []);
 
-  // const handleJoinRoom =async (roomId: string,roomType:string) => {
-  //   try {
-  //     console.log("handlejoin rooo  rromid,roomType",roomId,roomType)
-  //     const code = roomType==='PRIVATE' ? secretCode : undefined
-  //     const response = await joinRoom(roomId,code)
-  //     toast.success(`user joined Room "${response.room.title}"`,{duration:3000})
-  //     const data = await getAllRooms()
-  //     setRooms(data.rooms)
-  //   } catch (error:unknown) {
-  //     toast.error(error instanceof Error ? error.message : 'Failed to join room');
-  //   }
-  // };
 
   const handleJoinRoom = async (roomId: string, roomType: string) => {
     if (roomType === 'PRIVATE') {
-      // Show modal for private rooms
       setSelectedRoomId(roomId);
       setShowModal(true);
       return;
     }
-
-    // Handle public rooms directly
     try {
       const response = await joinRoom(roomId);
       toast.success(`User joined "${response.room.title}"`, { duration: 3000 });

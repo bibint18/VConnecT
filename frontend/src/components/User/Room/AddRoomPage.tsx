@@ -1,6 +1,7 @@
 import { Sidebar } from "../Profile/Sidebar"
 import Header from "../Header/Header"
-import RoomPage from "./RoomPage"
+// import RoomPage from "./RoomPage"
+import AddRoom from "./AddRoom"
 
 export default function AddRoomPage() {
   return (
@@ -17,7 +18,7 @@ export default function AddRoomPage() {
 
         {/* ProfileContent: Takes remaining space */}
         <div className="flex-1 pt-16"> {/* pt-16 offsets for header height */}
-          <RoomPage />
+          <AddRoom />
         </div>
       </div>
     </div>

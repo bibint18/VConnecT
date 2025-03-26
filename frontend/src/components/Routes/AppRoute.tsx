@@ -21,10 +21,10 @@ import HomePage from "../User/Header/HomePage";
 import LandingPage from '../../pages/LandingPage'
 import ProfilePage from "../User/Profile/Page";
 // import ListRoom from "./components/User/Room/ListRoom";
-import RoomPage from "../User/Room/AddRoomPage";
+// import RoomPage from "../User/Room/AddRoomPage";
 // import AddRoom from "./components/User/Room/AddRoom";
 import AddRoomPage from "../User/Room/AddRoomPage";
-
+import RoomPage from "../User/Room/RoomPage";
 import RoomCall from "../User/Room/Calls/RoomCall";
 import FriendRequests from "../User/Friends/FriendRequest";
 import AdminRoom from "@/pages/AdminRoom";

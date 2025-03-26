@@ -3,6 +3,19 @@ import { IRoomRepository } from "../interfaces/IRoomRepository";
 
 export class RoomRepository implements IRoomRepository{
   async createRoom(roomData:IRoom):Promise<IRoom | null>{
+    if(roomData.title.trim()===''){
+      throw new Error("Should add title")
+    }
+    const existingTitle = await Room.findOne({title:roomData.title})
+    if(existingTitle){
+      throw new Error("Title already exist")
+    }
+    if(roomData.limit>10 || roomData.limit<1){
+      throw new Error("Limit should between 1-10")
+    }
+    if(roomData.description.trim()===''){
+      throw new Error("Should add description")
+    }
     const room = new Room(roomData)
     const savedRoom=await room.save()
     return savedRoom

@@ -57,4 +57,4 @@ async deleteUser(req:Request,res:Response,next:NextFunction) {
 }
 }
 
-export default new AdminUsersController(new AdminUserService(AdminUserRepository()))
+export default new AdminUsersController(new AdminUserService(new AdminUserRepository()))
