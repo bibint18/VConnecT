@@ -1,6 +1,14 @@
 import mongoose,{Schema, Types} from "mongoose";
 import { title } from "process";
 import { IUser } from "./User";
+
+export interface IParticipant {
+  userId: Types.ObjectId;
+  firstJoin: Date;
+  lastJoin: Date;
+  lastLeave: Date | null;
+  totalDuration: number; // In milliseconds
+}
 export interface IRoom{
   id?: string; 
   title: string;
@@ -8,13 +16,20 @@ export interface IRoom{
   premium: boolean; 
   type: 'PUBLIC' | 'PRIVATE';
   description: string;
-  createdAt?: Date; // Optiona
+  createdAt?: Date; 
   createdBy:Partial<IUser>;
   secretCode?:string;
-  participants: Types.ObjectId[];
+  participants: IParticipant[]
   isDeleted:boolean;
   isBlocked:boolean
 }
+const participantSchema = new Schema({
+  userId: { type: Schema.Types.ObjectId, ref: "User", },
+  firstJoin: { type: Date},
+  lastJoin: { type: Date},
+  lastLeave: { type: Date, default: null },
+  totalDuration: { type: Number, default: 0 }, 
+});
 
 const RoomSchema:Schema = new Schema({
   title:{type:String,require:true},
@@ -25,7 +40,7 @@ const RoomSchema:Schema = new Schema({
   createdAt: { type: Date, default: Date.now },
   createdBy:{ type: Schema.Types.ObjectId, ref: "User", required: true },
   secretCode:{type:String},
-  participants:[{type:Schema.Types.ObjectId,ref:'User'}],
+  participants:[participantSchema],
   isDeleted:{type:Boolean,default:false},
   isBlocked:{type:Boolean,default:false}
 })

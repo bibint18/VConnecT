@@ -1,4 +1,5 @@
 import { IAdminRoomRepository } from "../interfaces/IAdminRoomRepository";
+import { IRoom } from "../models/RoomModel";
 
 export class AdminRoomService {
   private roomRepository: IAdminRoomRepository;
@@ -27,5 +28,9 @@ export class AdminRoomService {
 
   async deleteRoom(id: string) {
     return await this.roomRepository.deleteRoom(id);
+  }
+
+  async getRoomDetails(id:string):Promise<IRoom | null>{
+    return await this.roomRepository.getRoomDetails(id)
   }
 }

@@ -1,5 +1,6 @@
 import { Room ,IRoom} from "../models/RoomModel";
 import { IRoomRepository } from "../interfaces/IRoomRepository";
+import mongoose from "mongoose";
 
 export class RoomRepository implements IRoomRepository{
   async createRoom(roomData:IRoom):Promise<IRoom | null>{
@@ -46,7 +47,21 @@ export class RoomRepository implements IRoomRepository{
       if(room.participants.length >= room.limit){
         throw new Error('Room is full...')
       }
-      room.participants.push(userId as any)
+      // room.participants.push(userId as any)
+      // return await room.save()
+      const participantIndex = room.participants.findIndex((p) => p.userId.toString() ===userId)
+      const now = new Date()
+      if(participantIndex  ===-1){
+        room.participants.push({
+          userId:new mongoose.Types.ObjectId(userId),
+          firstJoin:now,
+          lastJoin:now,
+          lastLeave:null,
+          totalDuration:0,
+        })
+      }else{
+        room.participants[participantIndex].lastJoin=now
+      }
       return await room.save()
     } catch (error) {
       console.error(error)

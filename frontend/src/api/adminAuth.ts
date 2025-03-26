@@ -78,16 +78,23 @@ export const deletePlan = async (id:string) => {
 
 
 //Rooms
+export interface IParticipant {
+  userId: { _id: string; name: string; email: string };
+  firstJoin: Date;
+  lastJoin: Date;
+  lastLeave: Date | null;
+  totalDuration: number;
+}
 export interface Room {
   _id: string;
   title: string;
-  createdBy: string; // User ID
+  createdBy: string; 
   limit: number;
-  participants: string[]; // Array of User IDs
+  participants: IParticipant[]; 
   createdAt: Date;
   isDeleted?: boolean;
-  isBlocked: boolean; // New field for blocking
-  type: "public" | "private" | "premium"; // New field for room type
+  isBlocked: boolean; 
+  type: "public" | "private" ; 
 }
 
 export interface RoomsResponse {

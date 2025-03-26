@@ -39,7 +39,6 @@ export class CallService {
       socket.on('leave-call', async (data: { roomId: string; userId: string }) => {
         const { roomId, userId } = data;
         console.log('Received leave-call:', { roomId, userId, socketId: socket.id });
-
         try {
           await this.callRepository.leaveCall(roomId, userId);
           socket.leave(roomId);

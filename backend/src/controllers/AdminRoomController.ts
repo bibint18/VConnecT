@@ -51,6 +51,17 @@ async deleteRoom (req: Request, res: Response, next: NextFunction){
     next(error);
   }
 };
+
+async getRoomDetails(req:Request,res:Response,next:NextFunction){
+  try {
+    const {id} = req.params
+    const room= await this.adminRoomService.getRoomDetails(id)
+    res.status(200).json({room})
+  } catch (error) {
+    next(error)
+  }
+}
+
 }
 
 export default new AdminRoomController(new AdminRoomService(new AdminRoomRepository()))

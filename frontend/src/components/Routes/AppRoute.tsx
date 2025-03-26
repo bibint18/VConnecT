@@ -28,6 +28,7 @@ import RoomPage from "../User/Room/RoomPage";
 import RoomCall from "../User/Room/Calls/RoomCall";
 import FriendRequests from "../User/Friends/FriendRequest";
 import AdminRoom from "@/pages/AdminRoom";
+import RoomDetails from "../admin/Room/RoomDetails";
 
 function AppRoute() {
   return (
@@ -47,6 +48,7 @@ function AppRoute() {
         <Route path="/adminLogin" element={<AdminLogin />} />
         <Route path="/" element={<HomePage />} />
         <Route path="/rooms" element={<RoomPage/>} />
+        <Route path="/admin/room-details/:id" element={<RoomDetails />} />
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<AdminDashboard />} />
           <Route path="/plans" element={<AdminPlans />} />

@@ -2,6 +2,7 @@ import { title } from "process";
 import { IAdminRoomRepository } from "../interfaces/IAdminRoomRepository";
 import { IRoom, Room } from "../models/RoomModel";
 import { AppError } from "../utils/AppError";
+import { IUser } from "../models/User";
 
 export class AdminRoomRepository implements IAdminRoomRepository{
   async getAllRooms(page: number, limit: number, searchTerm: string, sortOption: string): Promise<IRoom[]> {
@@ -54,5 +55,14 @@ export class AdminRoomRepository implements IAdminRoomRepository{
     const room = await Room.findByIdAndUpdate(id, { isDeleted: true }, { new: true }).exec();
     if (!room) throw new AppError("Room not found", 404);
     return room;
+  }
+
+  async getRoomDetails(id: string): Promise<IRoom | null> {
+    const room = await Room.findById(id)
+    .populate('createdBy','name email')
+    .populate('participants.userId','name email')
+    .exec()
+    if(!room) throw new AppError("Room not found",404)
+    return room
   }
 }

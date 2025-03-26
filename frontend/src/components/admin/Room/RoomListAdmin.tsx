@@ -18,17 +18,17 @@
 
 import { useState } from "react"
 import { Search, ChevronDown, BarChart2,ScanSearch, ChevronRight, ChevronLeft } from "lucide-react"
-
-import { useRooms,useBlockRoom,useUnblockRoom,useDeleteRoom } from "../../../hooks/useRooms"
+import { useNavigate } from "react-router-dom"
+import { useRooms,useBlockRoom,useUnblockRoom} from "../../../hooks/useRooms"
 import Swal from "sweetalert2";
 import { Room } from "@/api/adminAuth";
 export default function RoomlistAdmin() {
   const [page,setPage] = useState(1)
   const limit=6
-  
+  const navigate = useNavigate()
   const blockMutation = useBlockRoom()
   const unblockMutation = useUnblockRoom()
-  const deleteMutation = useDeleteRoom()
+  // const deleteMutation = useDeleteRoom()
   const [searchTerm,setSearchTerm] = useState('')
   const [sortOption,setSortOption] = useState<string>('all')
   const { data, isLoading, isError } = useRooms(page, limit, searchTerm, sortOption);
@@ -84,28 +84,32 @@ const totalPages = Math.ceil(totalRooms/limit)
     });
   };
 
-  const handleDelete = (id: string) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#d33",
-      cancelButtonColor: "#3085d6",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        deleteMutation.mutate(id, {
-          onSuccess: () => {
-            Swal.fire("Deleted!", "The user has been deleted.", "success");
-          },
-          onError: () => {
-            Swal.fire("Error!", "Something went wrong.", "error");
-          },
-        });
-      }
-    });
+  const handleViewDetails = (id: string) => {
+    navigate(`/admin/room-details/${id}`);
   };
+
+  // const handleDelete = (id: string) => {
+  //   Swal.fire({
+  //     title: "Are you sure?",
+  //     text: "You won't be able to revert this!",
+  //     icon: "warning",
+  //     showCancelButton: true,
+  //     confirmButtonColor: "#d33",
+  //     cancelButtonColor: "#3085d6",
+  //     confirmButtonText: "Yes, delete it!",
+  //   }).then((result) => {
+  //     if (result.isConfirmed) {
+  //       deleteMutation.mutate(id, {
+  //         onSuccess: () => {
+  //           Swal.fire("Deleted!", "The user has been deleted.", "success");
+  //         },
+  //         onError: () => {
+  //           Swal.fire("Error!", "Something went wrong.", "error");
+  //         },
+  //       });
+  //     }
+  //   });
+  // };
 
   if(isLoading) return <p>Loading Rooms...</p>
   if(isError) return <p>Error fetching Rooms..</p>
@@ -198,7 +202,7 @@ const totalPages = Math.ceil(totalRooms/limit)
                         </td>
                         <td className="px-4 py-3">
                           <button
-                            onClick={() => handleDelete(room._id)}
+                            onClick={() => handleViewDetails(room._id)}
                             className="action-button delete-button"
                           >
                             <ScanSearch className="h-5 w-5" />

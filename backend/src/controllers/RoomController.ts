@@ -12,6 +12,7 @@ export class RoomController {
   async createRoom(req:Request,res:Response,next:NextFunction) {
     try {
       const userId = (req as any).user?.id
+      const now = new Date()
       console.log(userId)
       const roomData :IRoom ={
         title:(req as any).body.title,
@@ -20,7 +21,13 @@ export class RoomController {
         type: req.body.type,
         description: req.body.description,
         createdBy:userId,
-        participants:[userId],
+        participants:[{
+          userId:userId,
+          firstJoin:now,
+          lastJoin:now,
+          lastLeave:null,
+          totalDuration:0
+        }],
         isDeleted:false,
         isBlocked:false
       }

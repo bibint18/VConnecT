@@ -3,6 +3,7 @@ import AdminUsersController from '../controllers/AdminUsersController'
 import AdminPlansController from '../controllers/AdminPlansController'
 import { authenticateToken,restrictToAdmin} from '../middlewares/authMiddleware'
 import AdminRoomController from '../controllers/AdminRoomController'
+import { auth } from 'google-auth-library'
 const router = express.Router()
 
 
@@ -25,4 +26,5 @@ router.get("/admin/rooms", authenticateToken,restrictToAdmin, AdminRoomControlle
 router.post("/admin/rooms/block/:id", authenticateToken,restrictToAdmin,AdminRoomController.blockRoom.bind(AdminRoomController));
 router.post("/admin/rooms/unblock/:id", authenticateToken,restrictToAdmin,AdminRoomController.unblockRoom.bind(AdminRoomController));
 router.post("/admin/rooms/delete/:id", authenticateToken,restrictToAdmin,AdminRoomController.deleteRoom.bind(AdminRoomController));
+router.get('/admin/room/details/:id',authenticateToken,restrictToAdmin,AdminRoomController.getRoomDetails.bind(AdminRoomController))
 export default router
