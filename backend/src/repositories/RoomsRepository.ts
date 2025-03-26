@@ -30,7 +30,7 @@ export class RoomRepository implements IRoomRepository{
   async joinRoom(RoomId: string, userId: string, secretCode: string): Promise<IRoom | null> {
     try {
       const room = await Room.findById(RoomId)
-      console.log("repository rooom",room)
+      console.log("repository rooom",room,userId)
       if(room?.isBlocked){
         throw new Error("Room is Blocked")
       }

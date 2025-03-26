@@ -2,10 +2,10 @@ import mongoose,{Schema, Types} from "mongoose";
 import { title } from "process";
 import { IUser } from "./User";
 export interface IRoom{
-  id?: string; // Optional for creation, added by DB
+  id?: string; 
   title: string;
   limit: number;
-  premium: boolean; // Convert 'Yes'/'No' to boolean
+  premium: boolean; 
   type: 'PUBLIC' | 'PRIVATE';
   description: string;
   createdAt?: Date; // Optiona

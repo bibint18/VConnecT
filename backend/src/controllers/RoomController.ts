@@ -42,13 +42,15 @@ export class RoomController {
 
   async joinRoom(req:Request,res:Response,next:NextFunction){
     try {
+      console.log("reached join room controller ")
       const userId=(req as any).user.id
       const {roomId,secretCode} = req.body
-      console.log('backend join room controller',roomId,secretCode)
+      console.log('backend join room controller',roomId,secretCode,userId)
       if(!roomId){
         throw new Error("Room id is required")
       }
       const updatedRoom = await this.roomService.joinRoom(roomId,userId,secretCode)
+      console.log("updatedRoom controller",updatedRoom)
       res.status(200).json({room:updatedRoom,message:"Joined room successfully!"})
     } catch (error) {
       next(error)
