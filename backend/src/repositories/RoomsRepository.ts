@@ -44,9 +44,9 @@ export class RoomRepository implements IRoomRepository{
       if(room.participants.some((id) => id.toString() ===userId)){
         return room
       }
-      if(room.participants.length >= room.limit){
-        throw new Error('Room is full...')
-      }
+      // if(room.participants.length >= room.limit){
+      //   throw new Error('Room is full...')
+      // }
       // room.participants.push(userId as any)
       // return await room.save()
       const participantIndex = room.participants.findIndex((p) => p.userId.toString() ===userId)

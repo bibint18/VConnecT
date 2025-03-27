@@ -13,9 +13,9 @@ export class CallRepository implements ICallRepository{
       if(!userId){
         throw new AppError("No user id reached backend",404)
       }
-      if(room.participants.length >= room.limit){
-        throw new AppError("Room is full",400)
-      }
+      // if(room.participants.length >= room.limit){
+      //   throw new AppError("Room is full",400)
+      // }
       // if(!room.participants.some((id) => id.toString() === userId)){
       //   room.participants.push(userId as any)
       //   await room.save()
