@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Search, Edit, Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useTriviaQuestion } from "@/hooks/useAdminTrivia";
-// import Swal from "sweetalert2";
+import { useDeleteTriviaQuestion, useTriviaQuestion } from "@/hooks/useAdminTrivia";
+import Swal from "sweetalert2";
 import { ChevronRight, ChevronLeft } from "lucide-react";
 import "./triviaList.css"; // Create this with similar styles to plans.css
 
@@ -26,25 +26,25 @@ export default function ListTrivia() {
     searchTerm
   );
   const totalPages = Math.ceil(data.total / limit);
-  // const { mutate: deleteTrivia } = useDeleteTriviaQuestion();
+  const { mutate: deleteTrivia } = useDeleteTriviaQuestion();
 
-  // const handleDelete = (id: string) => {
-  //   Swal.fire({
-  //     title: "Are you sure?",
-  //     text: "This trivia question will be deleted!",
-  //     icon: "warning",
-  //     showCancelButton: true,
-  //     confirmButtonColor: "#d33",
-  //     cancelButtonColor: "#3085d6",
-  //     confirmButtonText: "Yes, delete it!",
-  //   }).then((result) => {
-  //     if (result.isConfirmed) {
-  //       deleteTrivia(id, {
-  //         onSuccess: () => Swal.fire("Deleted!", "Trivia question has been deleted.", "success"),
-  //       });
-  //     }
-  //   });
-  // };
+  const handleDelete = (id: string) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "This trivia question will be deleted!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deleteTrivia(id, {
+          onSuccess: () => Swal.fire("Deleted!", "Trivia question has been deleted.", "success"),
+        });
+      }
+    });
+  };
 
   if (isPending) return <div className="text-center py-12">Loading trivia questions...</div>;
   if (isError) return <div className="text-center py-12 text-red-500">Failed to load trivia questions.</div>;
@@ -120,7 +120,7 @@ export default function ListTrivia() {
                       </button>
                       <button
                         className="action-button delete-button"
-                        onClick={() =>(trivia._id)}
+                        onClick={() =>handleDelete(trivia._id)}
                       >
                         <Trash2 className="h-5 w-5" />
                       </button>

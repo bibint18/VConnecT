@@ -36,4 +36,26 @@ export class AdminDailyTriviaReposiroy implements IAdminDailyTriviaRepository{
     const total = await DailyTrivia.countDocuments(query)
     return {questions,total}
   }
+
+  async updateTriviaQuestion(id: string, question: string, options: string[], correctAnswer: string): Promise<IDailyTrivia> {
+    if(options.length !==4) throw new AppError("4 options required",400)
+      if (!options.includes(correctAnswer)) throw new AppError("Correct answer must be one of the options", 400);
+    const trivia = await DailyTrivia.findByIdAndUpdate(id,{question,options,correctAnswer},{new:true}).exec()
+    if (!trivia || trivia.isDeleted) throw new AppError("Trivia question not found", 404);
+    return trivia
+  }
+
+  async deleteTriviaQuestion(id: string): Promise<IDailyTrivia> {
+    const trivia = await DailyTrivia.findByIdAndUpdate(
+      id,{isDeleted:true}
+    ).exec()
+    if(!trivia) throw new AppError("Trivia question not found",404)
+    return trivia
+  }
+
+  async getTriviaQuestionById(id: string): Promise<IDailyTrivia> {
+    const trivia = await DailyTrivia.findById(id).exec();
+    if (!trivia || trivia.isDeleted) throw new AppError("Trivia question not found", 404);
+    return trivia;
+  }
 }

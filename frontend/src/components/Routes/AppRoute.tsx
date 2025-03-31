@@ -31,6 +31,7 @@ import AdminRoom from "@/pages/AdminRoom";
 import RoomDetails from "../admin/Room/RoomDetails";
 import AdminTriviaForm from "../admin/Trivia/AdminTriviaForm";
 import ListTrivia from "../admin/Trivia/ListTrivia";
+import AdminTriviaEdit from "../admin/Trivia/EditTrivia";
 
 function AppRoute() {
   return (
@@ -60,7 +61,7 @@ function AppRoute() {
           <Route path="/admin/rooms" element={<AdminRoom />} />
           <Route path="/trivia/add" element={<AdminTriviaForm/>} />
           <Route path="/trivia" element={<ListTrivia/>} />
-
+          <Route path="/admin/trivia/edit/:id" element={<AdminTriviaEdit />} />
         </Route>
       </Routes>
   )

@@ -1,5 +1,5 @@
-import { addTriviaQuestion, fetchTriviaQuestions, ITriviaResponse } from '@/api/adminAuth'
-import {keepPreviousData, useMutation, useQuery} from '@tanstack/react-query'
+import { addTriviaQuestion, deleteTriviaQuestion, fetchTriviaQuestionById, fetchTriviaQuestions, ITrivia, ITriviaResponse, TriviaData, updateTriviaQuestion } from '@/api/adminAuth'
+import {keepPreviousData, useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 import { AxiosError } from 'axios'
 import toast from 'react-hot-toast'
 export const useAddTriviaQuestion = () => {
@@ -27,3 +27,51 @@ export const useTriviaQuestion = (page:number,limit:number,searchTerm:string) =>
     placeholderData:keepPreviousData,
   })
 }
+
+export const useTriviaQuestionById = (id: string) => {
+  return useQuery<ITrivia>({
+    queryKey: ["triviaQuestion", id],
+    queryFn: () => fetchTriviaQuestionById(id),
+    enabled: !!id, // Only fetch if ID is provided
+  });
+};
+
+export const useUpdateTriviaQuestion = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, data }: { id: string; data: TriviaData }) => updateTriviaQuestion(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["triviaQuestions"]);
+      queryClient.invalidateQueries(["triviaQuestion"]);
+      console.log("Trivia question updated");
+    },
+    onError: (error:unknown) =>{
+      if (error instanceof AxiosError && error.response?.data?.message) {
+        console.log(error)
+        toast.error(error.response.data.message);
+      } else {
+        toast.error("add trivia failed");
+      }
+    }
+  });
+};
+
+
+export const useDeleteTriviaQuestion = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: deleteTriviaQuestion,
+    onSuccess: () => {
+      queryClient.invalidateQueries(["triviaQuestions"]);
+      console.log("Trivia question deleted");
+    },
+    onError: (error: unknown) =>{
+      if (error instanceof AxiosError && error.response?.data?.message) {
+        console.log(error)
+        toast.error(error.response.data.message);
+      } else {
+        toast.error("delete trivia failed");
+      }
+    }
+  });
+};

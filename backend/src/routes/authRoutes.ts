@@ -38,4 +38,7 @@ const dailyTriviaService = new AdminDailyTriviaService(dailyTriviaRepository)
 const dailyTriviaController = new AdminDailyTriviaController(dailyTriviaService)
 router.post('/admin/trivia',authenticateToken,restrictToAdmin,dailyTriviaController.addTriviaQuestion.bind(dailyTriviaController))
 router.get('/admin/trivia',authenticateToken,restrictToAdmin,dailyTriviaController.getTriviaQuestions.bind(dailyTriviaController))
+router.put('/admin/trivia/update/:id',authenticateToken,restrictToAdmin,dailyTriviaController.updateTriviaQuestion.bind(dailyTriviaController))
+router.delete('/admin/trivia/delete/:id',authenticateToken,restrictToAdmin,dailyTriviaController.deleteTriviaQuestion.bind(dailyTriviaController))
+router.get("/admin/trivia/:id", authenticateToken, restrictToAdmin, dailyTriviaController.getTriviaQuestionById.bind(dailyTriviaController));
 export default router

@@ -128,7 +128,7 @@ export const deleteRoom = async (id: string) => {
 
 //daily trivia
 
-interface TriviaData{
+export interface TriviaData{
   question:string;
   options:string[];
   correctAnswer:string;
@@ -139,7 +139,8 @@ export interface ITrivia{
   setNumber:number;
   question:string;
   correctAnswer:string;
-  isDeleted:boolean
+  isDeleted:boolean;
+  options:string[];
 }
 
 export interface ITriviaResponse {
@@ -154,5 +155,21 @@ export const addTriviaQuestion = async (data:TriviaData) => {
 
 export const fetchTriviaQuestions = async (page:number,limit:number,searchTerm:string): Promise<ITriviaResponse> => {
   const response = await axiosInstance.get('/admin/trivia',{params:{page,limit,searchTerm},withCredentials:true})
+  return response.data
+}
+
+export const fetchTriviaQuestionById = async (id:string):Promise<ITrivia> => {
+  const response = await axiosInstance.get(`/admin/trivia/${id}`)
+   console.log('data from frontend',response.data)
+  return response.data.trivia
+}
+
+export const updateTriviaQuestion = async (id:string,data:TriviaData) => {
+  const response = await axiosInstance.put(`/admin/trivia/update/${id}`,data)
+  return response.data
+}
+
+export const deleteTriviaQuestion =async (id:string) => {
+  const response = await axiosInstance.delete(`/admin/trivia/delete/${id}`)
   return response.data
 }

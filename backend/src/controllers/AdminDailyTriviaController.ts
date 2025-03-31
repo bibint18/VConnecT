@@ -31,4 +31,41 @@ export class AdminDailyTriviaController implements AdminIDailyTriviaController{
       next(error)
     }
   }
+
+  async updateTriviaQuestion(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const {id} = req.params
+      const {question,options,correctAnswer} = req.body;
+      if (!question || !options || !correctAnswer) {
+        res.status(400).json({ message: "All fields are required" });
+        return;
+      }
+      const trivia = await this.triviaService.updateTriviaQuestion(id,question,options,correctAnswer)
+      res.status(200).json({message:"Trivia Question updated",trivia})
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  async deleteTriviaQuestion(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const {id} = req.params
+      const trivia = await this.triviaService.deleteTriviaQuestion(id)
+      res.status(200).json({message:"Trivia deleted successfully",trivia})
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  async getTriviaQuestionById(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      console.log("reached fetbyid")
+      const { id } = req.params;
+      const trivia = await this.triviaService.getTriviaQuestionById(id);
+      console.log("trivia controller",trivia)
+      res.status(200).json({ trivia });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
