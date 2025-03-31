@@ -14,6 +14,8 @@ import cookieParser from "cookie-parser"
 import { FriendService } from "./services/FriendService"
 import { FriendRepository } from "./repositories/FriendRepository"
 import { authenticateToken,restrictToAdmin } from "./middlewares/authMiddleware"
+import { AdminDailyTriviaService } from "./services/AdminDailyTriviaService"
+import { AdminDailyTriviaReposiroy } from "./repositories/AdminDailyTriviaRepository"
 dotenv.config();
 const app = express()
 const httpServer = createServer(app)
@@ -36,5 +38,6 @@ app.use("/api/auth",userRoutes)
 app.use(errorHandler)
 const callService = new CallService(new CallRepository(),io)
 const friendService = new FriendService(new FriendRepository(),io)
+
 conneectDB()
 export default httpServer

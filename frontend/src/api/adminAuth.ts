@@ -124,3 +124,18 @@ export const deleteRoom = async (id: string) => {
   const response = await axiosInstance.post(`/admin/rooms/delete/${id}`);
   return response.data;
 };
+
+
+//daily trivia
+
+interface TriviaData{
+  question:string;
+  setNumber:number;
+  options:string[];
+  correctAnswer:string;
+}
+
+export const addTriviaQuestion = async (data:TriviaData) => {
+  const response = await axiosInstance.post('/admin/trivia',data)
+  return response.data
+}

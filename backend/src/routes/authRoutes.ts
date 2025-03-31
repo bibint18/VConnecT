@@ -4,6 +4,9 @@ import AdminPlansController from '../controllers/AdminPlansController'
 import { authenticateToken,restrictToAdmin} from '../middlewares/authMiddleware'
 import AdminRoomController from '../controllers/AdminRoomController'
 import { auth } from 'google-auth-library'
+import { AdminDailyTriviaController } from '../controllers/AdminDailyTriviaController'
+import { AdminDailyTriviaReposiroy } from '../repositories/AdminDailyTriviaRepository'
+import { AdminDailyTriviaService } from '../services/AdminDailyTriviaService'
 const router = express.Router()
 
 
@@ -27,4 +30,12 @@ router.post("/admin/rooms/block/:id", authenticateToken,restrictToAdmin,AdminRoo
 router.post("/admin/rooms/unblock/:id", authenticateToken,restrictToAdmin,AdminRoomController.unblockRoom.bind(AdminRoomController));
 router.post("/admin/rooms/delete/:id", authenticateToken,restrictToAdmin,AdminRoomController.deleteRoom.bind(AdminRoomController));
 router.get('/admin/room/details/:id',authenticateToken,restrictToAdmin,AdminRoomController.getRoomDetails.bind(AdminRoomController))
+
+
+//daily trivia 
+const dailyTriviaRepository = new AdminDailyTriviaReposiroy()
+const dailyTriviaService = new AdminDailyTriviaService(dailyTriviaRepository)
+const dailyTriviaController = new AdminDailyTriviaController(dailyTriviaService)
+router.post('/admin/trivia',authenticateToken,restrictToAdmin,dailyTriviaController.addTriviaQuestion.bind(dailyTriviaController))
+
 export default router

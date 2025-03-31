@@ -29,6 +29,7 @@ import RoomCall from "../User/Room/Calls/RoomCall";
 import FriendRequests from "../User/Friends/FriendRequest";
 import AdminRoom from "@/pages/AdminRoom";
 import RoomDetails from "../admin/Room/RoomDetails";
+import AdminTriviaForm from "../admin/Trivia/AdminTriviaForm";
 
 function AppRoute() {
   return (
@@ -56,7 +57,8 @@ function AppRoute() {
           <Route path="/plans/edit/:id" element={<AdminEditPlan />} />
           <Route path="/plans/add" element={<AdminAddPlan />} />
           <Route path="/admin/rooms" element={<AdminRoom />} />
-        
+          <Route path="/admin/trivia" element={<AdminTriviaForm/>} />
+
         </Route>
       </Routes>
   )
