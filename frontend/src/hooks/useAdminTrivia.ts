@@ -1,5 +1,5 @@
-import { addTriviaQuestion } from '@/api/adminAuth'
-import {useMutation} from '@tanstack/react-query'
+import { addTriviaQuestion, fetchTriviaQuestions, ITriviaResponse } from '@/api/adminAuth'
+import {keepPreviousData, useMutation, useQuery} from '@tanstack/react-query'
 import { AxiosError } from 'axios'
 import toast from 'react-hot-toast'
 export const useAddTriviaQuestion = () => {
@@ -13,8 +13,17 @@ export const useAddTriviaQuestion = () => {
               console.log(error)
               toast.error(error.response.data.message);
             } else {
-              toast.error("Signup failed");
+              toast.error("add trivia failed");
             }
     }
+  })
+}
+
+export const useTriviaQuestion = (page:number,limit:number,searchTerm:string) => {
+  return useQuery<ITriviaResponse>({
+    queryKey:['triviaQuestions',page,limit,searchTerm],
+    queryFn: () => fetchTriviaQuestions(page,limit,searchTerm) ,
+    // keepPreviousData:true,
+    placeholderData:keepPreviousData,
   })
 }

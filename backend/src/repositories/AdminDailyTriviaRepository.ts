@@ -3,7 +3,7 @@ import { DailyTrivia, IDailyTrivia } from "../models/DailyTriviaModel";
 import { AppError } from "../utils/AppError";
 
 export class AdminDailyTriviaReposiroy implements IAdminDailyTriviaRepository{
-  async addTriviaQuestion(question: string, setNumber: number, options: string[], correctAnswer: string): Promise<IDailyTrivia> {
+  async addTriviaQuestion(question: string, options: string[], correctAnswer: string): Promise<IDailyTrivia> {
     try {
       if(options.length !==4){
         throw new AppError("4 options required",400)
@@ -11,6 +11,8 @@ export class AdminDailyTriviaReposiroy implements IAdminDailyTriviaRepository{
       if(!options.includes(correctAnswer)){
         throw new AppError("Answer should be in option",400)
       }
+      const lastTrivia = await DailyTrivia.findOne().sort({setNumber:-1}).exec()
+      const setNumber = lastTrivia ? lastTrivia.setNumber + 1 : 1
       const trivia = await DailyTrivia.create({
         question,
         setNumber,
@@ -23,5 +25,15 @@ export class AdminDailyTriviaReposiroy implements IAdminDailyTriviaRepository{
     } catch (error) {
       throw error instanceof AppError ? error : new AppError("failed to add trivia",500)
     }
+  }
+
+    async getTriviaQuestions(page: number, limit: number, searchTerm: string,): Promise<{ questions: IDailyTrivia[]; total: number; }> {
+    const query:any = {}
+    if(searchTerm){
+      query.question = {$regex:searchTerm,$options:'i'}
+    }
+    const questions = await DailyTrivia.find(query).skip((page -1) * limit).limit(limit).exec()
+    const total = await DailyTrivia.countDocuments(query)
+    return {questions,total}
   }
 }

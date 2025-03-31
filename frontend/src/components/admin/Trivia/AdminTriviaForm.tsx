@@ -1,12 +1,18 @@
+
+
 import React, { useState } from "react";
 import { useAddTriviaQuestion } from "@/hooks/useAdminTrivia";
+import "./adminTriviaForm.css"; 
+import { validateTriviaForm ,FormErrors} from "@/utils/validations/AdminTriviaValidations";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const AdminTriviaForm: React.FC = () => {
+  const navigate = useNavigate()
   const [question, setQuestion] = useState("");
-  const [setNumber, setSetNumber] = useState<number>(1);
   const [options, setOptions] = useState(["", "", "", ""]);
   const [correctAnswer, setCorrectAnswer] = useState("");
-
+  const [errors,setErrors] = useState<FormErrors>({})
   const { mutate: addTrivia, isPending } = useAddTriviaQuestion();
 
   const handleOptionChange = (index: number, value: string) => {
@@ -17,77 +23,122 @@ const AdminTriviaForm: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const triviaData = {
-      question,
-      setNumber,
-      options,
-      correctAnswer,
-    };
-    addTrivia(triviaData, {
-      onSuccess: () => {
-        alert("Trivia question added successfully!");
-        setQuestion("");
-        setSetNumber(1);
-        setOptions(["", "", "", ""]);
-        setCorrectAnswer("");
-      },
-      onError: () => alert(`Failed to add trivia question`),
-    });
+    const validationErrors = validateTriviaForm(question, options, correctAnswer);
+    setErrors(validationErrors);
+    // const triviaData = {
+    //   question,
+    //   options,
+    //   correctAnswer,
+    // };
+    if(Object.keys(validationErrors).length ===0){
+      const triviaData = {
+        question,
+        options,
+        correctAnswer,
+      };
+      addTrivia(triviaData, {
+        onSuccess: () => {
+          toast("Trivia question added successfully!",{duration:2000});
+          setQuestion("");
+          setOptions(["", "", "", ""]);
+          setCorrectAnswer("");
+          setTimeout(() => {
+            navigate('/plans')
+          },2000)
+        },
+        onError: () => toast(`Failed to add trivia question`),
+      });
+    }
+    
   };
 
   return (
-    <div>
-      <h2>Add Daily Trivia Question</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Question:</label>
-          <input
-            type="text"
-            value={question}
-            onChange={(e) => setQuestion(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Set Number:</label>
-          <input
-            type="number"
-            value={setNumber}
-            onChange={(e) => setSetNumber(Number(e.target.value))}
-            min="1"
-            required
-          />
-        </div>
-        {options.map((option, index) => (
-          <div key={index}>
-            <label>Option {index + 1}:</label>
+    <div className="form-container">
+      <div className="form-card">
+        <h2 className="form-heading">Add Daily Trivia Question</h2>
+        <form onSubmit={handleSubmit}>
+          {/* Question */}
+          <div className="form-group">
+            <label htmlFor="question" className="form-label">
+              Question
+            </label>
             <input
               type="text"
-              value={option}
-              onChange={(e) => handleOptionChange(index, e.target.value)}
+              id="question"
+              value={question}
+              onChange={(e) => setQuestion(e.target.value)}
+              className="form-input"
+              placeholder="Enter trivia question"
+            />
+            {errors.question && <span className="form-error">{errors.question}</span>}
+          </div>
+
+          {/* Set Number */}
+          {/* <div className="form-group">
+            <label htmlFor="setNumber" className="form-label">
+              Set Number
+            </label>
+            <input
+              type="number"
+              id="setNumber"
+              value={setNumber}
+              onChange={(e) => setSetNumber(Number(e.target.value))}
+              className="form-input"
+              placeholder="Enter set number"
+              min="1"
               required
             />
+          </div> */}
+
+          {/* Options */}
+          {options.map((option, index) => (
+            <div className="form-group" key={index}>
+              <label htmlFor={`option${index}`} className="form-label">
+                Option {index + 1}
+              </label>
+              <input
+                type="text"
+                id={`option${index}`}
+                value={option}
+                onChange={(e) => handleOptionChange(index, e.target.value)}
+                className="form-input"
+                placeholder={`Enter option ${index + 1}`}
+              />
+              {errors.options && errors.options[index] && (
+                <span className="form-error">{errors.options[index]}</span>
+              )}
+            </div>
+          ))}
+
+          {/* Correct Answer */}
+          <div className="form-group">
+            <label htmlFor="correctAnswer" className="form-label">
+              Correct Answer
+            </label>
+            <select
+              id="correctAnswer"
+              value={correctAnswer}
+              onChange={(e) => setCorrectAnswer(e.target.value)}
+              className="form-select"
+            >
+              <option value="">Select correct answer</option>
+              {options.map((opt, index) => (
+                <option key={index} value={opt} disabled={!opt}>
+                  {opt || "Fill option first"}
+                </option>
+              ))}
+            </select>
+            {errors.correctAnswer && (
+              <span className="form-error">{errors.correctAnswer}</span>
+            )}
           </div>
-        ))}
-        <div>
-          <label>Correct Answer:</label>
-          <select
-            value={correctAnswer}
-            onChange={(e) => setCorrectAnswer(e.target.value)}
-            required
-          >
-            <option value="">Select correct answer</option>
-            {options.map((opt, index) => (
-              <option key={index} value={opt} disabled={!opt}>
-                {opt || "Fill option first"}
-              </option>
-            ))}
-          </select>
-        </div>
-        <button type="submit" disabled={isPending}>
-          {isPending ? "Adding..." : "Add Trivia Question"}
-        </button>
-      </form>
+
+          {/* Submit Button */}
+          <button type="submit" className="form-button" disabled={isPending}>
+            {isPending ? "Adding..." : "Add Trivia Question"}
+          </button>
+        </form>
+      </div>
     </div>
   );
 };

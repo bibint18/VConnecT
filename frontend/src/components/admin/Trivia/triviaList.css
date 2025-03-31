@@ -1,0 +1,90 @@
+.trivia-list {
+  padding: 20px;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.search-container {
+  position: relative;
+  width: 100%;
+  max-width: 300px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 10px 40px 10px 15px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  outline: none;
+  color: orange;
+}
+
+.sort-options {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.sort-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.add-plan-button {
+  background-color: #f97316;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.table-container {
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.table-header {
+  background-color: #f97316;
+  color: white;
+}
+
+.table-row:hover {
+  background-color: #f9fafb;
+}
+
+.action-button {
+  padding: 6px;
+  border-radius: 4px;
+}
+
+.edit-button {
+  background-color: #10b981;
+  color: white;
+}
+
+.delete-button {
+  background-color: #ef4444;
+  color: white;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.page-button {
+  padding: 8px;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+}

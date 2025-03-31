@@ -6,6 +6,7 @@ export interface IDailyTrivia{
   options:string[];
   correctAnswer:string;
   isListed:boolean;
+  isDeleted:boolean;
   createdAt:Date;
 }
 const DailyTriviaSchema :Schema = new Schema<IDailyTrivia>({
@@ -16,6 +17,7 @@ const DailyTriviaSchema :Schema = new Schema<IDailyTrivia>({
     validate: [(val: string[]) => val.length === 4, "Exactly 4 options are required"],},
   correctAnswer:{type:String},
   isListed:{type:Boolean,default:false},
+  isDeleted:{type:Boolean,default:false},
   createdAt:{type:Date,default:Date.now}
 })
 

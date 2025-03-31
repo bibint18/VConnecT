@@ -130,12 +130,29 @@ export const deleteRoom = async (id: string) => {
 
 interface TriviaData{
   question:string;
-  setNumber:number;
   options:string[];
   correctAnswer:string;
 }
 
+export interface ITrivia{
+  _id:string;
+  setNumber:number;
+  question:string;
+  correctAnswer:string;
+  isDeleted:boolean
+}
+
+export interface ITriviaResponse {
+  questions: ITrivia[];
+  total: number;
+}
+
 export const addTriviaQuestion = async (data:TriviaData) => {
   const response = await axiosInstance.post('/admin/trivia',data)
+  return response.data
+}
+
+export const fetchTriviaQuestions = async (page:number,limit:number,searchTerm:string): Promise<ITriviaResponse> => {
+  const response = await axiosInstance.get('/admin/trivia',{params:{page,limit,searchTerm},withCredentials:true})
   return response.data
 }

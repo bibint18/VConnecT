@@ -167,6 +167,8 @@ const totalPages = Math.ceil(totalRooms/limit)
                     <th className="px-4 py-3 text-left text-sm">Name</th>
                     <th className="px-4 py-3 text-left text-sm">createdBy</th>
                     <th className="px-4 py-3 text-left text-sm">Type</th>
+                    <th className="px-4 py-3 text-left text-sm">Limit</th>
+                    <th className="px-4 py-3 text-left text-sm">Live</th>
                     <th className="px-4 py-3 text-left text-sm">Status</th>
                     <th className="rounded-tr-lg px-4 py-3 text-left text-sm">Update</th>
                   </tr>

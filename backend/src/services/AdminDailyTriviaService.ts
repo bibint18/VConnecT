@@ -7,7 +7,11 @@ export class AdminDailyTriviaService implements IAdminDailyTriviaService{
   constructor(triviaRepository:IAdminDailyTriviaRepository){
     this.triviaRepository=triviaRepository
   }
-  async addTriviaQuestion(question: string, setNumber: number, options: string[], correctAnswer: string): Promise<IDailyTrivia> {
-    return await this.triviaRepository.addTriviaQuestion(question,setNumber,options,correctAnswer)
+  async addTriviaQuestion(question: string, options: string[], correctAnswer: string): Promise<IDailyTrivia> {
+    return await this.triviaRepository.addTriviaQuestion(question,options,correctAnswer)
+  }
+
+  async getTriviaQuestions(page: number, limit: number, searchTerm: string): Promise<{ questions: IDailyTrivia[]; total: number; }> {
+    return await this.triviaRepository.getTriviaQuestions(page,limit,searchTerm)
   }
 }

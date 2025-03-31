@@ -37,5 +37,5 @@ const dailyTriviaRepository = new AdminDailyTriviaReposiroy()
 const dailyTriviaService = new AdminDailyTriviaService(dailyTriviaRepository)
 const dailyTriviaController = new AdminDailyTriviaController(dailyTriviaService)
 router.post('/admin/trivia',authenticateToken,restrictToAdmin,dailyTriviaController.addTriviaQuestion.bind(dailyTriviaController))
-
+router.get('/admin/trivia',authenticateToken,restrictToAdmin,dailyTriviaController.getTriviaQuestions.bind(dailyTriviaController))
 export default router

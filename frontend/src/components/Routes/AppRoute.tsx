@@ -30,6 +30,7 @@ import FriendRequests from "../User/Friends/FriendRequest";
 import AdminRoom from "@/pages/AdminRoom";
 import RoomDetails from "../admin/Room/RoomDetails";
 import AdminTriviaForm from "../admin/Trivia/AdminTriviaForm";
+import ListTrivia from "../admin/Trivia/ListTrivia";
 
 function AppRoute() {
   return (
@@ -57,7 +58,8 @@ function AppRoute() {
           <Route path="/plans/edit/:id" element={<AdminEditPlan />} />
           <Route path="/plans/add" element={<AdminAddPlan />} />
           <Route path="/admin/rooms" element={<AdminRoom />} />
-          <Route path="/admin/trivia" element={<AdminTriviaForm/>} />
+          <Route path="/trivia/add" element={<AdminTriviaForm/>} />
+          <Route path="/trivia" element={<ListTrivia/>} />
 
         </Route>
       </Routes>
