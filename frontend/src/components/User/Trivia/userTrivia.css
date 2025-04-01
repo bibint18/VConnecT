@@ -1,4 +1,4 @@
-.user-trivia {
+/* .user-trivia {
   padding: 20px;
   max-width: 800px;
   margin: 0 auto;
@@ -46,4 +46,231 @@
 .option:disabled {
   cursor: not-allowed;
   opacity: 0.7;
+} */
+
+
+
+
+
+
+/* userTrivia.css */
+button{
+  max-width: 250px;
+}
+.user-trivia {
+  min-height: 100vh;
+  background: #000; /* Black background */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+  font-family: 'Arial', sans-serif;
+  color: #fff;
+}
+
+/* Decorative Design */
+.trivia-header {
+  margin-bottom: 2rem;
+}
+
+.decorative-design {
+  width: 120px;
+  height: 120px;
+  background: linear-gradient(45deg, #ff6f61, #ffb347); /* Gradient design */
+  border-radius: 50%;
+  position: relative;
+  box-shadow: 0 0 20px rgba(255, 111, 97, 0.5);
+}
+
+.decorative-design::before {
+  content: '';
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(45deg, #ffb347, #ff6f61);
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.decorative-design::after {
+  content: '';
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  background: #fff;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Loading and Error States */
+.loading,
+.error,
+.no-questions {
+  font-size: 1.2rem;
+  color: #fff;
+  text-align: center;
+}
+
+/* Trivia Boxes Row */
+.trivia-boxes-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; /* Center the boxes if there's only one */
+  gap: 2rem;
+  width: 100%;
+  max-width: 1200px;
+}
+
+/* Trivia Box (contains question and options) */
+.trivia-box {
+  background-color: #fff;
+  border-radius: 15px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  width: 100%;
+  max-width: 500px; /* Fixed width for each box */
+  flex: 1 1 calc(50% - 1rem); /* Two boxes in a row with gap */
+  display: flex;
+  flex-direction: column;
+  color: #333;
+}
+
+/* Question Box (inside trivia box) */
+.question-box {
+  margin-bottom: 1.5rem;
+  text-align: center;
+  font-size: 1.3rem;
+  font-weight: bold;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  min-height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Options Grid (inside trivia box) */
+.options-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+/* Option Buttons */
+.option {
+  background-color: #000000;
+  border: none;
+  border-radius: 10px;
+  padding: 1rem;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(133, 59, 59, 0.3);
+  text-align: left;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.option:hover {
+  background-color: #e0e0e0;
+  color: black;
+  transform: translateY(-2px);
+}
+
+.option:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.option.correct {
+  background-color: #4caf50;
+  color: #fff;
+}
+
+.option.incorrect {
+  background-color: #f44336;
+  color: #fff;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .trivia-box {
+    flex: 1 1 100%; /* Stack boxes vertically on smaller screens */
+    max-width: 600px; /* Slightly wider when stacked */
+  }
+}
+
+@media (max-width: 768px) {
+  .user-trivia {
+    padding: 1rem;
+  }
+
+  .decorative-design {
+    width: 100px;
+    height: 100px;
+  }
+
+  .decorative-design::before {
+    width: 60px;
+    height: 60px;
+  }
+
+  .decorative-design::after {
+    width: 30px;
+    height: 30px;
+  }
+
+  .question-box {
+    font-size: 1.1rem;
+    min-height: 80px;
+  }
+
+  .options-grid {
+    grid-template-columns: 1fr; /* Stack options vertically */
+    gap: 0.8rem;
+  }
+
+  .option {
+    font-size: 1rem;
+    padding: 0.8rem;
+    min-height: 50px;
+  }
+}
+
+@media (max-width: 480px) {
+  .decorative-design {
+    width: 80px;
+    height: 80px;
+  }
+
+  .decorative-design::before {
+    width: 50px;
+    height: 50px;
+  }
+
+  .decorative-design::after {
+    width: 20px;
+    height: 20px;
+  }
+
+  .question-box {
+    font-size: 1rem;
+    min-height: 70px;
+    background-color: black;
+    color: white;
+  }
+
+  .option {
+    font-size: 0.9rem;
+    padding: 0.6rem;
+    min-height: 40px;
+  }
 }

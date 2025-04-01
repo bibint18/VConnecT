@@ -13,7 +13,7 @@ export class DailyTriviaRepository implements IDailyTriviaRepository{
       throw new AppError("No Unlisted questions available",400)
     }
     const questionIds = questions.map((q) => q._id)
-    // await DailyTrivia.updateMany({_id:{$in:questionIds}},{isListed:true})
+    await DailyTrivia.updateMany({_id:{$in:questionIds}},{isListed:true})
     return questions
   }
 
