@@ -4,6 +4,10 @@ import ProfileController from '../controllers/ProfileController'
 import RoomController from '../controllers/RoomController'
 import { FriendController } from '../controllers/FriendController'
 import { FriendRepository } from '../repositories/FriendRepository'
+import { DailyTriviaRepository } from '../repositories/DailyTriviaRepository'
+import { DailyTriviaService } from '../services/DailyTriviaService'
+import { DailyTriviaController } from '../controllers/DailyTriviaController'
+import { auth } from 'google-auth-library'
 
 
 const router = express.Router()
@@ -27,4 +31,11 @@ const friendRepository = new FriendRepository();
 const friendController = new FriendController(friendRepository);
 router.get('/user/friend/requests',authenticateToken,friendController.getPendingRequests)
 
+
+//Trivia
+const dailyTriviaRepository = new DailyTriviaRepository()
+const dailyTriviaService = new DailyTriviaService(dailyTriviaRepository)
+const dailyTriviaController = new DailyTriviaController(dailyTriviaService)
+router.get('/user/trivia',authenticateToken,dailyTriviaController.getDailyTriviaQuestions.bind(dailyTriviaController))
+router.post('/user/trivia/submit',authenticateToken,dailyTriviaController.submitTriviaAnswer.bind(dailyTriviaController))
 export default router

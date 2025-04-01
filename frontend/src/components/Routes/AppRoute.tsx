@@ -32,6 +32,7 @@ import RoomDetails from "../admin/Room/RoomDetails";
 import AdminTriviaForm from "../admin/Trivia/AdminTriviaForm";
 import ListTrivia from "../admin/Trivia/ListTrivia";
 import AdminTriviaEdit from "../admin/Trivia/EditTrivia";
+import UserTrivia from "../User/Trivia/UserTrivia";
 
 function AppRoute() {
   return (
@@ -62,6 +63,8 @@ function AppRoute() {
           <Route path="/trivia/add" element={<AdminTriviaForm/>} />
           <Route path="/trivia" element={<ListTrivia/>} />
           <Route path="/admin/trivia/edit/:id" element={<AdminTriviaEdit />} />
+          <Route path="/dailyTrivia" element={<UserTrivia />} />
+
         </Route>
       </Routes>
   )

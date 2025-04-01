@@ -22,6 +22,7 @@ export interface IUser extends Document{
   description?: string;
   gender?: string;
   streak:number;
+  point:number;
   lastStreakUpdate:Date;
   friends: Types.ObjectId[]
 }
@@ -47,6 +48,7 @@ const userSchema = new Schema <IUser> ({
   description: {type:String},
   gender:{type:String},
   streak:{type:Number,default:0},
+  point:{type:Number,default:0},
   lastStreakUpdate:{type:Date,default:null},
   friends:[{type:Schema.Types.ObjectId,ref:"User"}]
 })
