@@ -274,3 +274,14 @@ button{
     min-height: 40px;
   }
 }
+
+.points-display {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: #10b981;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: bold;
+}

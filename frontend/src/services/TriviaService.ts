@@ -1,5 +1,6 @@
 import axiosInstance from "@/utils/axiosInterceptor";
 import { AxiosError } from "axios";
+
 export interface ITrivia {
   _id: string;
   setNumber: number;
@@ -11,6 +12,7 @@ export interface ITrivia {
 
 interface ITriviaResponse {
   questions: ITrivia[];
+  user:{point:number}
 }
 
 interface ISubmitAnswerResponse {
@@ -18,10 +20,10 @@ interface ISubmitAnswerResponse {
   pointsUpdated: boolean;
 }
 
-export const fetchDailyTriviaQuestions = async ():Promise<ITrivia[]> => {
+export const fetchDailyTriviaQuestions = async ():Promise<{questions:ITrivia[];point:number}> => {
   try {
     const response = await axiosInstance.get<ITriviaResponse>('/user/trivia')
-    return response.data.questions || []
+    return {questions:response.data.questions ||[],point:response.data.user?.point || 0}
   } catch (error) {
     if(error instanceof AxiosError && error.response){
       throw new Error(error.response.data.message)
