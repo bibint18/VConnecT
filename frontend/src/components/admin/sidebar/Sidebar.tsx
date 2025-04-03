@@ -48,7 +48,7 @@ const Sidebar: React.FC = () => {
             { label: "Banners", icon: Image },
             { label: "Rooms", icon: MessageSquare ,path:"/admin/rooms"},
             { label: "Payments", icon: CreditCard },
-            { label: "Daily Challenge", icon: Calendar },
+            { label: "Daily Challenge", icon: Calendar,path:'/trivia' },
             { label: "Rewards", icon: Award },
             { label: "Support", icon: LifeBuoy },
             { label: "Feeds", icon: Rss },

@@ -47,7 +47,7 @@ const AdminTriviaEdit: React.FC = () => {
   if (isFetching) return <div>Loading trivia question...</div>;
 
   return (
-    <div className="form-container">
+    <div className="form-container w-150">
       <div className="form-card">
         <h2 className="form-heading">Edit Trivia Question</h2>
         <form onSubmit={handleSubmit}>

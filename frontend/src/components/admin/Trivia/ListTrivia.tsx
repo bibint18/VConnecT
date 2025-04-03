@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useDeleteTriviaQuestion, useTriviaQuestion } from "@/hooks/useAdminTrivia";
 import Swal from "sweetalert2";
 import { ChevronRight, ChevronLeft } from "lucide-react";
-import "./triviaList.css"; // Create this with similar styles to plans.css
+import "./triviaList.css"; 
 
 interface Trivia {
   _id: string;
@@ -85,13 +85,12 @@ export default function ListTrivia() {
             </div>
           </div> */}
 
-          {/* Add Trivia Button */}
+         
           <button className="add-plan-button" onClick={() => navigate("/trivia/add")}>
             <span>Add New Trivia</span>
           </button>
         </div>
 
-        {/* Table */}
         <div className="table-container">
           <table className="w-full">
             <thead>
@@ -132,7 +131,7 @@ export default function ListTrivia() {
           </table>
         </div>
 
-        {/* Empty State */}
+       
         {data.questions.length === 0 && (
           <div className="text-center py-12">
             <p className="text-gray-500 text-lg">
@@ -141,7 +140,7 @@ export default function ListTrivia() {
           </div>
         )}
 
-        {/* Pagination */}
+       
         <div className="pagination">
           <button
             disabled={page === 1}

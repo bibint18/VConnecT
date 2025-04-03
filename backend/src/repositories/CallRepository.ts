@@ -5,7 +5,7 @@ import mongoose from "mongoose";
 export class CallRepository implements ICallRepository{
   async joinCall(roomId: string, userId: string): Promise<void> {
     try {
-      console.log("call Repository ",roomId,userId)
+      console.log("call Repositoryyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy ",roomId,userId)
       const room = await Room.findById(roomId).exec()
       if(!room){
         throw new AppError("Room not found",404)
@@ -20,6 +20,14 @@ export class CallRepository implements ICallRepository{
       //   room.participants.push(userId as any)
       //   await room.save()
       // }
+      const activeParticipants = room.participants.filter((p) => !p.lastLeave || p.lastLeave < p.lastJoin);
+      console.log("active participantsssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss",activeParticipants)
+      const isParticipant = room.participants.some((p) => p.userId.toString() === userId);
+      console.log("is participantsssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss",isParticipant)
+      console.log("active participants length",activeParticipants.length)
+      if (!isParticipant && activeParticipants.length >= room.limit) {
+        throw new AppError("Room is full", 400);
+      }
       const participantIndex = room.participants.findIndex((p) => p.userId.toString() === userId)
       const now = new Date()
       if(participantIndex == -1){

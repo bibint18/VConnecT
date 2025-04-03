@@ -28,7 +28,7 @@ export class AdminDailyTriviaReposiroy implements IAdminDailyTriviaRepository{
   }
 
     async getTriviaQuestions(page: number, limit: number, searchTerm: string,): Promise<{ questions: IDailyTrivia[]; total: number; }> {
-    const query:any = {}
+    const query:any = {isDeleted:false}
     if(searchTerm){
       query.question = {$regex:searchTerm,$options:'i'}
     }

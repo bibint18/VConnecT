@@ -43,7 +43,7 @@ const AdminTriviaForm: React.FC = () => {
           setOptions(["", "", "", ""]);
           setCorrectAnswer("");
           setTimeout(() => {
-            navigate('/plans')
+            navigate('/trivia')
           },2000)
         },
         onError: () => toast(`Failed to add trivia question`),
@@ -53,7 +53,7 @@ const AdminTriviaForm: React.FC = () => {
   };
 
   return (
-    <div className="form-container">
+    <div className="form-container w-150">
       <div className="form-card">
         <h2 className="form-heading">Add Daily Trivia Question</h2>
         <form onSubmit={handleSubmit}>

@@ -29,10 +29,11 @@ import RoomCall from "../User/Room/Calls/RoomCall";
 import FriendRequests from "../User/Friends/FriendRequest";
 import AdminRoom from "@/pages/AdminRoom";
 import RoomDetails from "../admin/Room/RoomDetails";
-import AdminTriviaForm from "../admin/Trivia/AdminTriviaForm";
-import ListTrivia from "../admin/Trivia/ListTrivia";
-import AdminTriviaEdit from "../admin/Trivia/EditTrivia";
-import UserTrivia from "../User/Trivia/UserTrivia";
+// import UserTrivia from "../User/Trivia/UserTrivia";
+import TriviaPage from "../User/Trivia/TriviaPage";
+import AdminTriviaPage from "@/pages/AdminTririvaPage";
+import AdminTriviaAddPage from "@/pages/AdminTriviaAdd";
+import AdminEditTriviaPage from "@/pages/AdminTriviaEdit";
 
 function AppRoute() {
   return (
@@ -52,7 +53,7 @@ function AppRoute() {
         <Route path="/adminLogin" element={<AdminLogin />} />
         <Route path="/" element={<HomePage />} />
         <Route path="/rooms" element={<RoomPage/>} />
-        <Route path="/admin/room-details/:id" element={<RoomDetails />} />
+        <Route path="/dailyTrivia" element={<TriviaPage />} />
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<AdminDashboard />} />
           <Route path="/plans" element={<AdminPlans />} />
@@ -60,11 +61,10 @@ function AppRoute() {
           <Route path="/plans/edit/:id" element={<AdminEditPlan />} />
           <Route path="/plans/add" element={<AdminAddPlan />} />
           <Route path="/admin/rooms" element={<AdminRoom />} />
-          <Route path="/trivia/add" element={<AdminTriviaForm/>} />
-          <Route path="/trivia" element={<ListTrivia/>} />
-          <Route path="/admin/trivia/edit/:id" element={<AdminTriviaEdit />} />
-          <Route path="/dailyTrivia" element={<UserTrivia />} />
-
+          <Route path="/trivia/add" element={<AdminTriviaAddPage/>} />
+          <Route path="/trivia" element={<AdminTriviaPage/>} />
+          <Route path="/admin/trivia/edit/:id" element={<AdminEditTriviaPage />} />
+          <Route path="/admin/room-details/:id" element={<RoomDetails />} />
         </Route>
       </Routes>
   )

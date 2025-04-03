@@ -85,7 +85,15 @@ const UserTrivia: React.FC = () => {
       {/* <div className="trivia-header">
         <div className="decorative-design"></div>
       </div> */}
-      <div className="points-display">Points: {points}</div>
+      {/* <div className="points-display">Points: {points}</div> */}
+
+      <div className="trivia-header">
+      <h1 className="trivia-title">Daily Trivia</h1>
+      <div className="points-display">
+        <span className="points-icon">★</span>
+        <span>Points: {points}</span>
+      </div>
+    </div>
       {questions.length === 0 ? (
         <p className="no-questions">No trivia questions available today. Check back tomorrow!</p>
       ) : (

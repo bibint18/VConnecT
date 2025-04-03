@@ -1,6 +1,7 @@
 import { Room ,IRoom} from "../models/RoomModel";
 import { IRoomRepository } from "../interfaces/IRoomRepository";
 import mongoose from "mongoose";
+import { AppError } from "../utils/AppError";
 
 export class RoomRepository implements IRoomRepository{
   async createRoom(roomData:IRoom):Promise<IRoom | null>{
@@ -44,6 +45,14 @@ export class RoomRepository implements IRoomRepository{
       if(room.participants.some((id) => id.toString() ===userId)){
         return room
       }
+      const activeParticipants = room.participants.filter((p) => !p.lastLeave || p.lastLeave < p.lastJoin);
+            console.log("active participantsssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss",activeParticipants)
+            const isParticipant = room.participants.some((p) => p.userId.toString() === userId);
+            console.log("is participantsssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss",isParticipant)
+            console.log("active participants length",activeParticipants.length)
+            if (!isParticipant && activeParticipants.length >= room.limit) {
+              throw new AppError("Room is full", 400);
+            }
       // if(room.participants.length >= room.limit){
       //   throw new Error('Room is full...')
       // }
