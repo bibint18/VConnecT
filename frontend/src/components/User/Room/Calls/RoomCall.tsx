@@ -264,7 +264,7 @@ const RoomCall: React.FC = () => {
                     {username} {participantId === userId && '(You)'}
                   </span>
                 </div>
-                {participantId !== userId && (
+                {participantId !== userId &&   (
                   <motion.button
                     onClick={() => handlePlusButtonClick(participantId, username)}
                     className="text-blue-400 hover:text-blue-300 p-1 rounded-full"

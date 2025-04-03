@@ -32,7 +32,7 @@ export class RoomRepository implements IRoomRepository{
   async joinRoom(RoomId: string, userId: string, secretCode: string): Promise<IRoom | null> {
     try {
       const room = await Room.findById(RoomId)
-      console.log("repository rooom",room,userId)
+      console.log("repository rooommmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm",room,userId)
       if(room?.isBlocked){
         throw new Error("Room is Blocked")
       }
@@ -45,7 +45,7 @@ export class RoomRepository implements IRoomRepository{
       if(room.participants.some((id) => id.toString() ===userId)){
         return room
       }
-      const activeParticipants = room.participants.filter((p) => !p.lastLeave || p.lastLeave < p.lastJoin);
+      const activeParticipants = room.participants.filter((p) => !p.lastLeave || p.lastJoin > p.lastLeave);
             console.log("active participantsssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss",activeParticipants)
             const isParticipant = room.participants.some((p) => p.userId.toString() === userId);
             console.log("is participantsssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss",isParticipant)

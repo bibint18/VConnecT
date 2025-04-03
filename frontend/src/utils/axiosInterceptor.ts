@@ -77,7 +77,6 @@ axiosInstance.interceptors.response.use(
     console.log('Cookies: on response', document.cookie);
     if (error.response?.status === 403 && error.response?.data?.message === 'User is blocked') {
       console.log('User is blocked. Preventing logout.');
-      // You can show a custom message here or perform specific actions
       toast.error('Your account is blocked. Please contact support.',{duration:3000});
       setTimeout(() => {
         store.dispatch(logoutTheUser())

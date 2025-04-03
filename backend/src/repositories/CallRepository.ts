@@ -20,11 +20,12 @@ export class CallRepository implements ICallRepository{
       //   room.participants.push(userId as any)
       //   await room.save()
       // }
-      const activeParticipants = room.participants.filter((p) => !p.lastLeave || p.lastLeave < p.lastJoin);
+      const activeParticipants = room.participants.filter((p) => !p.lastLeave || p.lastJoin > p.lastLeave);
       console.log("active participantsssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss",activeParticipants)
       const isParticipant = room.participants.some((p) => p.userId.toString() === userId);
       console.log("is participantsssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss",isParticipant)
       console.log("active participants length",activeParticipants.length)
+      console.log("limit",room.limit)
       if (!isParticipant && activeParticipants.length >= room.limit) {
         throw new AppError("Room is full", 400);
       }
@@ -59,6 +60,7 @@ export class CallRepository implements ICallRepository{
           throw new AppError("User not found in room", 404);
         }
         const particpant = room.participants[participantIndex]
+        console.log("partcipant repo",particpant)
         const now = new Date()
         particpant.lastLeave=now
         const sessionDuration=now.getTime() - particpant.lastJoin.getTime()
