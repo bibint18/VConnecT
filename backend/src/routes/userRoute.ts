@@ -30,6 +30,7 @@ router.post('/user/room/join',authenticateToken,RoomController.joinRoom.bind(Roo
 const friendRepository = new FriendRepository();
 const friendController = new FriendController(friendRepository);
 router.get('/user/friend/requests',authenticateToken,friendController.getPendingRequests)
+router.get('/user/friends',authenticateToken,friendController.getFriends)
 
 
 //Trivia

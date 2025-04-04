@@ -5,7 +5,7 @@ import { FriendRequest } from "../models/FriendRequestModel";
 export class FriendService {
   private io: Server;
   private friendRepository: IFriendRepository;
-  private socketMap: Map<string, string> = new Map(); // userId -> socketId
+  private socketMap: Map<string, string> = new Map(); 
 
   constructor(friendRepository: IFriendRepository, io: Server) {
     this.friendRepository = friendRepository;
@@ -58,6 +58,15 @@ export class FriendService {
             this.io.to(fromSocketId).emit(`friend-request-${data.accept ? "accepted" : "rejected"}`, {
               by: userId,
             });
+          }
+          if (data.accept) {
+            // Update friends list in DB
+            await User.findByIdAndUpdate(userId, { $addToSet: { friends: fromUserId } });
+            await User.findByIdAndUpdate(fromUserId, { $addToSet: { friends: userId } });
+            // Notify both users to update their UI
+            const userSocketId = this.socketMap.get(userId);
+            if (userSocketId) this.io.to(userSocketId).emit("friend-added", { friendId: fromUserId });
+            if (fromSocketId) this.io.to(fromSocketId).emit("friend-added", { friendId: userId });
           }
           callback({ success: true });
         } catch (error) {

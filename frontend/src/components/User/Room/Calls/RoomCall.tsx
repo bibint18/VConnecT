@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { CallManager } from '@/services/CallManager';
 import { useAppSelector } from '@/redux/store';
 import { toast } from 'react-toastify';
+import { getFriends } from '@/services/FriendService';
 import { 
   FaVideo, 
   FaVideoSlash, 
@@ -24,12 +25,13 @@ const RoomCall: React.FC = () => {
   const [audioEnabled, setAudioEnabled] = useState(true);
   const [audioDevices, setAudioDevices] = useState<MediaDeviceInfo[]>([]);
   const [selectedAudioDevice, setSelectedAudioDevice] = useState<string>('');
+  const [friends, setFriends] = useState<string[]>([]);
   const videoRefs = useRef<Map<string, HTMLVideoElement>>(new Map());
   const callManagerRef = useRef<CallManager | null>(null);
   const { userId, isAuthenticated, name } = useAppSelector((state) => state.user);
   const username = name;
   const [showSettings, setShowSettings] = useState(false);
-
+  const [isLoadingFriends, setIsLoadingFriends] = useState(true);
   useEffect(() => {
     if (!roomId || !isAuthenticated || !userId || !username) {
       if (!isAuthenticated || !userId) {
@@ -38,6 +40,21 @@ const RoomCall: React.FC = () => {
       }
       return;
     }
+
+    const fetchFriends = async () => {
+      try {
+        const friendList = await getFriends();
+        console.log("friends from frontend",friendList)
+        setFriends(friendList.map(f => f.id));
+      } catch (err) {
+        console.error("Failed to fetch friends:", err);
+        toast.error("Failed to load friends list");
+      }finally{
+        setIsLoadingFriends(false)
+      }
+    };
+
+    fetchFriends()
 
     const manager = new CallManager(roomId, userId, username, (newStreams) => setStreams(new Map(newStreams)));
     callManagerRef.current = manager;
@@ -251,8 +268,9 @@ const RoomCall: React.FC = () => {
             <h2 className="text-lg font-bold">Participants ({streams.size})</h2>
           </div>
           
-          <ul className="space-y-2">
+          {/* <ul className="space-y-2">
             {Array.from(streams.entries()).map(([participantId, { username }]) => (
+              
               <li key={participantId} className="flex justify-between items-center p-3 bg-gray-700 rounded-lg">
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center">
@@ -264,7 +282,20 @@ const RoomCall: React.FC = () => {
                     {username} {participantId === userId && '(You)'}
                   </span>
                 </div>
-                {participantId !== userId &&   (
+                {/* {participantId !== userId &&   (
+                  <motion.button
+                    onClick={() => handlePlusButtonClick(participantId, username)}
+                    className="text-blue-400 hover:text-blue-300 p-1 rounded-full"
+                    variants={{ hover: { scale: 1.1 }, tap: { scale: 0.95 } }}
+                    whileHover="hover"
+                    whileTap="tap"
+                    title="Add friend"
+                  >
+                    <FaUserPlus />
+                  </motion.button>
+                )} 
+
+{participantId !== userId && !friends.includes(participantId) && (
                   <motion.button
                     onClick={() => handlePlusButtonClick(participantId, username)}
                     className="text-blue-400 hover:text-blue-300 p-1 rounded-full"
@@ -281,7 +312,49 @@ const RoomCall: React.FC = () => {
             {streams.size === 0 && (
               <li className="text-gray-400 text-center py-4">No other participants yet</li>
             )}
-          </ul>
+          </ul> */}
+
+
+
+<ul className="space-y-2">
+  {isLoadingFriends ? (
+    <li className="text-gray-400 text-center py-4">Loading participants...</li>
+  ) : (
+    Array.from(streams.entries()).map(([participantId, { username }]) => {
+      console.log("Participant ID:", participantId, "Friends:", friends, "Is Friend:", friends.includes(participantId));
+      return (
+        <li key={participantId} className="flex justify-between items-center p-3 bg-gray-700 rounded-lg">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center">
+              <span className="text-sm font-bold">
+                {username?.charAt(0).toUpperCase()}
+              </span>
+            </div>
+            <span className="font-medium">
+              {username} {participantId === userId && '(You)'}
+            </span>
+          </div>
+          {participantId !== userId && !friends.includes(participantId) && (
+            <motion.button
+              onClick={() => handlePlusButtonClick(participantId, username)}
+              className="text-blue-400 hover:text-blue-300 p-1 rounded-full"
+              variants={{ hover: { scale: 1.1 }, tap: { scale: 0.95 } }}
+              whileHover="hover"
+              whileTap="tap"
+              title="Add friend"
+            >
+              <FaUserPlus />
+            </motion.button>
+          )}
+        </li>
+      );
+    })
+  )}
+  {streams.size === 0 && !isLoadingFriends && (
+    <li className="text-gray-400 text-center py-4">No other participants yet</li>
+  )}
+</ul>
+
         </div>
       </div>
     </div>

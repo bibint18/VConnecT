@@ -117,7 +117,6 @@ export class CallManager {
     });
     this.socket.on("friend-request-received", (data: { requestId: string; from: string }) => {
       toast.info(`Friend request received from user ${data.from}`);
-      // Optionally store requestId for immediate action
     });
 
     this.socket.on("friend-request-sent", (data: { to: string }) => {
