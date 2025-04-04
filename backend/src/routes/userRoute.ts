@@ -8,6 +8,9 @@ import { DailyTriviaRepository } from '../repositories/DailyTriviaRepository'
 import { DailyTriviaService } from '../services/DailyTriviaService'
 import { DailyTriviaController } from '../controllers/DailyTriviaController'
 import { auth } from 'google-auth-library'
+import { UserFriendRespository } from '../repositories/UserFriendRepository'
+import { UserFriendService } from '../services/UserFriendService'
+import { UserFriendController } from '../controllers/UserFriendController'
 
 
 const router = express.Router()
@@ -39,4 +42,12 @@ const dailyTriviaService = new DailyTriviaService(dailyTriviaRepository)
 const dailyTriviaController = new DailyTriviaController(dailyTriviaService)
 router.get('/user/trivia',authenticateToken,dailyTriviaController.getDailyTriviaQuestions.bind(dailyTriviaController))
 router.post('/user/trivia/submit',authenticateToken,dailyTriviaController.submitTriviaAnswer.bind(dailyTriviaController))
+
+
+const userFriendRepository = new UserFriendRespository()
+const userFriendService = new UserFriendService(userFriendRepository)
+const userFriendController = new UserFriendController(userFriendService)
+router.get('/user/chat/friends',authenticateToken,userFriendController.getUserFriends.bind(userFriendController))
+
+
 export default router
