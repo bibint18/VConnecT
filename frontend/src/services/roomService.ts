@@ -1,7 +1,7 @@
 import axiosInstance from "@/utils/axiosInterceptor";
 import { AxiosError } from "axios";
 import { FormData } from "@/components/User/Room/AddRoom";
-import { Room } from "@/api/adminAuth";
+
 // interface RoomData{
 //   title:string;
 //   limit:number;

@@ -24,7 +24,7 @@ const Header: React.FC = () => {
       <nav className="hidden md:flex space-x-6">
         <a href="/" className="hover:text-purple-500">Home</a>
         <a href="#" className="hover:text-purple-500" onClick={fetchAbout}>About</a>
-        <a href="#" className="hover:text-purple-500">Community</a>
+        <a href="/friends" className="hover:text-purple-500">Friends</a>
         <a href="/profile" className="hover:text-purple-500">Profile</a>
         <a href="/dailyTrivia" className="hover:text-purple-500">Daily Trivia</a>
       </nav>

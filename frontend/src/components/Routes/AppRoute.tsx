@@ -34,7 +34,8 @@ import TriviaPage from "../User/Trivia/TriviaPage";
 import AdminTriviaPage from "@/pages/AdminTririvaPage";
 import AdminTriviaAddPage from "@/pages/AdminTriviaAdd";
 import AdminEditTriviaPage from "@/pages/AdminTriviaEdit";
-import MessagingApp from "../User/Chat/MessagePage";
+import ChatDashboard from "../User/Chat/ChatDashboard";
+// import MessagingApp from "../User/Chat/MessagePage";
 
 function AppRoute() {
   return (
@@ -55,7 +56,7 @@ function AppRoute() {
         <Route path="/" element={<HomePage />} />
         <Route path="/rooms" element={<RoomPage/>} />
         <Route path="/dailyTrivia" element={<TriviaPage />} />
-        <Route path="/friends" element={<MessagingApp/>} />
+        <Route path="/friends" element={<ChatDashboard/>} />
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<AdminDashboard />} />
           <Route path="/plans" element={<AdminPlans />} />

@@ -11,6 +11,13 @@ import { auth } from 'google-auth-library'
 import { UserFriendRespository } from '../repositories/UserFriendRepository'
 import { UserFriendService } from '../services/UserFriendService'
 import { UserFriendController } from '../controllers/UserFriendController'
+import { ChatRepository } from '../repositories/User/Chat/ChatRepository'
+import { ChatService } from '../services/User/Chat/IChatServices'
+import { chatIo } from '../app'
+import { ChatController } from '../controllers/Admin/Chat/ChatController'
+import { Namespace } from 'socket.io'
+
+export const createUserRoutes = (chatIo:Namespace) => {
 
 
 const router = express.Router()
@@ -50,4 +57,21 @@ const userFriendController = new UserFriendController(userFriendService)
 router.get('/user/chat/friends',authenticateToken,userFriendController.getUserFriends.bind(userFriendController))
 
 
-export default router
+//chat
+const chatRepository = new ChatRepository()
+const chatService = new ChatService(chatRepository,chatIo)
+const chatController = new ChatController(chatService)
+chatIo.on("connection", (socket) => {
+  console.log("New chat connection:", socket.id);
+  chatService.handleSocketEvents(socket);
+
+  socket.on("disconnect", (reason) => {
+    console.log("Chat client disconnected:", socket.id, "Reason:", reason);
+  });
+});
+router.post('/chat/send',authenticateToken,chatController.sendMessage.bind(chatController))
+router.get('/chat/history',authenticateToken,chatController.getChatHistory.bind(chatController))
+// export default router
+return router
+
+}
