@@ -25,6 +25,7 @@ const io = new Server(httpServer,{
     credentials:true
   }
 })
+console.log("Root IO initialized:", io.path());
 
 // export const chatIo =new Server(httpServer,{
 //   path:'/socket.io/chat',
@@ -36,11 +37,19 @@ const io = new Server(httpServer,{
 // })
 
 export const chatIo:Namespace = io.of('/chat')
-console.log("from app.ts chatIo initialized in app.ts:", chatIo ? "present" : "undefined");
+console.log("Chat IO initialized:", chatIo.name);
+// console.log("from app.ts chatIo initialized in app.ts:", chatIo ? "present" : "undefined");
 app.use(cors({
   origin: "http://localhost:5173", 
   credentials: true, 
 }));
+
+io.on("connection", (socket) => {
+  console.log("Root connection:", socket.id, "Namespaces:", Object.keys(io._nsps));
+});
+chatIo.on("connection", (socket) => {
+  console.log("Chat connection:", socket.id, "Namespaces:", Object.keys(io._nsps));
+});
 app.use(express.json())
 app.use(cookieParser())
 app.use("/api/auth",authRoutes)

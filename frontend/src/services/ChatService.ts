@@ -19,37 +19,67 @@ export class ChatService {
     //   withCredentials: true,
     // });
     this.socket = io("http://localhost:3000/chat", { // Connect to /chat namespace
+      // path:"/chat/socket.io",
       withCredentials: true,
       reconnection: true,
       reconnectionAttempts: 5,
       reconnectionDelay: 1000,
+      transports: ["websocket"],
+      forceNew: true,
     });
-    console.log("ChatService socket initialized, connecting to:", "http://localhost:3000/socket.io/chat");
+    console.log("ChatService socket initialized for user:", userId, "url :",this.socket.io.opts);
+    // console.log("ChatService socket initialized, connecting to:", "http://localhost:3000/socket.io/chat");
     this.setupSocketEvents();
-    this.socket.emit('join-chat',{userId:this.userId})
+    // this.socket.emit('join-chat',{userId:this.userId})
+    this.joinChatRoom()
   }
+
+
+
+  private joinChatRoom() {
+    console.log("Joining chat room for user:", this.userId);
+    this.socket.emit("join-chat", { userId: this.userId }, (response: unknown) => {
+      console.log("Join chat response for", this.userId, ":", response);
+    });
+  }
+  // public static getInstance(userId: string, onMessageReceived: (message: IMessage) => void): ChatService {
+  //   if (!ChatService.instance || ChatService.instance.userId !== userId) {
+  //     ChatService.instance = new ChatService(userId, onMessageReceived);
+  //   }
+  //   return ChatService.instance;
+  // }
 
   public static getInstance(userId: string, onMessageReceived: (message: IMessage) => void): ChatService {
     if (!ChatService.instance || ChatService.instance.userId !== userId) {
       ChatService.instance = new ChatService(userId, onMessageReceived);
+    } else {
+      ChatService.instance.onMessageReceived = onMessageReceived; 
     }
     return ChatService.instance;
   }
 
   private setupSocketEvents(){
     this.socket.on("connect",() => {
-      console.log("Connected to chat Server")
+      console.log("Chat socket connected for user:", this.userId, "Socket ID:", this.socket.id);
       toast("connected to chat")
     })
 
+    this.socket.on("connect_error", (error) => {
+      console.error("Chat socket connection error for user:", this.userId, "Error:", error.message);
+      console.log("Connection URI:", this.socket.io.opts);
+      toast.error("Chat connection failed: " + error.message);
+    });
+
     this.socket.on('receive-message',(message:IMessage) => {
+      console.log("Chat message received for user:", this.userId, "Message:", message);
       console.log("listening eventttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt Recieved message",message);
+
       toast.success("New Message")
       this.onMessageReceived(message)
     })
 
-    this.socket.on('disconnect',() => {
-      console.log("Disconnected from chat server")
+    this.socket.on('disconnect',(reason) => {
+      console.log("Disconnected from chat server",reason)
       toast("Disconnected from chat")
     })
   }
