@@ -13,15 +13,7 @@ const ChatDashboard: React.FC = () => {
   const handleSelectFriend = (friendId: string) => {
     setActiveChat(friendId);
   };
-  // useEffect(() => {
-  //   return () => {
-  //     if (userId) {
-  //       const chatService = ChatService.getInstance(userId, () => {});
-  //       chatService.disconnect(); // Disconnect socket when dashboard unmounts
-  //       console.log("ChatService disconnected on ChatDashboard unmount");
-  //     }
-  //   };
-  // }, [userId]);
+
 
   useEffect(() => {
     if (!userId) return;

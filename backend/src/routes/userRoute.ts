@@ -15,6 +15,7 @@ import { ChatRepository } from '../repositories/User/Chat/ChatRepository'
 import { ChatService } from '../services/User/Chat/IChatServices'
 import { ChatController } from '../controllers/Admin/Chat/ChatController'
 import { Namespace } from 'socket.io'
+import { FriendCallRepository } from '../repositories/User/call/FriendCallRepository'
 
 export const createUserRoutes = (chatIo:Namespace) => {
 const router = express.Router()
@@ -56,31 +57,24 @@ router.get('/user/chat/friends',authenticateToken,userFriendController.getUserFr
 
 //chat
 const chatRepository = new ChatRepository()
-const chatService = new ChatService(chatRepository,chatIo)
+const callRepository = new FriendCallRepository
+const chatService = new ChatService(chatRepository,chatIo,callRepository)
 const chatController = new ChatController(chatService)
+
 // chatIo.on("connection", (socket) => {
-//   console.log("New chat connection:", socket.id);
+//   console.log("New chat connection:", socket.id, "Namespaces:", Object.keys(socket.nsp.server._nsps));
 //   chatService.handleSocketEvents(socket);
+
+//   socket.on("join-chat", ({ userId }, callback) => {
+//     console.log(`${userId} joined chat room with socket ${socket.id}`);
+//     socket.join(userId); // Join user-specific room
+//     if (callback) callback({ status: "success", userId });
+//   });
 
 //   socket.on("disconnect", (reason) => {
 //     console.log("Chat client disconnected:", socket.id, "Reason:", reason);
 //   });
 // });
-
-chatIo.on("connection", (socket) => {
-  console.log("New chat connection:", socket.id, "Namespaces:", Object.keys(socket.nsp.server._nsps));
-  chatService.handleSocketEvents(socket);
-
-  socket.on("join-chat", ({ userId }, callback) => {
-    console.log(`${userId} joined chat room with socket ${socket.id}`);
-    socket.join(userId); // Join user-specific room
-    if (callback) callback({ status: "success", userId });
-  });
-
-  socket.on("disconnect", (reason) => {
-    console.log("Chat client disconnected:", socket.id, "Reason:", reason);
-  });
-});
 router.post('/chat/send',authenticateToken,chatController.sendMessage.bind(chatController))
 router.get('/chat/history',authenticateToken,chatController.getChatHistory.bind(chatController))
 // export default router

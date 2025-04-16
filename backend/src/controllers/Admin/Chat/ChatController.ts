@@ -29,12 +29,12 @@ export class ChatController implements IChatController{
       console.log("reached history controller")
       const {receiverId} = req.query
       const senderId = (req as any).user?.id 
-      console.log("data from controller",receiverId,senderId)
+      // console.log("data from controller",receiverId,senderId)
       if (!senderId || !receiverId) {
         throw new AppError("Sender ID and receiver ID are required", 400);
       }
       const history = await this.chatService.getChatHistory(senderId,receiverId as string)
-      console.log("data from controller history",history)
+      // console.log("data from controller history",history)
       res.status(200).json  ({success:true,data:history})
     } catch (error) {
       next(error)

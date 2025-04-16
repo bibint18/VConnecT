@@ -60,7 +60,5 @@ const callService = new CallService(new CallRepository(),io)
 const friendService = new FriendService(new FriendRepository(),io)
 
 
-//make changes here
-
 conneectDB()
 export default httpServer

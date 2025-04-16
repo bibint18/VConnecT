@@ -18,7 +18,7 @@ export class ChatRepository implements IChatRepository{
         {senderId: new mongoose.Types.ObjectId(recieverId),receiverId:new mongoose.Types.ObjectId(senderId)}
       ]
     }).sort({timestamp:-1}).exec()
-    console.log("messages from repo history",messages)
+    // console.log("messages from repo history",messages)
     return messages
   }
 

@@ -14,12 +14,7 @@ export class ChatService {
   constructor(userId:string,onMessageReceived:(message:IMessage) => void){
     this.userId=userId;
     this.onMessageReceived=onMessageReceived;
-    // this.socket = io("http://localhost:3000", {
-    //   path: "/socket.io/chat",
-    //   withCredentials: true,
-    // });
-    this.socket = io("http://localhost:3000/chat", { // Connect to /chat namespace
-      // path:"/chat/socket.io",
+    this.socket = io("http://localhost:3000/chat", { 
       withCredentials: true,
       reconnection: true,
       reconnectionAttempts: 5,
@@ -28,13 +23,9 @@ export class ChatService {
       forceNew: true,
     });
     console.log("ChatService socket initialized for user:", userId, "url :",this.socket.io.opts);
-    // console.log("ChatService socket initialized, connecting to:", "http://localhost:3000/socket.io/chat");
     this.setupSocketEvents();
-    // this.socket.emit('join-chat',{userId:this.userId})
     this.joinChatRoom()
   }
-
-
 
   private joinChatRoom() {
     console.log("Joining chat room for user:", this.userId);
@@ -42,12 +33,6 @@ export class ChatService {
       console.log("Join chat response for", this.userId, ":", response);
     });
   }
-  // public static getInstance(userId: string, onMessageReceived: (message: IMessage) => void): ChatService {
-  //   if (!ChatService.instance || ChatService.instance.userId !== userId) {
-  //     ChatService.instance = new ChatService(userId, onMessageReceived);
-  //   }
-  //   return ChatService.instance;
-  // }
 
   public static getInstance(userId: string, onMessageReceived: (message: IMessage) => void): ChatService {
     if (!ChatService.instance || ChatService.instance.userId !== userId) {
@@ -73,7 +58,6 @@ export class ChatService {
     this.socket.on('receive-message',(message:IMessage) => {
       console.log("Chat message received for user:", this.userId, "Message:", message);
       console.log("listening eventttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt Recieved message",message);
-
       toast.success("New Message")
       this.onMessageReceived(message)
     })
@@ -82,6 +66,71 @@ export class ChatService {
       console.log("Disconnected from chat server",reason)
       toast("Disconnected from chat")
     })
+
+    this.socket.on("friend-call-incoming", (data: { callId: string; callerId: string }) => {
+      console.log("Incoming call from:", data.callerId, "Call ID:", data.callId);
+      // toast(`Incoming call from ${data.callerId}`, {
+      //   id: data.callId,
+      //   duration: Infinity,
+      //   position: "top-center",
+      //   buttons: [
+      //     ["Accept", () => this.acceptFriendCall(data.callId)],
+      //     ["Reject", () => this.rejectFriendCall(data.callId)],
+      //   ],
+      // });
+    });
+
+    this.socket.on("friend-call-ringing", (data: { callId: string; receiverId: string }) => {
+      console.log("Call ringing for:", data.receiverId, "Call ID:", data.callId);
+      toast("Ringing...", { id: data.callId });
+    });
+
+    this.socket.on("friend-call-accepted", (data: { callId: string; receiverId: string }) => {
+      console.log("Call accepted by:", data.receiverId, "Call ID:", data.callId);
+      toast.success("Call accepted", { id: data.callId });
+    });
+
+    this.socket.on("friend-call-rejected", (data: { callId: string }) => {
+      console.log("Call rejected, Call ID:", data.callId);
+      toast.error("Call rejected", { id: data.callId });
+    });
+
+    this.socket.on("friend-call-ended", (data: { callId: string }) => {
+      console.log("Call ended, Call ID:", data.callId);
+      toast.success("Call ended", { id: data.callId });
+    });
+  }
+
+  public startFriendCall(receiverId: string) {
+    console.log("Starting friend call to:", receiverId);
+    this.socket.emit("friend-start-call", { callerId: this.userId, receiverId });
+  }
+
+  public acceptFriendCall(callId: string) {
+    console.log("Accepting friend call:", callId);
+    this.socket.emit("friend-accept-call", { callId, userId: this.userId });
+  }
+
+  public rejectFriendCall(callId: string) {
+    console.log("Rejecting friend call:", callId);
+    this.socket.emit("friend-reject-call", { callId, userId: this.userId });
+  }
+
+  public sendFriendOffer(callId: string, offer: RTCSessionDescriptionInit, to: string) {
+    this.socket.emit("friend-offer", { callId, offer, to });
+  }
+
+  public sendFriendAnswer(callId: string, answer: RTCSessionDescriptionInit, to: string) {
+    this.socket.emit("friend-answer", { callId, answer, to });
+  }
+
+  public sendFriendIceCandidate(callId: string, candidate: RTCIceCandidateInit, to: string) {
+    this.socket.emit("friend-ice-candidate", { callId, candidate, to });
+  }
+
+  public endFriendCall(callId: string) {
+    console.log("Ending friend call:", callId);
+    this.socket.emit("friend-end-call", { callId, userId: this.userId });
   }
 
   public async fetchFriends(): Promise<IFriend[]> {

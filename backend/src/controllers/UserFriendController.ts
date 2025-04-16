@@ -15,7 +15,7 @@ export class UserFriendController implements IUserFriendController{
         throw new AppError("User not authenticated", 401);
       }
       const friends = await this.userFriendService.getUserFriends(userId)
-      console.log("friendssssssssssssss",friends)
+      // console.log("friendssssssssssssss",friends)
       res.status(200).json({success:true,data:friends})
     } catch (error) {
       next(error)
