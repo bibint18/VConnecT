@@ -35,6 +35,8 @@ import AdminTriviaPage from "@/pages/AdminTririvaPage";
 import AdminTriviaAddPage from "@/pages/AdminTriviaAdd";
 import AdminEditTriviaPage from "@/pages/AdminTriviaEdit";
 import ChatDashboard from "../User/Chat/ChatDashboard";
+import AdminRewardsList from "../admin/Reward/RewardListing";
+import AddReward from "../admin/Reward/AddRewardForm";
 // import MessagingApp from "../User/Chat/MessagePage";
 
 function AppRoute() {
@@ -57,6 +59,9 @@ function AppRoute() {
         <Route path="/rooms" element={<RoomPage/>} />
         <Route path="/dailyTrivia" element={<TriviaPage />} />
         <Route path="/friends" element={<ChatDashboard/>} />
+        <Route path="/admin/rewards" element={<AdminRewardsList/>} />
+        <Route path="/admin/rewards/add" element={<AddReward/>} />
+        <Route path="/admin/rewards/edit/:rewardId" element={<AddReward/>} />
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<AdminDashboard />} />
           <Route path="/plans" element={<AdminPlans />} />

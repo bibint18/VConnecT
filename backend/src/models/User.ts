@@ -24,7 +24,9 @@ export interface IUser extends Document{
   streak:number;
   point:number;
   lastStreakUpdate:Date;
-  friends: Types.ObjectId[]
+  friends: Types.ObjectId[];
+  availableRoomLimit: number; 
+  claimedRewards: { rewardId: string; claimedAt: Date }[];
 }
 
 const userSchema = new Schema <IUser> ({
@@ -50,7 +52,16 @@ const userSchema = new Schema <IUser> ({
   streak:{type:Number,default:0},
   point:{type:Number,default:0},
   lastStreakUpdate:{type:Date,default:null},
-  friends:[{type:Schema.Types.ObjectId,ref:"User"}]
-})
+  friends:[{type:Schema.Types.ObjectId,ref:"User"}],
+  availableRoomLimit: { type: Number, default: 3 },
+  claimedRewards: [
+    {
+      rewardId: { type: String, required: true },
+      claimedAt: { type: Date, required: true },
+    },
+  ],
+},
+{ timestamps: true }
+)
 
 export const User = mongoose.model<IUser>("User",userSchema)

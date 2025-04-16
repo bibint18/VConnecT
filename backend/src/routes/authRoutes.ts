@@ -7,6 +7,10 @@ import { auth } from 'google-auth-library'
 import { AdminDailyTriviaController } from '../controllers/AdminDailyTriviaController'
 import { AdminDailyTriviaReposiroy } from '../repositories/AdminDailyTriviaRepository'
 import { AdminDailyTriviaService } from '../services/AdminDailyTriviaService'
+import { RewardRepository } from '../repositories/Admin/Reward/RewardRepository'
+import { UserRewardRepository } from '../repositories/User/Reward/UserRewardRepository'
+import { AdminRewardService } from '../services/Admin/Reward/RewardService'
+import { AdminRewardController } from '../controllers/Admin/Reward/RewardController'
 const router = express.Router()
 
 
@@ -41,4 +45,18 @@ router.get('/admin/trivia',authenticateToken,restrictToAdmin,dailyTriviaControll
 router.put('/admin/trivia/update/:id',authenticateToken,restrictToAdmin,dailyTriviaController.updateTriviaQuestion.bind(dailyTriviaController))
 router.delete('/admin/trivia/delete/:id',authenticateToken,restrictToAdmin,dailyTriviaController.deleteTriviaQuestion.bind(dailyTriviaController))
 router.get("/admin/trivia/:id", authenticateToken, restrictToAdmin, dailyTriviaController.getTriviaQuestionById.bind(dailyTriviaController));
+
+//reward
+
+const adminRewardRepository = new RewardRepository()
+const userRewardRepository = new UserRewardRepository()
+// const userRewardService = new UserReward     user service needed to be written 
+const adminRewardService = new AdminRewardService(adminRewardRepository)
+const adminRewardController = new AdminRewardController(adminRewardService)
+
+router.post('/admin/rewards',authenticateToken,restrictToAdmin,adminRewardController.createReward.bind(adminRewardController))
+router.put('/admin/rewards/:rewardId',authenticateToken,restrictToAdmin,adminRewardController.updateReward.bind(adminRewardController))
+router.delete('/admin/rewards/:rewardId',authenticateToken,restrictToAdmin,adminRewardController.deleteReward.bind(adminRewardController))
+router.get('/admin/rewards',authenticateToken,restrictToAdmin,adminRewardController.getRewards.bind(adminRewardController))
+router.get('/admin/reward',authenticateToken,restrictToAdmin,adminRewardController.getRewardById.bind(adminRewardController))
 export default router
