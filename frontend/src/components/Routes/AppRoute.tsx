@@ -28,24 +28,20 @@ import RoomPage from "../User/Room/RoomPage";
 import RoomCall from "../User/Room/Calls/RoomCall";
 import FriendRequests from "../User/Friends/FriendRequest";
 import AdminRoom from "@/pages/AdminRoom";
-import RoomDetails from "../admin/Room/RoomDetails";
 // import UserTrivia from "../User/Trivia/UserTrivia";
 import TriviaPage from "../User/Trivia/TriviaPage";
 import AdminTriviaPage from "@/pages/AdminTririvaPage";
 import AdminTriviaAddPage from "@/pages/AdminTriviaAdd";
 import AdminEditTriviaPage from "@/pages/AdminTriviaEdit";
 import ChatDashboard from "../User/Chat/ChatDashboard";
-import AdminRewardsList from "../admin/Reward/RewardListing";
-import AddReward from "../admin/Reward/AddRewardForm";
-// import MessagingApp from "../User/Chat/MessagePage";
+import AdminRewardPage from "../admin/Reward/RewardPage";
+import AddRewardPage from "../admin/Reward/AddRewardPage";
+import RoomDetailsPage from "../admin/Room/RoomDetailsPage";
 
 function AppRoute() {
   return (
 
     <Routes>
-        {/* <Route path="/header" element={<HomePage/>} /> */}
-
-        {/* <Route path="/addplans" element={<AddPlansPage/>} /> */}
         <Route path="/friends/request" element={<FriendRequests/>} />
         <Route path="/room/:roomId/call" element={<RoomCall/>} />
         <Route path="/profile" element={<ProfilePage/>} />
@@ -59,9 +55,7 @@ function AppRoute() {
         <Route path="/rooms" element={<RoomPage/>} />
         <Route path="/dailyTrivia" element={<TriviaPage />} />
         <Route path="/friends" element={<ChatDashboard/>} />
-        <Route path="/admin/rewards" element={<AdminRewardsList/>} />
-        <Route path="/admin/rewards/add" element={<AddReward/>} />
-        <Route path="/admin/rewards/edit/:rewardId" element={<AddReward/>} />
+        
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<AdminDashboard />} />
           <Route path="/plans" element={<AdminPlans />} />
@@ -72,7 +66,10 @@ function AppRoute() {
           <Route path="/trivia/add" element={<AdminTriviaAddPage/>} />
           <Route path="/trivia" element={<AdminTriviaPage/>} />
           <Route path="/admin/trivia/edit/:id" element={<AdminEditTriviaPage />} />
-          <Route path="/admin/room-details/:id" element={<RoomDetails />} />
+          <Route path="/admin/room-details/:id" element={<RoomDetailsPage />} />
+          <Route path="/admin/rewards" element={<AdminRewardPage/>} />
+        <Route path="/admin/rewards/add" element={<AddRewardPage/>} />
+        <Route path="/admin/rewards/edit/:rewardId" element={<AddRewardPage/>} />
         </Route>
       </Routes>
   )

@@ -8,6 +8,10 @@ export class UserRepository implements IUserRepository{
     return await new User(data).save()
   }
 
+  async findById(id: string): Promise<IUser | null> {
+    return await User.findById(id);
+  }
+  
   async findByEmail(email: string): Promise<IUser | null> {
     return await User.findOne({email})
   }
@@ -40,5 +44,37 @@ export class UserRepository implements IUserRepository{
       console.log('error finding user by username',error)
       throw Error
     }
+  }
+
+  async updateRoomLimit(userId: string, increment: number): Promise<IUser | null> {
+    return await User.findByIdAndUpdate(
+      userId,
+      { $inc: { availableRoomLimit: increment } },
+      { new: true }
+    );
+  }
+
+  async addClaimedReward(userId: string, rewardId: string): Promise<IUser | null> {
+    return await User.findByIdAndUpdate(
+      userId,
+      { $push: { claimedRewards: { rewardId, claimedAt: new Date() } } },
+      { new: true }
+    );
+  }
+
+  async updatePoints(userId: string, points: number): Promise<IUser | null> {
+    return await User.findByIdAndUpdate(
+      userId,
+      { $inc: { point: points } },
+      { new: true }
+    );
+  }
+
+  async updateStreak(userId: string, streak: number, lastUpdate: Date): Promise<IUser | null> {
+    return await User.findByIdAndUpdate(
+      userId,
+      { streak, lastStreakUpdate: lastUpdate },
+      { new: true }
+    );
   }
 }

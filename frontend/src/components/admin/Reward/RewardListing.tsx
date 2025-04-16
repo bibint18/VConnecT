@@ -3,7 +3,7 @@ import { Search, Edit, Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { ChevronRight, ChevronLeft } from "lucide-react";
-import axiosInstance from "@/utils/axiosInterceptor";
+import { fetchRewards,deleteReward } from "@/services/AdminRewardService";
 export interface IReward {
   _id: string;
   rewardId: string;
@@ -27,12 +27,12 @@ const AdminRewardsList: React.FC = () => {
   const [isPending, setIsPending] = useState(false);
   const [isError, setIsError] = useState(false);
 
-  const fetchRewards = async () => {
+  const loadRewards = async () => {
     try {
       setIsPending(true);
-      const response = await axiosInstance.get(`/admin/rewards?page=${page}&limit=${limit}&search=${searchTerm}`);
-      setData(response.data.data);
-    } catch (error:unknown) {
+      const fetchedData = await fetchRewards(page, limit, searchTerm);
+      setData(fetchedData);
+    } catch (error: unknown) {
       if (error instanceof Error) {
         setIsError(true);
         console.log('Caught error:', error.message);
@@ -40,14 +40,13 @@ const AdminRewardsList: React.FC = () => {
         setIsError(true);
         console.log('Unknown error:', error);
       }
-      setIsError(true);
     } finally {
       setIsPending(false);
     }
   };
 
   useEffect(() => {
-    fetchRewards();
+    loadRewards();
   }, [page, searchTerm]);
 
   const handleDelete = (rewardId: string) => {
@@ -62,10 +61,10 @@ const AdminRewardsList: React.FC = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await axiosInstance.delete(`/admin/rewards/${rewardId}`);
+          await deleteReward(rewardId); // Use deleteReward service
           Swal.fire("Deleted!", "Reward has been deleted.", "success");
-          fetchRewards();
-        } catch (error:unknown) {
+          loadRewards(); // Reload rewards after deletion
+        } catch (error: unknown) {
           if (error instanceof Error) {
             Swal.fire(error.message);
             console.log('Caught error:', error.message);
@@ -84,92 +83,102 @@ const AdminRewardsList: React.FC = () => {
   const totalPages = Math.ceil(data.total / limit);
 
   return (
-    <div className="container mx-auto p-6">
-      <div className="mb-6 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
-        <div className="relative w-full sm:w-1/3">
-          <input
-            type="text"
-            placeholder="Search rewards..."
-            className="w-full p-2 border rounded-lg !text-black"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 !text-orange-500" />
+    <div className="customer-dashboard flex-1">
+      <div className="container">
+        <div className="grid-layout">
+          <div>
+            <div className="mb-6 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+              <div className="search-container">
+                <input
+                  type="text"
+                  placeholder="Search rewards..."
+                  className="search-input"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+                <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-orange-500" />
+              </div>
+              <button
+                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+                onClick={() => navigate("/admin/rewards/add")}
+              >
+                Add New Reward
+              </button>
+            </div>
+
+            <div className="table-container">
+              <table className="w-full">
+                <thead>
+                  <tr className="table-header">
+                    <th className="rounded-tl-lg px-4 py-3 text-left text-sm">S. No</th>
+                    <th className="px-4 py-3 text-left text-sm">Title</th>
+                    <th className="px-4 py-3 text-left text-sm">Type</th>
+                    <th className="px-4 py-3 text-left text-sm">Value</th>
+                    <th className="px-4 py-3 text-left text-sm">Points</th>
+                    <th className="px-4 py-3 text-left text-sm">Streak</th>
+                    <th className="rounded-tr-lg px-4 py-3 text-left text-sm">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {data.rewards.length > 0 ? (
+                    data.rewards.map((reward, index) => (
+                      <tr key={reward.rewardId} className="table-row border-b border-gray-100 last:border-0">
+                        <td className="px-4 py-3">
+                          <span className="font-bold">{(page - 1) * limit + index + 1}</span>
+                        </td>
+                        <td className="px-4 py-3">{reward.title}</td>
+                        <td className="px-4 py-3">{reward.type}</td>
+                        <td className="px-4 py-3">{reward.value}</td>
+                        <td className="px-4 py-3">{reward.requiredPoints || "-"}</td>
+                        <td className="px-4 py-3">{reward.requiredStreak || "-"}</td>
+                        <td className="px-4 py-3">
+                          <div className="flex items-center gap-2">
+                            <button
+                              className="action-button edit-button"
+                              onClick={() => navigate(`/admin/rewards/edit/${reward.rewardId}`)}
+                            >
+                              <Edit className="h-5 w-5" />
+                            </button>
+                            <button
+                              className="action-button delete-button"
+                              onClick={() => handleDelete(reward.rewardId)}
+                            >
+                              <Trash2 className="h-5 w-5" />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan={7} className="text-center py-4 text-gray-500">
+                        No rewards found
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+
+            <div className="pagination">
+              <button
+                disabled={page === 1}
+                onClick={() => setPage((prev) => prev - 1)}
+                className="page-button"
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </button>
+              <span className="px-3 py-2">{page}</span>
+              <button
+                disabled={page >= totalPages}
+                onClick={() => setPage((prev) => prev + 1)}
+                className="page-button"
+              >
+                <ChevronRight className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
         </div>
-        <button
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
-          onClick={() => navigate("/admin/rewards/add")}
-        >
-          Add New Reward
-        </button>
-      </div>
-
-      <div className="overflow-x-auto">
-        <table className="w-full border-collapse">
-          <thead>
-            <tr className="bg-gray-100">
-              <th className="px-4 py-3 text-left">S. No</th>
-              <th className="px-4 py-3 text-left">Title</th>
-              <th className="px-4 py-3 text-left">Type</th>
-              <th className="px-4 py-3 text-left">Value</th>
-              <th className="px-4 py-3 text-left">Points</th>
-              <th className="px-4 py-3 text-left">Streak</th>
-              <th className="px-4 py-3 text-left">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.rewards.map((reward, index) => (
-              <tr key={reward.rewardId} className="border-b">
-                <td className="px-4 py-3">{(page - 1) * limit + index + 1}</td>
-                <td className="px-4 py-3">{reward.title}</td>
-                <td className="px-4 py-3">{reward.type}</td>
-                <td className="px-4 py-3">{reward.value}</td>
-                <td className="px-4 py-3">{reward.requiredPoints || "-"}</td>
-                <td className="px-4 py-3">{reward.requiredStreak || "-"}</td>
-                <td className="px-4 py-3">
-                  <div className="flex gap-2">
-                    <button
-                      className="text-blue-600 hover:text-blue-800"
-                      onClick={() => navigate(`/admin/rewards/edit/${reward.rewardId}`)}
-                    >
-                      <Edit className="h-5 w-5" />
-                    </button>
-                    <button
-                      className="text-red-600 hover:text-red-800"
-                      onClick={() => handleDelete(reward.rewardId)}
-                    >
-                      <Trash2 className="h-5 w-5" />
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      {data.rewards.length === 0 && (
-        <div className="text-center py-12">
-          <p className="text-gray-500">No rewards found. Try adjusting your search or add a new reward.</p>
-        </div>
-      )}
-
-      <div className="flex justify-center mt-6">
-        <button
-          disabled={page === 1}
-          onClick={() => setPage((prev) => prev - 1)}
-          className="px-3 py-1 mx-1 bg-gray-200 rounded disabled:opacity-50"
-        >
-          <ChevronLeft className="h-4 w-4" />
-        </button>
-        <span className="px-3 py-1 mx-1">{page}</span>
-        <button
-          disabled={page >= totalPages}
-          onClick={() => setPage((prev) => prev + 1)}
-          className="px-3 py-1 mx-1 bg-gray-200 rounded disabled:opacity-50"
-        >
-          <ChevronRight className="h-4 w-4" />
-        </button>
       </div>
     </div>
   );

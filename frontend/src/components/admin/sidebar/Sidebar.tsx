@@ -49,7 +49,7 @@ const Sidebar: React.FC = () => {
             { label: "Rooms", icon: MessageSquare ,path:"/admin/rooms"},
             { label: "Payments", icon: CreditCard },
             { label: "Daily Challenge", icon: Calendar,path:'/trivia' },
-            { label: "Rewards", icon: Award },
+            { label: "Rewards", icon: Award,path:"/admin/rewards" },
             { label: "Support", icon: LifeBuoy },
             { label: "Feeds", icon: Rss },
             { label: "Reports", icon: BarChart3 },

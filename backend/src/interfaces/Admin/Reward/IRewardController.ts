@@ -6,7 +6,4 @@ export interface IRewardController {
   deleteReward(req: Request, res: Response, next: NextFunction): Promise<void>;
   getRewards(req: Request, res: Response, next: NextFunction): Promise<void>;
   getRewardById(req:Request,res:Response,next:NextFunction):Promise<void>
-  // getUserRewards(req: Request, res: Response, next: NextFunction): Promise<void>;
-  // claimReward(req: Request, res: Response, next: NextFunction): Promise<void>;
-  // checkIn(req: Request, res: Response, next: NextFunction): Promise<void>;
 }
