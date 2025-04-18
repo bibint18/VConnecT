@@ -41,6 +41,8 @@ const RewardsList: React.FC = () => {
 
   const handleClaim = async (rewardId: string) => {
     try {
+      console.log("clicked claim ")
+      console.log("clicked claim ",rewardId)
       await rewardService.claimReward(rewardId);
       setRewards((prev) =>
         prev.map((r) => (r.rewardId === rewardId ? { ...r, isClaimed: true } : r))

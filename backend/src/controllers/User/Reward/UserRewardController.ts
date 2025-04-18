@@ -20,8 +20,11 @@ export class UserRewardController implements IUserRewardController{
 
   async claimReward(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
+      console.log("Reached claim controller",req.params)
+      const {rewardid} = req.params
+      console.log("Reached claim controller data ",rewardid)
       const userId = req.user?.id
-      await this.userRewardService.claimReward(userId as string,req.params.rewardId)
+      await this.userRewardService.claimReward(userId as string,req.params.rewardid)
       res.status(200).json({ success: true, message: "Reward claimed" });
     } catch (error) {
       next(error)
