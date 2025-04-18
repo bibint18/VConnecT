@@ -37,7 +37,8 @@ import ChatDashboard from "../User/Chat/ChatDashboard";
 import AdminRewardPage from "../admin/Reward/RewardPage";
 import AddRewardPage from "../admin/Reward/AddRewardPage";
 import RoomDetailsPage from "../admin/Room/RoomDetailsPage";
-import RewardsList from "../User/Reward/RewardList";
+
+import RewardPage from "../User/Reward/RewardPage";
 
 function AppRoute() {
   return (
@@ -56,7 +57,7 @@ function AppRoute() {
         <Route path="/rooms" element={<RoomPage/>} />
         <Route path="/dailyTrivia" element={<TriviaPage />} />
         <Route path="/friends" element={<ChatDashboard/>} />
-        <Route path="/rewards" element={<RewardsList/>} />
+        <Route path="/rewards" element={<RewardPage/>} />
         
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<AdminDashboard />} />

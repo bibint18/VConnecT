@@ -1,81 +1,5 @@
 
 
-
-// import  { useState } from 'react';
-// import { FaUser, FaChartLine, FaPen, FaDoorOpen, FaUserFriends, FaCog } from 'react-icons/fa';
-
-// const Sidebar = () => {
-//   const [isCollapsed, setIsCollapsed] = useState(false);
-
-//   const toggleSidebar = () => {
-//     setIsCollapsed(!isCollapsed);
-//   };
-
-//   return (
-//     <div
-//       className={`sidebar fixed h-screen text-white p-4 flex flex-col justify-between ${
-//         isCollapsed ? 'w-[60px]' : 'w-[200px]'
-//       } transition-all duration-300`}
-//     >
-//       <div>
-//         <button
-//           onClick={toggleSidebar}
-//           className="text-white mb-6 focus:outline-none"
-//         >
-//           {isCollapsed ? '☰' : '✖'}
-//         </button>
-//         <ul className="space-y-4">
-//           <li
-//             className={`flex items-center space-x-4 p-2 rounded ${
-//               !isCollapsed ? 'bg-blue-500' : ''
-//             }`}
-//           >
-//             <FaUser className="text-xl" />
-//             {!isCollapsed && <span>Profile</span>}
-//           </li>
-//           <li className="flex items-center space-x-4 p-2 rounded hover:bg-gray-700">
-//             <FaChartLine className="text-xl" />
-//             {!isCollapsed && <span>Stats</span>}
-//           </li>
-//           <li className="flex items-center space-x-4 p-2 rounded hover:bg-gray-700">
-//             <FaPen className="text-xl" />
-//             {!isCollapsed && <span>Posts</span>}
-//           </li>
-//           <li className="flex items-center space-x-4 p-2 rounded hover:bg-gray-700">
-//             <FaDoorOpen className="text-xl" />
-//             {!isCollapsed && <span>Rooms</span>}
-//           </li>
-//           <li className="flex items-center space-x-4 p-2 rounded hover:bg-gray-700">
-//             <FaUserFriends className="text-xl" />
-//             {!isCollapsed && <span>Friends</span>}
-//           </li>
-//           <li className="flex items-center space-x-4 p-2 rounded hover:bg-gray-700">
-//             <FaCog className="text-xl" />
-//             {!isCollapsed && <span>Settings</span>}
-//           </li>
-//           {!isCollapsed && (
-//             <li className="flex items-center space-x-4 p-2 text-gray-500">
-//               <span>Premium</span>
-//             </li>
-//           )}
-//         </ul>
-//       </div>
-//       <button
-//         className={`logout-btn py-2 px-4 rounded transition duration-300 ${
-//           isCollapsed ? 'w-[40px]' : 'w-full'
-//         }`}
-//       >
-//         {isCollapsed ? '←' : 'Logout ←'}
-//       </button>
-//     </div>
-//   );
-// };
-
-// export default Sidebar;
-
-
-
-
 import React from 'react';
 import { 
   Home, 
@@ -97,7 +21,7 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { name: 'Profile', icon: Home, isActive: true,path:'/profile' },
-  { name: 'Stats', icon: BarChart2,path:'/stats' },
+  { name: 'Stats', icon: BarChart2,path:'/rewards' },
   { name: 'Posts', icon: FileText,path:'/posts' },
   { name: 'Rooms', icon: MessageSquare,path:'/rooms' },
   { name: 'Friends', icon: Users ,path:'/friends/request'},

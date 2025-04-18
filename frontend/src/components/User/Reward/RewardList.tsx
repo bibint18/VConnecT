@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { RewardService, IReward } from "@/services/RewardService";
 import { useAppSelector } from "@/redux/store";
 import toast from "react-hot-toast";
@@ -39,7 +39,7 @@ const RewardsList: React.FC = () => {
   }, [userId]);
 
 
-  const handleClaim = async (rewardId: string) => {
+  const handleClaim =useCallback (async (rewardId: string) => {
     try {
       console.log("clicked claim ")
       console.log("clicked claim ",rewardId)
@@ -47,11 +47,15 @@ const RewardsList: React.FC = () => {
       setRewards((prev) =>
         prev.map((r) => (r.rewardId === rewardId ? { ...r, isClaimed: true } : r))
       );
+      if(userId){
+        const updatedUser = await rewardService.getUserDetails(userId)
+        setUserData(updatedUser)
+      }
       toast.success("Reward claimed!");
     } catch (err: unknown) {
       toast.error(err instanceof Error ? err.message : 'Failed to claim reward');
     }
-  };
+  },[userId]);
 
   const handleCheckIn = async () => {
     try {
