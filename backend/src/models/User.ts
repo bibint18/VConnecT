@@ -53,7 +53,7 @@ const userSchema = new Schema <IUser> ({
   point:{type:Number,default:0},
   lastStreakUpdate:{type:Date,default:null},
   friends:[{type:Schema.Types.ObjectId,ref:"User"}],
-  availableRoomLimit: { type: Number, default: 3 },
+  availableRoomLimit: { type: Number, default: 1 },
   claimedRewards: [
     {
       rewardId: { type: String, required: true },

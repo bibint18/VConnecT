@@ -1,0 +1,35 @@
+.gradient-float {
+  background: linear-gradient(
+    90deg,
+    rgba(236, 72, 153, 0.3),
+    rgba(168, 85, 247, 0.3),
+    rgba(59, 130, 246, 0.3),
+    rgba(236, 72, 153, 0.3)
+  );
+  background-size: 200% 200%;
+  animation: gradientFloat 6s ease infinite;
+}
+
+@keyframes gradientFloat {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .gradient-float {
+    animation: none;
+    background: linear-gradient(
+      90deg,
+      rgba(236, 72, 153, 0.3),
+      rgba(168, 85, 247, 0.3)
+    );
+  }
+}
