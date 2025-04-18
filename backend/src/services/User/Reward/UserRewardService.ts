@@ -3,10 +3,11 @@ import { IRewardRepository } from "../../../interfaces/Admin/Reward/IRewardRepos
 import { IUserRepository } from "../../../interfaces/IUserRepository";
 import { IReward } from "../../../models/RewardModel";
 import { IUser } from "../../../models/User";
+import { IUserRewardRepo } from "../../../interfaces/user/Reward/IUserRepository";
 
 export class UserRewardService implements IUserRewardService {
   constructor(
-    private rewardRepository: IRewardRepository,
+    private rewardRepository: IUserRewardRepo,
     private userRepository: IUserRepository
   ) {}
 
@@ -15,7 +16,7 @@ export class UserRewardService implements IUserRewardService {
     if (!user) throw new Error("User not found");
     const { rewards } = await this.rewardRepository.findAllRewards(1, 100, "");
     return rewards.map((reward) => ({
-      ...reward,
+      ...reward, // .lean() ensures plain object
       isUnlocked: (reward.requiredPoints && user.point >= reward.requiredPoints) ||
                   (reward.requiredStreak && user.streak >= reward.requiredStreak) ||
                   false,
@@ -64,5 +65,11 @@ export class UserRewardService implements IUserRewardService {
     if (!updatedUser) throw new Error("Failed to update streak");
 
     return updatedUser;
+  }
+
+  async getUserDetails(userId: string): Promise<IUser> {
+    const user = await this.userRepository.findById(userId);
+    if (!user) throw new Error("User not found");
+    return user;
   }
 }

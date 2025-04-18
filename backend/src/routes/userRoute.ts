@@ -67,13 +67,14 @@ const chatController = new ChatController(chatService)
 router.post('/chat/send',authenticateToken,chatController.sendMessage.bind(chatController))
 router.get('/chat/history',authenticateToken,chatController.getChatHistory.bind(chatController))
 
-//reward
-// const userRepository = new UserRepository()
-// const rewardRepository = new UserRewardRepository()
-// // const rewardService = new UserRewardService(rewardRepository,userRepository)
-// const rewardController = new UserRewardController(rewardService)
-// router.get('/rewards',authenticateToken,rewardController.getUserRewards.bind(rewardController))
-// router.post('/rewards/claim/:rewardid',authenticateToken,rewardController.claimReward.bind(rewardController))
-// router.post('/user/checkin',authenticateToken,rewardController.checkIn.bind(rewardController))
+// reward
+const rewardRepository = new UserRewardRepository()
+const userRepository = new UserRepository()
+const rewardService = new UserRewardService(rewardRepository,userRepository)
+const rewardController = new UserRewardController(rewardService)
+router.get('/rewards',authenticateToken,rewardController.getUserRewards.bind(rewardController))
+router.post('/rewards/claim/:rewardid',authenticateToken,rewardController.claimReward.bind(rewardController))
+router.post('/user/checkin',authenticateToken,rewardController.checkIn.bind(rewardController))
+router.get('/user/details/:userId',authenticateToken,rewardController.getUserDetails.bind(rewardController))
 return router
 }

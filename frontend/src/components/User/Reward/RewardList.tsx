@@ -3,13 +3,15 @@ import { RewardService, IReward } from "@/services/RewardService";
 import { useAppSelector } from "@/redux/store";
 import toast from "react-hot-toast";
 import { Lock, Unlock, CheckCircle } from "lucide-react";
+import { IUser } from "@/components/admin/dashboard/CustomerDashboard";
 
 const RewardsList: React.FC = () => {
-  const { userId, point, streak } = useAppSelector((state) => state.user);
+  const { userId} = useAppSelector((state) => state.user);
   const [rewards, setRewards] = useState<IReward[]>([]);
   const [loading, setLoading] = useState(true);
   const rewardService = new RewardService();
-
+  const [userData,setUserData] = useState<IUser | null>(null)
+  console.log("loaded")
   useEffect(() => {
     if (!userId) {
       toast.error("Please log in to view rewards");
@@ -18,11 +20,16 @@ const RewardsList: React.FC = () => {
 
     const fetchRewards = async () => {
       try {
+        console.log("fetched")
         setLoading(true);
+        const userData = await rewardService.getUserDetails(userId as string)
+        console.log("userDate",userData)
+        setUserData(userData)
         const data = await rewardService.getRewards();
+        console.log("rewards",data)
         setRewards(data);
-      } catch (error: any) {
-        toast.error(error.message);
+      } catch (err:unknown) {
+        toast.error(err instanceof Error ? err.message : 'Error!');
       } finally {
         setLoading(false);
       }
@@ -31,6 +38,7 @@ const RewardsList: React.FC = () => {
     fetchRewards();
   }, [userId]);
 
+
   const handleClaim = async (rewardId: string) => {
     try {
       await rewardService.claimReward(rewardId);
@@ -38,8 +46,8 @@ const RewardsList: React.FC = () => {
         prev.map((r) => (r.rewardId === rewardId ? { ...r, isClaimed: true } : r))
       );
       toast.success("Reward claimed!");
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (err: unknown) {
+      toast.error(err instanceof Error ? err.message : 'Failed to claim reward');
     }
   };
 
@@ -47,13 +55,19 @@ const RewardsList: React.FC = () => {
     try {
       await rewardService.checkIn();
       toast.success("Checked in successfully!");
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (err: unknown) {
+      toast.error(err instanceof Error ? err.message : 'Failed to checkin');
     }
   };
 
   if (loading) return <div className="text-center py-12">Loading rewards...</div>;
 
+  const point = userData?.point
+  const streak = userData?.streak
+  console.log("streak and point and rewards ",streak,point,rewards)
+  if (!userData || point === undefined || streak === undefined) {
+    return <div className="text-center py-12">Failed to load user data</div>;
+  }
   return (
     <div className="container mx-auto p-6">
       <h1 className="text-3xl font-bold mb-6 text-center">Your Rewards</h1>

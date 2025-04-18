@@ -1,6 +1,6 @@
 import mongoose, { Document, Schema } from "mongoose";
 
-export interface IReward extends Document {
+export interface IReward  {
   rewardId: string;
   title: string;
   description: string;
@@ -11,10 +11,14 @@ export interface IReward extends Document {
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
-  isDeleted:boolean
+  isDeleted:boolean;
+  isUnlocked?:boolean;
+  isClaimed?:boolean;
 }
 
-const rewardSchema = new Schema<IReward>(
+export interface IRewardDocument extends IReward,Document{}
+
+const rewardSchema = new Schema<IRewardDocument>(
   {
     rewardId: { type: String, required: true, unique: true },
     title: { type: String, required: true },

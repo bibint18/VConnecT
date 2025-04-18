@@ -4,4 +4,5 @@ export interface IUserRewardController {
   getUserRewards(req: Request, res: Response, next: NextFunction): Promise<void>;
   claimReward(req: Request, res: Response, next: NextFunction): Promise<void>;
   checkIn(req: Request, res: Response, next: NextFunction): Promise<void>;
+  getUserDetails(req: Request, res: Response, next: NextFunction): Promise<void>;
 }

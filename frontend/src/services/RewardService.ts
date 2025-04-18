@@ -1,3 +1,4 @@
+import { IUser } from "@/components/admin/dashboard/CustomerDashboard";
 import axiosInstance from "@/utils/axiosInterceptor";
 import { AxiosError } from "axios";
 
@@ -19,6 +20,7 @@ export class RewardService {
   async getRewards(): Promise<IReward[]> {
     try {
       const response = await axiosInstance.get("/rewards");
+      console.log("response from fetching rewards",response.data.data)
       return response.data.data;
     } catch (error: unknown) {
       if(error instanceof AxiosError && error.message){
@@ -48,6 +50,18 @@ export class RewardService {
           }
           throw new Error("Failed to checkin")
         }
+    }
+
+    async getUserDetails(userId:string):Promise<IUser>{
+      try {
+        const response=await axiosInstance.get(`/user/details/${userId}`)
+        return response.data.data
+      } catch (error) {
+        if(error instanceof AxiosError && error.message){
+          throw new Error(error.response?.data.message)
+        }
+        throw new Error("Failed to fetch details")
+      }
     }
   
 }

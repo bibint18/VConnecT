@@ -1,10 +1,6 @@
-import { IUser } from "../../../models/User";
+import { IReward } from "../../../models/RewardModel";
 
-export interface IUserRewardRepository {
-  findById(id: string): Promise<IUser | null>;
-  updateUser(id: string, updates: Partial<IUser>): Promise<IUser | null>;
-  updateRoomLimit(userId: string, increment: number): Promise<IUser | null>;
-  addClaimedReward(userId: string, rewardId: string): Promise<IUser | null>;
-  updatePoints(userId: string, points: number): Promise<IUser | null>;
-  updateStreak(userId: string, streak: number, lastUpdate: Date): Promise<IUser | null>;
+export interface IUserRewardRepo {
+  findRewardById(rewardId: string): Promise<IReward | null>;
+  findAllRewards(page: number, limit: number, searchTerm: string): Promise<{ rewards: IReward[]; total: number }>;
 }

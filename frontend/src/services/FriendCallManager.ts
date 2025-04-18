@@ -25,20 +25,6 @@ export class FriendCallManager {
     this.setupSocketEvents();
   }
 
-  // public async startCall(receiverId: string) {
-  //   console.log("Starting call to:", receiverId);
-  //   try {
-  //     this.state.localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-  //     this.state.callId = `call_${[this.chatService['userId'], receiverId].sort().join("_")}`;
-  //     this.state.remoteUserId = receiverId;
-  //     this.onStreamUpdate(this.state.localStream, null);
-  //     this.chatService.startFriendCall(receiverId);
-  //     console.log("Call started to:", receiverId);
-  //   } catch (error) {
-  //     console.error("Error starting call:", error);
-  //     throw error;
-  //   }
-  // }
 
   public async startCall(receiverId: string) {
     console.log("Starting call to:", receiverId);

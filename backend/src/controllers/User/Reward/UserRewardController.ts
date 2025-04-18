@@ -11,7 +11,7 @@ export class UserRewardController implements IUserRewardController{
 
   async getUserRewards(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const rewards = await this.userRewardService.getUserRewards((req as any).user?.id)
+      const rewards = await this.userRewardService.getUserRewards(req.user?.id as string)
       res.status(200).json({ success: true, data: rewards });
     } catch (error) {
       next(error)
@@ -20,8 +20,8 @@ export class UserRewardController implements IUserRewardController{
 
   async claimReward(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const userId = (req as any).user.id
-      await this.userRewardService.claimReward(userId,req.params.rewardId)
+      const userId = req.user?.id
+      await this.userRewardService.claimReward(userId as string,req.params.rewardId)
       res.status(200).json({ success: true, message: "Reward claimed" });
     } catch (error) {
       next(error)
@@ -37,4 +37,14 @@ export class UserRewardController implements IUserRewardController{
     }
   }
 
+  async getUserDetails(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const {userId} = req.params
+      const user = await this.userRewardService.getUserDetails(userId)
+      if (!user) throw new Error("User not found");
+      res.status(200).json({success:true,data:user})
+    } catch (error) {
+      next(error)
+    }
+  }
 }

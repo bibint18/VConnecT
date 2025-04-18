@@ -1,43 +1,22 @@
-import { IUserRewardRepository } from "../../../interfaces/user/Reward/IUserRepository";
+import { IUserRewardRepo} from "../../../interfaces/user/Reward/IUserRepository";
+import { IReward, Reward } from "../../../models/RewardModel";
 import { IUser,User } from "../../../models/User";
-export class UserRewardRepository implements IUserRewardRepository {
-  async findById(id: string): Promise<IUser | null> {
-    return await User.findById(id);
+export class UserRewardRepository implements IUserRewardRepo {
+  async findRewardById(rewardId: string): Promise<IReward | null> {
+    return await Reward.findOne({ rewardId, isDeleted: false, isActive: true });
   }
 
-  async updateUser(id: string, updates: Partial<IUser>): Promise<IUser | null> {
-    return await User.findByIdAndUpdate(id, updates, { new: true });
-  }
-
-  async updateRoomLimit(userId: string, increment: number): Promise<IUser | null> {
-    return await User.findByIdAndUpdate(
-      userId,
-      { $inc: { availableRoomLimit: increment } },
-      { new: true }
-    );
-  }
-
-  async addClaimedReward(userId: string, rewardId: string): Promise<IUser | null> {
-    return await User.findByIdAndUpdate(
-      userId,
-      { $push: { claimedRewards: { rewardId, claimedAt: new Date() } } },
-      { new: true }
-    );
-  }
-
-  async updatePoints(userId: string, points: number): Promise<IUser | null> {
-    return await User.findByIdAndUpdate(
-      userId,
-      { $inc: { point: points } },
-      { new: true }
-    );
-  }
-
-  async updateStreak(userId: string, streak: number, lastUpdate: Date): Promise<IUser | null> {
-    return await User.findByIdAndUpdate(
-      userId,
-      { streak, lastStreakUpdate: lastUpdate },
-      { new: true }
-    );
+  async findAllRewards(page: number, limit: number, searchTerm: string): Promise<{ rewards: IReward[]; total: number }> {
+    const query = {
+      isDeleted: false,
+      isActive: true,
+      $or: [
+        { title: { $regex: searchTerm, $options: "i" } },
+        { description: { $regex: searchTerm, $options: "i" } },
+      ],
+    };
+    const rewards = await Reward.find(query).skip((page - 1) * limit).limit(limit).lean();
+    const total = await Reward.countDocuments(query);
+    return { rewards, total };
   }
 }

@@ -1,6 +1,6 @@
 
 "use client"
-interface User{
+export interface IUser{
   _id:string;
   name:string,
   email:string,
@@ -13,7 +13,9 @@ interface User{
   lockUntil: Date | null;
   plan:string;
   isDeleted:boolean;
-  isBlocked:boolean
+  isBlocked:boolean;
+  point?:number;
+  streak?:number
 }
 
 import { useState } from "react"
@@ -32,7 +34,7 @@ export default function CustomerDashboard() {
   const [sortOption,setSortOption] = useState<string>("A-Z")
   const { data, isLoading, isError } = useUsers(page, limit, searchTerm, sortOption);
   console.log("data from component ",data)
-  const users: User[] = data?.users ?? []; 
+  const users: IUser[] = data?.users ?? []; 
   const totalUsers: number = data?.totalUsers ?? 0; 
 const totalPages = Math.ceil(totalUsers/limit)
   console.log("totalCount",totalPages)
@@ -167,7 +169,7 @@ const totalPages = Math.ceil(totalUsers/limit)
                 </thead>
                 <tbody>
                 
-                {users?.length > 0 ? ( users?.map((user: User,index:number) => (
+                {users?.length > 0 ? ( users?.map((user: IUser,index:number) => (
                     <tr key={user._id} className="table-row border-b border-gray-100 last:border-0">
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-2">
