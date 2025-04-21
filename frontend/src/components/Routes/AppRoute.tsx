@@ -39,6 +39,8 @@ import AddRewardPage from "../admin/Reward/AddRewardPage";
 import RoomDetailsPage from "../admin/Room/RoomDetailsPage";
 
 import RewardPage from "../User/Reward/RewardPage";
+import PlansPage from "../User/Plans/PlansPage";
+import PricingSuccess from "../User/Plans/PricingSuccess";
 
 function AppRoute() {
   return (
@@ -49,7 +51,7 @@ function AppRoute() {
         <Route path="/profile" element={<ProfilePage/>} />
         <Route path="/addRoom" element={<AddRoomPage/>} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/landing" element={<LandingPage/>} />
+        <Route path="/landing" element={<LandingPage/>} /> 
         <Route path="/verify-otp" element={<VerifyOTP />} />
         <Route path="/login" element={<Login />} />
         <Route path="/adminLogin" element={<AdminLogin />} />
@@ -58,6 +60,8 @@ function AppRoute() {
         <Route path="/dailyTrivia" element={<TriviaPage />} />
         <Route path="/friends" element={<ChatDashboard/>} />
         <Route path="/rewards" element={<RewardPage/>} />
+        <Route path="/user/plans" element={<PlansPage/>} />
+        <Route path="/pricing/success" element={<PricingSuccess/>} />
         
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<AdminDashboard />} />

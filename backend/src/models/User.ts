@@ -12,7 +12,14 @@ export interface IUser extends Document{
   isAdmin:boolean
   failedLoginAttempts: number;
   lockUntil: Date | null;
-  plan:string;
+  plan:{
+    planId:Types.ObjectId;
+    planName:string;
+    status:"active" | 'expired' | 'cancelled';
+    startDate:Date;
+    endDate?:Date;
+    transactionId?:string;
+  }[];
   isDeleted:boolean;
   isBlocked:boolean;
   googleId?:string;
@@ -40,7 +47,14 @@ const userSchema = new Schema <IUser> ({
   isAdmin:{type:Boolean,default:false},
   failedLoginAttempts: { type: Number, default: 0 },
   lockUntil: { type: Date, default: null },
-  plan:{type:String,default:"BASIC"},
+  plan:[{
+    planId: { type: Schema.Types.ObjectId, ref: "Plan", required: true },
+        planName: { type: String, required: true },
+        status: { type: String, enum: ["active", "expired", "cancelled"], default: "active" },
+        startDate: { type: Date, required: true },
+        endDate: { type: Date },
+        transactionId: { type: String },
+  }],
   isDeleted:{type:Boolean,default:false},
   isBlocked:{type:Boolean,default:false},
   googleId:{type:String,sparse:true},

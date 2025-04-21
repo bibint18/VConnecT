@@ -1,6 +1,7 @@
 import { IUserRepository } from "../interfaces/IUserRepository";
 import { IUser,User } from "../models/User";
 import { OtpVerification } from "../models/OtpModel";
+import { Types } from "mongoose";
 
 export class UserRepository implements IUserRepository{
   async createUser(data: Partial<IUser>): Promise<IUser |null> {
@@ -76,5 +77,15 @@ export class UserRepository implements IUserRepository{
       { streak, lastStreakUpdate: lastUpdate },
       { new: true }
     );
+  }
+
+  async updateUserPlans(userId: string, planData: { planId: Types.ObjectId; planName: string; status: "active" | "expired" | "cancelled"; startDate: Date; endDate?: Date; transactionId?: string; }): Promise<IUser> {
+      const user = await User.findById(userId)
+      if(!user){
+        throw new Error("User not found")
+      }
+      user.plan = user.plan.map((plan) => plan.status ==='active' ? {...plan,status:'expired',endDate:new Date()} : plan)
+      user.plan.push(planData)
+      return await user.save()
   }
 }

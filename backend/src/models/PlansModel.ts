@@ -2,6 +2,7 @@
 import mongoose,{Schema,Document} from 'mongoose'
 
 export interface IPlan extends Document{
+  _id:string
   name:string;
   type:string
   description: string;

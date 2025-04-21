@@ -25,7 +25,7 @@ const navItems: NavItem[] = [
   { name: 'Posts', icon: FileText,path:'/posts' },
   { name: 'Rooms', icon: MessageSquare,path:'/rooms' },
   { name: 'Friends', icon: Users ,path:'/friends/request'},
-  { name: 'Premium', icon: Star ,path:'/premium'},
+  { name: 'Premium', icon: Star ,path:'/user/plans'},
   { name: 'Setting', icon: Settings ,path:"/settings"},
 ];
 

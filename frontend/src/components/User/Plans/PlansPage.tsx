@@ -1,0 +1,19 @@
+import { Sidebar } from "../Profile/Sidebar"
+import Header from "../Header/Header"
+import ListPlans from "./ListPlans"
+
+export default function PlansPage() {
+  return (
+    <div className="flex flex-col min-h-screen bg-black">
+      <div className="fixed top-0 left-0 w-full z-10">
+        <Header />
+      </div>
+      <div className="flex flex-1">
+        <Sidebar />
+        <main className="flex-1 ml-20 md:ml-64 pt-16">
+          <ListPlans/>
+        </main>
+      </div>
+    </div>
+  )
+}

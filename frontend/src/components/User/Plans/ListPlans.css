@@ -1,0 +1,33 @@
+.popular-plan-glow {
+  background: linear-gradient(
+    90deg,
+    rgba(168, 85, 247, 0.5),
+    rgba(236, 72, 153, 0.5),
+    rgba(168, 85, 247, 0.5)
+  );
+  background-size: 200% 200%;
+  animation: gradientFloat 6s ease infinite;
+}
+
+@keyframes gradientFloat {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .popular-plan-glow {
+    animation: none;
+    background: linear-gradient(
+      90deg,
+      rgba(168, 85, 247, 0.5),
+      rgba(236, 72, 153, 0.5)
+    );
+  }
+}

@@ -20,6 +20,11 @@ import { UserRewardRepository } from '../repositories/User/Reward/UserRewardRepo
 import { UserRewardService } from '../services/User/Reward/UserRewardService'
 import { UserRepository } from '../repositories/userRepository'
 import { UserRewardController } from '../controllers/User/Reward/UserRewardController'
+import { UserPlanRepository } from '../repositories/User/Plans/UserPlansRepository'
+import { UserPlanService } from '../services/User/Plans/UserPlansService'
+import { UserPlanController } from '../controllers/User/Plans/UserPlansController'
+import { PaymentService } from '../services/User/Payment/PaymentService'
+import { PaymentController } from '../controllers/User/Payment/PaymentController'
 
 export const createUserRoutes = (chatIo:Namespace) => {
 const router = express.Router()
@@ -76,5 +81,25 @@ router.get('/rewards',authenticateToken,rewardController.getUserRewards.bind(rew
 router.post('/rewards/claim/:rewardid',authenticateToken,rewardController.claimReward.bind(rewardController))
 router.post('/user/checkin',authenticateToken,rewardController.checkIn.bind(rewardController))
 router.get('/user/details/:userId',authenticateToken,rewardController.getUserDetails.bind(rewardController))
+
+//plans
+const plansRepository = new UserPlanRepository()
+const plansService = new UserPlanService(plansRepository,userRepository)
+const plansController = new UserPlanController(plansService)
+router.get('/plans',authenticateToken,plansController.getPlans.bind(plansController))
+
+
+//payment
+const paymentService = new PaymentService(plansRepository)
+const paymentController = new PaymentController(paymentService,plansService)
+router.post('/payments/create',authenticateToken,paymentController.createPayment.bind(paymentController))
+router.get('/payments/execute',paymentController.executePayment.bind(paymentController))
+
+
+
+
+
+
+
 return router
 }
