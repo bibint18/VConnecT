@@ -69,15 +69,9 @@ export class ChatService {
 
     this.socket.on("friend-call-incoming", (data: { callId: string; callerId: string }) => {
       console.log("Incoming call from:", data.callerId, "Call ID:", data.callId);
-      // toast(`Incoming call from ${data.callerId}`, {
-      //   id: data.callId,
-      //   duration: Infinity,
-      //   position: "top-center",
-      //   buttons: [
-      //     ["Accept", () => this.acceptFriendCall(data.callId)],
-      //     ["Reject", () => this.rejectFriendCall(data.callId)],
-      //   ],
-      // });
+      this.socket.emit("join-chat",{userId:data.callId},(response:unknown) => {
+        console.log("Joined call room:", data.callId, "Response:", response);
+      })
     });
 
     this.socket.on("friend-call-ringing", (data: { callId: string; receiverId: string }) => {
@@ -117,14 +111,17 @@ export class ChatService {
   }
 
   public sendFriendOffer(callId: string, offer: RTCSessionDescriptionInit, to: string) {
+    console.log("Sending friend offer for call:", callId);
     this.socket.emit("friend-offer", { callId, offer, to });
   }
 
   public sendFriendAnswer(callId: string, answer: RTCSessionDescriptionInit, to: string) {
+    console.log("Sending friend answer for call:", callId);
     this.socket.emit("friend-answer", { callId, answer, to });
   }
 
   public sendFriendIceCandidate(callId: string, candidate: RTCIceCandidateInit, to: string) {
+    console.log("Sending ICE candidate for call:", callId);
     this.socket.emit("friend-ice-candidate", { callId, candidate, to });
   }
 

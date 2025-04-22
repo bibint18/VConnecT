@@ -69,6 +69,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ friendId }) => {
     callManagerRef.current = new FriendCallManager(
       chatServiceRef.current,
       (local, remote) => {
+        console.log("Stream update - Local:", local, "Remote:", remote);
         setLocalStream(local);
         setRemoteStream(remote);
         setCallState(
@@ -77,9 +78,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ friendId }) => {
       }
     );
 
-    // chatServiceRef.current?.["socket"].emit("join-chat", { userId }, (response:unknown) => {
-    //   console.log("Join response:", response);
-    // });
+   
     const socket  = chatServiceRef.current?.['socket'];
     socket?.emit('join-chat',{userId},(response:unknown) => {
       console.log("Join room response ",response)
@@ -90,15 +89,16 @@ const ChatBox: React.FC<ChatBoxProps> = ({ friendId }) => {
       toast.error("Connection failed: " + err.message);
     });
 
-    chatServiceRef.current["socket"].on("friend-call-error", ({ message }) => {
+    socket?.on("friend-call-error", ({ message }) => {
+      console.error("Friend call error:", message);
       toast.error(message);
       setCallState("idle");
     });
 
-    chatServiceRef.current["socket"].on(
+    socket?.on(
       "friend-call-incoming",
       ({ callId, callerId }) => {
-        console.log("Call incoming:", callId);
+        console.log("Incoming call:", callId, "from:", callerId);
         setCallState("ringing");
         toast.custom(
           (t) => (
@@ -175,11 +175,8 @@ const ChatBox: React.FC<ChatBoxProps> = ({ friendId }) => {
 
     loadInitialData();
 
-    // --- Changed: Cleanup only call manager, not chat service ---
     return () => {
       callManagerRef.current?.endCall();
-      // chatServiceRef.current?.["socket"].off("friend-call-incoming");
-      // chatServiceRef.current?.["socket"].off("friend-call-error");
       socket.off("friend-call-incoming");
       socket.off("friend-call-error");
     };
@@ -219,10 +216,14 @@ const ChatBox: React.FC<ChatBoxProps> = ({ friendId }) => {
   // --- New: Update video refs when streams change ---
   useEffect(() => {
     if (localVideoRef.current && localStream) {
+      console.log("Binding local stream to video element:", localStream);
       localVideoRef.current.srcObject = localStream;
+      localVideoRef.current.play().catch(e => console.error("Local video play error:", e));
     }
     if (remoteVideoRef.current && remoteStream) {
+      console.log("Binding remote stream to video element:", remoteStream);
       remoteVideoRef.current.srcObject = remoteStream;
+      remoteVideoRef.current.play().catch(e => console.error("Remote video play error:", e));
     }
   }, [localStream, remoteStream]);
 
@@ -292,22 +293,8 @@ const ChatBox: React.FC<ChatBoxProps> = ({ friendId }) => {
           </div>
         </div>
         {/* --- New: Call Button --- */}
-        {/* <button
-          onClick={handleCallButton}
-          className={`px-3 py-1 rounded-lg text-white ${
-            callState === "idle"
-              ? "!bg-green-500 !hover:bg-green-600"
-              : "!bg-red-500 !hover:bg-red-600"
-          }`}
-        >
-          {callState === "idle"
-            ? "Call"
-            : callState === "ringing"
-            ? "Ringing..."
-            : "End Call"}
-        </button> */}
 
-<button
+        <button
           onClick={handleCallButton}
           disabled={!isConnected}
           className={`px-3 py-1 rounded-lg text-white ${
@@ -354,72 +341,6 @@ const ChatBox: React.FC<ChatBoxProps> = ({ friendId }) => {
       </div>
 
       {/* --- New: Video Call Overlay --- */}
-      {/* {(localStream || remoteStream) && (
-        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
-          <div className="relative bg-gray-900 p-4 rounded-lg">
-            <div className="flex space-x-4">
-              {localStream && (
-                <video
-                  ref={localVideoRef}
-                  autoPlay
-                  muted
-                  className="w-1/2 rounded-lg"
-                />
-              )}
-              {remoteStream && (
-                <video
-                  ref={remoteVideoRef}
-                  autoPlay
-                  className="w-1/2 rounded-lg"
-                />
-              )}
-            </div>
-            <div className="mt-4 flex justify-center space-x-4">
-              <button
-                onClick={toggleAudio}
-                className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-              >
-                {localStream?.getAudioTracks()[0]?.enabled ? "Mute" : "Unmute"}
-              </button>
-              <button
-                onClick={toggleVideo}
-                className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-              >
-                {localStream?.getVideoTracks()[0]?.enabled
-                  ? "Video Off"
-                  : "Video On"}
-              </button> */}
-
-              {/* 
-              <button
-                onClick={handleCallButton}
-                className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
-              >
-                End Call
-              </button>
-              */}
-
-              {/* <button
-                onClick={handleCallButton}
-                disabled={!isConnected}
-                className={`px-3 py-1 rounded-lg text-white ${
-                  callState === "idle"
-                    ? "bg-green-500 hover:bg-green-600"
-                    : "bg-red-500 hover:bg-red-600"
-                } ${!isConnected && "opacity-50 cursor-not-allowed"}`}
-              >
-                {!isConnected
-                  ? "Connecting..."
-                  : callState === "idle"
-                  ? "Call"
-                  : callState === "ringing"
-                  ? "Ringing..."
-                  : "End Call"}
-              </button>
-            </div>
-          </div>
-        </div>
-      )} */}
 
 {(callState === "active" || localStream || remoteStream) && (
         <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">

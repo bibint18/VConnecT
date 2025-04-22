@@ -15,7 +15,6 @@ export class ChatService implements IChatService{
   
   async sendMessage(senderId: string, recieverId: string, content: string): Promise<void> {
     const message:IMessageInput = {
-      // id:new Date().toISOString(),
       senderId:new mongoose.Types.ObjectId(senderId),
       receiverId:new mongoose.Types.ObjectId(recieverId),
       content:content,
@@ -30,7 +29,6 @@ export class ChatService implements IChatService{
   }
 
   async getChatHistory(senderId: string, recieverId: string): Promise<IMessage[]> {
-    // console.log("service layer history",senderId,recieverId)
     return this.chatRepository.getMessages(senderId,recieverId)
   }
 
@@ -39,22 +37,12 @@ export class ChatService implements IChatService{
   }
 
   handleSocketEvents(socket: Socket): void {
-    // socket.on('join-chat',({userId}) => {
-    //   socket.join(userId)
-    //   console.log(`${userId} joined chat room with socket id ${socket.id}`)
-    // })
-
     socket.on('join-chat', ({ userId }, callback) => {
       console.log(`User ${userId} joining chat with socket ${socket.id}`);
-      
-      // Add user data to socket for easier tracking
       socket.data.userId = userId;
-      
-      // Join user's personal room
       socket.join(userId);
-      
       if (callback) {
-        callback({ status: 'success', rooms: Array.from(socket.rooms) });
+        callback({ status: 'success', rooms: Array.from(socket.rooms),socketId:socket.id });
       }
     });
 
@@ -71,11 +59,6 @@ export class ChatService implements IChatService{
     this.chatIo.on("connection", (socket: Socket) => {
       console.log(`New connection ${socket.id} from user ${socket.handshake.auth?.userId}`);
 
-      // socket.on("friend-start-call", async ({ callerId, receiverId }) => {
-      //   console.log("Received friend-start-call:", { callerId, receiverId });
-      //   await this.startFriendCall(callerId, receiverId);
-      // });
-
       socket.use(([event, ...args], next) => {
         console.log(`Socket event: ${event}`);
         next();
@@ -83,13 +66,8 @@ export class ChatService implements IChatService{
 
       socket.on("join-chat", ({ userId }, callback) => {
         console.log(`User ${userId} joining with socket ${socket.id}`);
-        
-        // Store user ID on socket
         socket.data.userId = userId;
-        
-        // Join user-specific room
         socket.join(userId);
-        
         if (callback) {
           callback({ 
             status: "success", 
@@ -135,12 +113,12 @@ export class ChatService implements IChatService{
 
       socket.on("friend-answer", ({ callId, answer, to }) => {
         console.log("Received friend-answer:", { callId, to });
-        this.chatIo.to(to).emit("friend-answer", { callId, answer, from: socket.id });
+        this.chatIo.to(callId).emit("friend-answer", { callId, answer, from: socket.id });
       });
 
       socket.on("friend-ice-candidate", ({ callId, candidate, to }) => {
         console.log("Received friend-ice-candidate:", { callId, to });
-        this.chatIo.to(to).emit("friend-ice-candidate", { callId, candidate, from: socket.id });
+        this.chatIo.to(callId).emit("friend-ice-candidate", { callId, candidate, from: socket.id });
       });
 
       socket.on("friend-end-call", async ({ callId, userId }) => {
@@ -192,9 +170,8 @@ export class ChatService implements IChatService{
     if (call && call.status === "INITIATED") {
       await this.callRepository.updateCall(callId, { status: "ACCEPTED" });
       socket.join(callId)
-      // this.chatIo.to(callId).emit("join-room", { callId }); 
       this.chatIo.in(call.callerId.toString()).socketsJoin(callId);
-      this.chatIo.to(call.callerId.toString()).emit("friend-call-accepted", { callId, receiverId: userId });
+      this.chatIo.to(callId).emit("friend-call-accepted", { callId, receiverId: userId });
       console.log(`${userId} accepted call: ${callId}`);
     }
   }

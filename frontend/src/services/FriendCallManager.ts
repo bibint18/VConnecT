@@ -29,7 +29,7 @@ export class FriendCallManager {
   public async startCall(receiverId: string) {
     console.log("Starting call to:", receiverId);
     try {
-      // Clear any previous streams
+      // pazhth clean aakkan
       if (this.state.localStream) {
         this.state.localStream.getTracks().forEach(track => track.stop());
       }
@@ -42,7 +42,7 @@ export class FriendCallManager {
       // Generate a unique call ID
       this.state.callId = `call_${[this.chatService['userId'], receiverId].sort().join("_")}_${Date.now()}`;
       this.state.remoteUserId = receiverId;
-      
+      this.createPeerConnection()
       this.onStreamUpdate(this.state.localStream, null);
       
       // Add timeout for call initiation
@@ -69,12 +69,13 @@ export class FriendCallManager {
       this.state.callId = callId;
       this.state.remoteUserId = remoteUserId;
       console.log("callId remote userId from acceptcall",callId,remoteUserId)
-      this.onStreamUpdate(this.state.localStream, null);
       this.createPeerConnection();
+      this.onStreamUpdate(this.state.localStream, null);
       this.chatService.acceptFriendCall(callId);
       console.log("Call accepted successfully");
     } catch (error) {
       console.error("Error accepting call:", error);
+      this.endCall();
       throw error;
     }
   }
@@ -107,15 +108,19 @@ export class FriendCallManager {
 
   private setupSocketEvents() {
     this.chatService['socket'].on("friend-call-accepted", async (data: { callId: string; receiverId: string }) => {
+      console.log("Friend call accepted:", data)
       this.state.callId = data.callId;
       this.state.remoteUserId = data.receiverId;
-      this.createPeerConnection();
+      if (!this.state.peerConnection) {
+        this.createPeerConnection();
+      }
       const offer = await this.state.peerConnection!.createOffer();
       await this.state.peerConnection!.setLocalDescription(offer);
       this.chatService.sendFriendOffer(data.callId, offer, data.receiverId);
     });
 
     this.chatService['socket'].on("friend-offer", async (data: { callId: string; offer: RTCSessionDescriptionInit; from: string }) => {
+      console.log("Received friend-offer:", data);
       if (this.state.peerConnection) {
         await this.state.peerConnection.setRemoteDescription(new RTCSessionDescription(data.offer));
         const answer = await this.state.peerConnection.createAnswer();
@@ -125,18 +130,25 @@ export class FriendCallManager {
     });
 
     this.chatService['socket'].on("friend-answer", async (data: { callId: string; answer: RTCSessionDescriptionInit; from: string }) => {
+      console.log("Received friend-answer:", data);
       if (this.state.peerConnection) {
         await this.state.peerConnection.setRemoteDescription(new RTCSessionDescription(data.answer));
       }
     });
 
     this.chatService['socket'].on("friend-ice-candidate", async (data: { callId: string; candidate: RTCIceCandidateInit; from: string }) => {
+      console.log("Received ICE candidate:", data);
       if (this.state.peerConnection) {
-        await this.state.peerConnection.addIceCandidate(new RTCIceCandidate(data.candidate));
+        try {
+          await this.state.peerConnection.addIceCandidate(new RTCIceCandidate(data.candidate));
+        } catch (error) {
+          console.error("Error adding ICE candidate:", error);
+        }
       }
     });
 
     this.chatService['socket'].on("friend-call-ended", () => {
+      console.log("Call ended via socket event");
       this.endCall();
     });
   }
@@ -151,6 +163,7 @@ export class FriendCallManager {
 
     if (this.state.localStream) {
       this.state.localStream.getTracks().forEach((track) => {
+        console.log("Adding track to peer connection:", track);
         this.state.peerConnection!.addTrack(track, this.state.localStream!);
       });
     }
@@ -161,10 +174,12 @@ export class FriendCallManager {
     // };
 
     this.state.peerConnection.ontrack = (event) => {
+      console.log("ontrack event fired:", event);
     if (!this.state.remoteStream) {
       this.state.remoteStream = new MediaStream();
     }
     event.streams[0].getTracks().forEach(track => {
+      console.log("Adding remote track:", track);
       this.state.remoteStream?.addTrack(track);
     });
     this.onStreamUpdate(this.state.localStream, this.state.remoteStream);
@@ -172,14 +187,23 @@ export class FriendCallManager {
 
     this.state.peerConnection.onicecandidate = (event) => {
       if (event.candidate && this.state.callId && this.state.remoteUserId) {
+        console.log("Sending ICE candidate:", event.candidate);
         this.chatService.sendFriendIceCandidate(this.state.callId, event.candidate, this.state.remoteUserId);
       }
     };
 
     this.state.peerConnection.onconnectionstatechange = () => {
       console.log("Peer connection state:", this.state.peerConnection!.connectionState);
-      if (this.state.peerConnection!.connectionState === "failed") {
+      if (this.state.peerConnection!.connectionState === "failed" || this.state.peerConnection!.connectionState === "disconnected") {
+        console.error("Peer connection failed or disconnected");
         this.endCall();
+      }
+    };
+
+    this.state.peerConnection.oniceconnectionstatechange = () => {
+      console.log("ICE connection state:", this.state.peerConnection!.iceConnectionState);
+      if (this.state.peerConnection!.iceConnectionState === "failed") {
+        this.state.peerConnection!.restartIce();
       }
     };
   }
