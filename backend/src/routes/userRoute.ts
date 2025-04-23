@@ -33,6 +33,7 @@ const router = express.Router()
 router.get('/user/profile',authenticateToken,ProfileController.getProfile.bind(ProfileController))
 router.put('/user/profile/edit',authenticateToken,ProfileController.updateProfile.bind(ProfileController))
 router.get('/user/profile/signature',authenticateToken,ProfileController.getCloudinarySignature.bind(ProfileController))
+router.get('/chat/signature',authenticateToken,ProfileController.getChatCloudinarySignature.bind(ProfileController))
 router.post('/user/profile/image',authenticateToken,ProfileController.updateProfileImage.bind(ProfileController))
 router.post('/user/profile/streak',authenticateToken,ProfileController.updateStreak.bind(ProfileController))
 

@@ -151,10 +151,10 @@ export class ChatService {
     return friend
   }
 
-  public async sendMessage(receiverId: string, content: string): Promise<void> {
+  public async sendMessage(receiverId: string, content?: string,mediaUrl?: string, mediaType: 'text' | 'image' | 'video' = 'text'): Promise<void> {
     try {
-      console.log("passed from component ",receiverId,content)
-      await axiosInstance.post("/chat/send", { receiverId, content });
+      console.log("passed from component ",receiverId,content,mediaUrl,mediaType)
+      await axiosInstance.post("/chat/send", { receiverId, content,mediaUrl,mediaType });
     } catch (error) {
       if (error instanceof AxiosError) {
         throw new Error(error.response?.data.message || "Failed to send message");

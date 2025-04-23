@@ -11,13 +11,18 @@ export class ChatController implements IChatController{
 
   async sendMessage(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const {receiverId,content} = req.body;
-      const senderId = (req as any).user?.id
-      // console.log("backend controller send reciverId: ",receiverId,"sender: ",senderId,"content: ",content)
-      if (!senderId || !receiverId || !content) {
-        throw new AppError("Sender ID, receiver ID, and content are required", 400);
+      const {receiverId,content,mediaUrl,mediaType} = req.body;
+      const senderId = req.user?.id as string
+      if (!senderId || !receiverId ) {
+        throw new AppError("Sender ID, receiver ID are required", 400);
       }
-      await this.chatService.sendMessage(senderId,receiverId,content)
+      if (!content && !mediaUrl) { 
+        throw new AppError("Content or media URL is required", 400);
+      }
+      if (mediaUrl && !['image', 'video'].includes(mediaType)) {
+        throw new AppError("Invalid media type", 400);
+      }
+      await this.chatService.sendMessage(senderId,receiverId,content,mediaUrl,mediaType)
       res.status(200).json({success:true,message:"Message sent"})
     } catch (error) {
       next(error)
@@ -28,8 +33,7 @@ export class ChatController implements IChatController{
     try {
       console.log("reached history controller")
       const {receiverId} = req.query
-      const senderId = (req as any).user?.id 
-      // console.log("data from controller",receiverId,senderId)
+      const senderId = req.user?.id as string
       if (!senderId || !receiverId) {
         throw new AppError("Sender ID and receiver ID are required", 400);
       }

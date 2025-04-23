@@ -2,7 +2,7 @@ import { IMessage } from "../../../models/MessageModel";
 import { Namespace, Socket } from "socket.io";
 
 export interface IChatService{
-  sendMessage(senderId:string,recieverId:string,content:string):Promise<void>;
+  sendMessage(senderId:string,recieverId:string,content?:string,mediaUrl?:string,mediaType?: 'text' | 'image' | 'video'):Promise<void>;
   getChatHistory(senderId:string,recieverId:string): Promise<IMessage[]>;
   getLastMessage(senderId:string,recieverId:string):Promise<IMessage | null>
   handleSocketEvents(socket:Socket):void

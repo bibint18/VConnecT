@@ -9,5 +9,9 @@
     "paths": {
       "@/*": ["./src/*"]
     }
-  }
+  },
+  "include": [
+    "src/**/*",
+    "src/types/**/*" // Add this if cloudinary.d.ts is in src/types/
+  ]
 }

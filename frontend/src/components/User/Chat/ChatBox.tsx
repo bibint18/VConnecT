@@ -6,12 +6,22 @@ import { FriendCallManager } from "@/services/FriendCallManager";
 import { IFriend } from "./FriendList";
 import { toast } from "react-hot-toast";
 import { useAppSelector } from "@/redux/store";
+import { Paperclip } from "react-feather";
+import axiosInstance from "@/utils/axiosInterceptor";
+
+interface CloudinaryChatUploadResult {
+  secure_url: string;
+  resource_type: "image" | "video";
+}
+
 
 export interface IMessage {
   id: string;
   senderId: string;
   receiverId: string;
-  content: string;
+  content?: string;
+  mediaUrl?:string;
+  mediaType?:'text' | 'image' | 'video';
   timestamp: Date;
   isRead?: boolean;
 }
@@ -30,11 +40,13 @@ const ChatBox: React.FC<ChatBoxProps> = ({ friendId }) => {
   );
   const [localStream, setLocalStream] = useState<MediaStream | null>(null); 
   const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null); 
+  const [isUploading, setIsUploading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatServiceRef = useRef<ChatService | null>(null);
   const callManagerRef = useRef<FriendCallManager | null>(null); 
   const localVideoRef = useRef<HTMLVideoElement>(null);
-  const remoteVideoRef = useRef<HTMLVideoElement>(null); 
+  const remoteVideoRef = useRef<HTMLVideoElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null); 
   const { userId } = useAppSelector((state) => state.user);
 
   useEffect(() => {
@@ -239,6 +251,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ friendId }) => {
       senderId: String(userId),
       receiverId: friendId,
       content: newMessage,
+      mediaType:'text',
       timestamp: new Date(),
       isRead: false,
     };
@@ -250,6 +263,96 @@ const ChatBox: React.FC<ChatBoxProps> = ({ friendId }) => {
       console.error("Error sending message:", error);
       toast.error((error as Error).message || "Failed to send message");
       setMessages((prev) => prev.filter((msg) => msg.id !== tempMessage.id));
+    }
+  };
+
+  const handleMediaUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) {
+      toast.error("No file selected");
+      return;
+    }
+
+    try {
+      setIsUploading(true);
+
+      // Validate file size
+      const maxSize = file.type.startsWith("image/") ? 5 * 1024 * 1024 : 100 * 1024 * 1024;
+      if (file.size > maxSize) {
+        toast.error(`File too large. Max size: ${maxSize / (1024 * 1024)}MB`);
+        return;
+      }
+
+      // Fetch signature
+      const { data } = await axiosInstance.get("/chat/signature");
+      const { signature, timestamp } = data;
+
+      // Log FormData parameters for debugging
+      console.log("Uploading with parameters:", {
+        file: file.name,
+        // api_key: import.meta.env.VITE_CLOUDINARY_API_KEY,
+        timestamp,
+        signature,
+        folder: "chat_media",
+        // resource_type: "auto",
+      });
+
+      // Prepare FormData for Cloudinary upload
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("api_key", import.meta.env.VITE_CLOUDINARY_API_KEY as string);
+      formData.append("timestamp", timestamp.toString());
+      formData.append("signature", signature);
+      formData.append("folder", "chat_media");
+      // formData.append("resource_type", "auto");
+
+      // Upload to Cloudinary
+      const response = await fetch(
+        `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}/auto/upload`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Cloudinary error:", errorData);
+        throw new Error(errorData.error?.message || "Failed to upload file to Cloudinary");
+      }
+
+      const result: CloudinaryChatUploadResult = await response.json();
+      const mediaUrl = result.secure_url;
+      const mediaType = result.resource_type as "image" | "video";
+
+      // Send media message
+      const tempMessage: IMessage = {
+        id: Date.now().toString(),
+        senderId: String(userId),
+        receiverId: friendId,
+        mediaUrl,
+        mediaType,
+        timestamp: new Date(),
+        isRead: false,
+      };
+
+      setMessages((prev) => [...prev, tempMessage]);
+      await chatServiceRef.current
+        ?.sendMessage(friendId, "", mediaUrl, mediaType)
+        .catch((err) => {
+          setMessages((prev) => prev.filter((msg) => msg.id !== tempMessage.id));
+          throw err;
+        });
+
+      toast.success("Media sent");
+    } catch (error) {
+      console.error("Upload error:", error);
+      toast.error((error as Error).message || "Failed to upload media");
+    } finally {
+      setIsUploading(false);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = ""; // Reset file input
+      }
     }
   };
 
@@ -279,161 +382,196 @@ const ChatBox: React.FC<ChatBoxProps> = ({ friendId }) => {
       !localStream?.getVideoTracks()[0]?.enabled
     );
 
-  return (
-    <div className="flex flex-col h-full bg-white rounded-lg shadow-lg">
-      <div className="p-4 border-b flex justify-between items-center">
-        <div className="flex items-center">
-          <img
-            src={friend?.avatar}
-            alt={friend?.name}
-            className="w-10 h-10 rounded-full object-cover"
-          />
-          <div className="ml-3">
-            <h3 className="font-medium">{friend?.name || "Loading..."}</h3>
-          </div>
-        </div>
-        {/* --- New: Call Button --- */}
 
-        <button
-          onClick={handleCallButton}
-          disabled={!isConnected}
-          className={`px-3 py-1 rounded-lg text-white ${
-            callState === "idle"
-              ? "bg-green-500 hover:bg-green-600"
-              : "bg-red-500 hover:bg-red-600"
-          } ${!isConnected && "opacity-50 cursor-not-allowed"}`}
-        >
-          {!isConnected
-            ? "Connecting..."
-            : callState === "idle"
-            ? "Call"
-            : callState === "ringing"
-            ? "Ringing..."
-            : "End Call"}
-        </button>
-      </div>
-
-      <div className="flex-1 p-4 overflow-y-auto">
-        {messages.map((msg) => (
-          <div
-            key={msg.id}
-            className={`mb-2 flex ${
-              msg.senderId.toString() === userId
-                ? "justify-end"
-                : "justify-start"
-            }`}
-          >
-            <div
-              className={`max-w-xs p-3 rounded-lg ${
-                msg.senderId.toString() === userId
-                  ? "bg-purple-500 text-white"
-                  : "bg-gray-200 text-gray-800"
-              }`}
-            >
-              {msg.content}
-              <span className="block text-xs opacity-75">
-                {new Date(msg.timestamp).toLocaleTimeString()}
-              </span>
+    return (
+      <div className="flex flex-col h-full bg-white rounded-lg shadow-lg">
+        <div className="p-4 border-b flex justify-between items-center">
+          <div className="flex items-center">
+            <img
+              src={friend?.avatar}
+              alt={friend?.name}
+              className="w-10 h-10 rounded-full object-cover"
+            />
+            <div className="ml-3">
+              <h3 className="font-medium">{friend?.name || "Loading..."}</h3>
             </div>
           </div>
-        ))}
-        <div ref={messagesEndRef} />
-      </div>
-
-      {/* --- New: Video Call Overlay --- */}
-
-{(callState === "active" || localStream || remoteStream) && (
-        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
-          <div className="relative bg-gray-900 p-4 rounded-lg w-full max-w-4xl">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {localStream && (
-                <div className="relative">
-                  <video
-                    ref={localVideoRef}
-                    autoPlay
-                    muted
-                    className="w-full rounded-lg border-2 border-gray-600"
-                  />
-                  <div className="absolute bottom-2 left-2 bg-black bg-opacity-50 text-white px-2 py-1 rounded text-sm">
-                    You
-                  </div>
-                </div>
-              )}
-              {remoteStream && (
-                <div className="relative">
-                  <video
-                    ref={remoteVideoRef}
-                    autoPlay
-                    className="w-full rounded-lg border-2 border-gray-600"
-                  />
-                  <div className="absolute bottom-2 left-2 bg-black bg-opacity-50 text-white px-2 py-1 rounded text-sm">
-                    {friend?.name || "Friend"}
-                  </div>
-                </div>
-              )}
-            </div>
-            <div className="mt-4 flex justify-center space-x-4">
-              <button
-                onClick={toggleAudio}
-                className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 flex items-center"
-              >
-                {localStream?.getAudioTracks()[0]?.enabled ? (
-                  <>
-                    <span className="mr-2">🔊</span> Mute
-                  </>
-                ) : (
-                  <>
-                    <span className="mr-2">🔇</span> Unmute
-                  </>
-                )}
-              </button>
-              <button
-                onClick={toggleVideo}
-                className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 flex items-center"
-              >
-                {localStream?.getVideoTracks()[0]?.enabled ? (
-                  <>
-                    <span className="mr-2">📹</span> Stop Video
-                  </>
-                ) : (
-                  <>
-                    <span className="mr-2">📷</span> Start Video
-                  </>
-                )}
-              </button>
-              <button
-                onClick={handleCallButton}
-                className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 flex items-center"
-              >
-                <span className="mr-2">📞</span> End Call
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-
-{/* message input */}
-      <div className="p-4 border-t">
-        <div className="flex">
-          <input
-            type="text"
-            value={newMessage}
-            onChange={(e) => setNewMessage(e.target.value)}
-            onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
-            placeholder="Type a message..."
-            className="flex-1 p-2 border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-purple-500 !text-black"
-          />
           <button
-            onClick={handleSendMessage}
-            className="px-4 bg-purple-600 text-white rounded-r-lg hover:bg-purple-700"
+            onClick={handleCallButton}
+            disabled={!isConnected}
+            className={`px-3 py-1 rounded-lg text-white ${
+              callState === "idle"
+                ? "bg-green-500 hover:bg-green-600"
+                : "bg-red-500 hover:bg-red-600"
+            } ${!isConnected && "opacity-50 cursor-not-allowed"}`}
           >
-            Send
+            {!isConnected
+              ? "Connecting..."
+              : callState === "idle"
+              ? "Call"
+              : callState === "ringing"
+              ? "Ringing..."
+              : "End Call"}
           </button>
         </div>
+  
+        <div className="flex-1 p-4 overflow-y-auto">
+          {messages.map((msg) => (
+            <div
+              key={msg.id}
+              className={`mb-2 flex ${
+                msg.senderId.toString() === userId ? "justify-end" : "justify-start"
+              }`}
+            >
+              <div
+                className={`max-w-xs p-3 rounded-lg ${
+                  msg.senderId.toString() === userId
+                    ? "bg-purple-500 text-white"
+                    : "bg-gray-200 text-gray-800"
+                }`}
+              >
+                {msg.mediaType === "text" && msg.content && (
+                  <>
+                    {msg.content}
+                    <span className="block text-xs opacity-75">
+                      {new Date(msg.timestamp).toLocaleTimeString()}
+                    </span>
+                  </>
+                )}
+                {msg.mediaType === "image" && msg.mediaUrl && (
+                  <div>
+                    <img
+                      src={msg.mediaUrl}
+                      alt="Chat image"
+                      className="max-w-full rounded-lg"
+                    />
+                    <span className="block text-xs opacity-75">
+                      {new Date(msg.timestamp).toLocaleTimeString()}
+                    </span>
+                  </div>
+                )}
+                {msg.mediaType === "video" && msg.mediaUrl && (
+                  <div>
+                    <video
+                      src={msg.mediaUrl}
+                      controls
+                      className="max-w-full rounded-lg"
+                    />
+                    <span className="block text-xs opacity-75">
+                      {new Date(msg.timestamp).toLocaleTimeString()}
+                    </span>
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+          <div ref={messagesEndRef} />
+        </div>
+  
+        {(callState === "active" || localStream || remoteStream) && (
+          <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
+            <div className="relative bg-gray-900 p-4 rounded-lg w-full max-w-4xl">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {localStream && (
+                  <div className="relative">
+                    <video
+                      ref={localVideoRef}
+                      autoPlay
+                      muted
+                      className="w-full rounded-lg border-2 border-gray-600"
+                    />
+                    <div className="absolute bottom-2 left-2 bg-black bg-opacity-50 text-white px-2 py-1 rounded text-sm">
+                      You
+                    </div>
+                  </div>
+                )}
+                {remoteStream && (
+                  <div className="relative">
+                    <video
+                      ref={remoteVideoRef}
+                      autoPlay
+                      className="w-full rounded-lg border-2 border-gray-600"
+                    />
+                    <div className="absolute bottom-2 left-2 bg-black bg-opacity-50 text-white px-2 py-1 rounded text-sm">
+                      {friend?.name || "Friend"}
+                    </div>
+                  </div>
+                )}
+              </div>
+              <div className="mt-4 flex justify-center space-x-4">
+                <button
+                  onClick={toggleAudio}
+                  className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 flex items-center"
+                >
+                  {localStream?.getAudioTracks()[0]?.enabled ? (
+                    <>
+                      <span className="mr-2">🔊</span> Mute
+                    </>
+                  ) : (
+                    <>
+                      <span className="mr-2">🔇</span> Unmute
+                    </>
+                  )}
+                </button>
+                <button
+                  onClick={toggleVideo}
+                  className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 flex items-center"
+                >
+                  {localStream?.getVideoTracks()[0]?.enabled ? (
+                    <>
+                      <span className="mr-2">📹</span> Stop Video
+                    </>
+                  ) : (
+                    <>
+                      <span className="mr-2">📷</span> Start Video
+                    </>
+                  )}
+                </button>
+                <button
+                  onClick={handleCallButton}
+                  className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 flex items-center"
+                >
+                  <span className="mr-2">📞</span> End Call
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+  
+        <div className="p-4 border-t">
+          <div className="flex items-center">
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              disabled={isUploading || !isConnected}
+              className={`p-2 ${isUploading || !isConnected ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-100"} rounded-l-lg`}
+            >
+              <Paperclip size={20} />
+            </button>
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleMediaUpload}
+              accept="image/jpeg,image/png,image/gif,video/mp4,video/webm,video/mov"
+              className="hidden"
+            />
+            <input
+              type="text"
+              value={newMessage}
+              onChange={(e) => setNewMessage(e.target.value)}
+              onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
+              placeholder="Type a message..."
+              className="flex-1 p-2 border rounded-none focus:outline-none focus:ring-2 focus:ring-purple-500 !text-black"
+            />
+            <button
+              onClick={handleSendMessage}
+              className="px-4 bg-purple-600 text-white rounded-r-lg hover:bg-purple-700"
+            >
+              Send
+            </button>
+          </div>
+        </div>
       </div>
-    </div>
-  );
+    );
 };
 
 export default ChatBox;

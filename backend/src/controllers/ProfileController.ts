@@ -44,14 +44,33 @@ try {
   try {
     const timestamp = Math.round(new Date().getTime()/1000)
     const paramsToSign = {
-      timestamp: timestamp, // Match Cloudinary's expected key
-      folder: 'profile_images', // Match frontend
-      source: 'uw', // Match sources: ['local'] from frontend
+      timestamp: timestamp, 
+      folder: 'profile_images',
+      source: 'uw', 
     };
     const signature = cloudinary.v2.utils.api_sign_request(paramsToSign, process.env.CLOUDINARY_API_SECRET as string)
     res.json({signature,timestamp})
   } catch (error) {
     next(error)
+  }
+}
+
+async getChatCloudinarySignature(req: Request, res: Response, next: NextFunction) { 
+  try {
+    const timestamp = Math.round(new Date().getTime() / 1000);
+    const paramsToSign = {
+      timestamp: timestamp,
+      folder: 'chat_media'
+      // source: 'uw',
+      // resource_type: 'auto' 
+    };
+    console.log("Signing parameters:", paramsToSign);
+    const signature = cloudinary.v2.utils.api_sign_request(paramsToSign, process.env.CLOUDINARY_API_SECRET as string);
+    console.log("Generated signature:", signature);
+    res.json({ signature, timestamp });
+  } catch (error) {
+    console.error("Signature generation error:", error);
+    next(error);
   }
 }
 

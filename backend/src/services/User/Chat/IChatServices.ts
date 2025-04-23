@@ -13,11 +13,13 @@ export class ChatService implements IChatService{
     this.setupSocketEvents()
   }
   
-  async sendMessage(senderId: string, recieverId: string, content: string): Promise<void> {
+  async sendMessage(senderId: string, recieverId: string, content?: string,mediaUrl?: string, mediaType: 'text' | 'image' | 'video' = 'text'): Promise<void> {
     const message:IMessageInput = {
       senderId:new mongoose.Types.ObjectId(senderId),
       receiverId:new mongoose.Types.ObjectId(recieverId),
       content:content,
+      mediaUrl,
+      mediaType,
       timestamp:new Date(),
       isRead:false
     };
@@ -46,8 +48,8 @@ export class ChatService implements IChatService{
       }
     });
 
-    socket.on('send-message',async ({senderId,receiverId,content}) => {
-      await this.sendMessage(senderId,receiverId,content)
+    socket.on('send-message',async ({senderId,receiverId,content,mediaUrl,mediaType}) => {
+      await this.sendMessage(senderId,receiverId,content,mediaUrl,mediaType)
     })
 
     socket.on('disconnect',() => {
