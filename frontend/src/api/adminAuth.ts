@@ -39,13 +39,14 @@ export const deleteUser = async (id: string) => {
 //PLANS API
 export interface PlanFormData {
   name: string;
-  type: string;
+  type: 'paid' | 'free';
   description: string;
   regularAmount: number;
   discountAmount: number;
   benefits: string[];
   isListed: boolean;
-  duration: string;
+  duration: '1 month' | '3 months' | '6 months' | '9 months' | '12 months';
+  roomBenefit: number;
 }
 export const addNewPlan = async(PlanData:PlanFormData) =>{
   const response = await axiosInstance.post(`${API_URL}/admin/plans/add`,PlanData)

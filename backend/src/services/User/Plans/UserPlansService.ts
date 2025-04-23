@@ -23,18 +23,28 @@ export class UserPlanService implements UserIPlanService{
     if (!user) throw new Error("User not found");
     const plan = await this.planRepository.findActivePlans()
     const selectedPlan = plan.find((p) => p._id.toString() === planId)
+    
     if (!selectedPlan) throw new Error("Plan not found");
-    const durationDays = selectedPlan.duration === "Year" ? 365 : 30; 
+    console.log("Selected plan:", selectedPlan); // Should show roomBenefit: 4
+    console.log("roomBenefit:", selectedPlan.roomBenefit); // Debug: Confirm undefined
+    console.log("selectedPlan type:", Object.getPrototypeOf(selectedPlan));
+    const durationMap: Record<IPlan['duration'], number> = {
+      "1 month": 30,
+      "3 months": 90,
+      "6 months": 180,
+      "9 months": 270,
+      "12 months": 365
+    };
+    // const durationDays = selectedPlan.duration === "Year" ? 365 : 30; 
+    const durationDays = durationMap[selectedPlan.duration];
+    if (!durationDays) {
+      throw new Error(`Invalid duration: ${selectedPlan.duration}`);
+    }
       const startDate = new Date();
       const endDate = new Date(startDate.getTime() + durationDays * 24 * 60 * 60 * 1000);
-      // return await this.userRepository.updateUserPlans(userId, {
-      //   planId: new Types.ObjectId(selectedPlan._id),
-      //   planName: selectedPlan.name,
-      //   status: "active",
-      //   startDate,
-      //   endDate,
-      //   transactionId,
-      // });
+      // await this.userRepository.updateRoomLimit(userId,selectedPlan.roomBenifit)
+      const roomBenefit = selectedPlan.roomBenefit
+      console.log("roomBenefit serrice",roomBenefit)
       const planUpdate: {
         planId: Types.ObjectId;
         planName: string;
@@ -51,7 +61,7 @@ export class UserPlanService implements UserIPlanService{
         transactionId,
       };
       console.log("user plans updating data",planUpdate)
-      return await this.userRepository.updateUserPlans(userId,planUpdate)
+      return await this.userRepository.updateUserPlans(userId,planUpdate,roomBenefit)
     }catch(error){
       throw new Error(`Service error ${error}`);
     }

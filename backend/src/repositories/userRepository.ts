@@ -79,13 +79,17 @@ export class UserRepository implements IUserRepository{
     );
   }
 
-  async updateUserPlans(userId: string, planData: { planId: Types.ObjectId; planName: string; status: "active" | "expired" | "cancelled"; startDate: Date; endDate?: Date; transactionId?: string; }): Promise<IUser> {
+  async updateUserPlans(userId: string, planData: { planId: Types.ObjectId; planName: string; status: "active" | "expired" | "cancelled"; startDate: Date; endDate?: Date; transactionId?: string; },roomBenefit?:number): Promise<IUser> {
       const user = await User.findById(userId)
       if(!user){
         throw new Error("User not found")
       }
       user.plan = user.plan.map((plan) => plan.status ==='active' ? {...plan,status:'expired',endDate:new Date()} : plan)
       user.plan.push(planData)
+      console.log("roomBenefit",roomBenefit)
+      if(roomBenefit){
+        user.availableRoomLimit = (user.availableRoomLimit || 0) + roomBenefit
+      }
       return await user.save()
   }
 }

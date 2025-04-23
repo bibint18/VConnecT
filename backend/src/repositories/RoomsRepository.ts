@@ -2,9 +2,19 @@ import { Room ,IRoom} from "../models/RoomModel";
 import { IRoomRepository } from "../interfaces/IRoomRepository";
 import mongoose from "mongoose";
 import { AppError } from "../utils/AppError";
+import { User } from "../models/User";
 
 export class RoomRepository implements IRoomRepository{
   async createRoom(roomData:IRoom):Promise<IRoom | null>{
+    const user = await User.findById(roomData.createdBy)
+    if (!user) {
+      throw new AppError("User not found", 404);
+    }
+    
+    if(user?.availableRoomLimit ==0){
+      throw new Error("You have reached your room creation limit!!!")
+    }
+    console.log('Users room create limit',user?.availableRoomLimit)
     if(roomData.title.trim()===''){
       throw new Error("Should add title")
     }
@@ -20,6 +30,13 @@ export class RoomRepository implements IRoomRepository{
     }
     const room = new Room(roomData)
     const savedRoom=await room.save()
+    const updatedUser = await User.findByIdAndUpdate(roomData.createdBy,{$inc:{availableRoomLimit:-1}},{new:true,runValidators:true});
+    if(!updatedUser){
+      throw new AppError("Failed to update room limit : User not found",500)
+    }
+    if (updatedUser.availableRoomLimit < 0) {
+      throw new AppError("Room limit cannot be negative", 500);
+    }
     return savedRoom
   }
 
@@ -53,11 +70,6 @@ export class RoomRepository implements IRoomRepository{
             if (!isParticipant && activeParticipants.length >= room.limit) {
               throw new AppError("Room is full", 400);
             }
-      // if(room.participants.length >= room.limit){
-      //   throw new Error('Room is full...')
-      // }
-      // room.participants.push(userId as any)
-      // return await room.save()
       const participantIndex = room.participants.findIndex((p) => p.userId.toString() ===userId)
       const now = new Date()
       if(participantIndex  ===-1){

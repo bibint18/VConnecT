@@ -7,13 +7,14 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useUpdatePlan } from "../../../hooks/useUpdatePlan";
 interface PlanFormData {
   name: string;
-  type: string;
+  type: 'paid' | 'free';
   description: string;
   regularAmount: number;
   discountAmount: number;
   benefits: string[];
   isListed: boolean;
-  duration: string;
+  duration: '1 month' | '3 months' | '6 months' | '9 months' | '12 months';
+  roomBenefit:number;
 }
 
 const EditPlan: React.FC = () => {
@@ -24,26 +25,28 @@ const EditPlan: React.FC = () => {
   const {mutate,isPending} = useUpdatePlan()
   const [formData, setFormData] = useState<PlanFormData>({
     name: "",
-    type: "",
+    type: "paid",
     description: "",
     regularAmount: 0,
     discountAmount: 0,
     benefits: [],
     isListed: true,
-    duration: "",
+    duration: "1 month",
+    roomBenefit:0,
   });
 
  useEffect(() => {
   if(user){
     setFormData({
       name: user.name || '',
-      type: user.type || '',
+      type: user.type || 'paid',
       description: user.description || '',
       regularAmount: user.regularAmount || '',
       discountAmount: user.discountAmount || '',
       benefits: user.benefits || '',
       isListed: Boolean(user.isListed),
-      duration: user.duration || '',
+      duration: user.duration || '1 month',
+      roomBenefit:user.roomBenefit || 0,
     })
   }
  },[user])
@@ -54,7 +57,7 @@ const EditPlan: React.FC = () => {
     const { name, value } = e.target;
     setFormData((prev) => ({ 
       ...prev, 
-      [name]: name === "isListed" ? value === "true" : value 
+      [name]: name === "isListed" ? value === "true" : name === "roomBenefit" ? Number(value) : value
     }));
   };
 
@@ -97,7 +100,7 @@ const EditPlan: React.FC = () => {
             />
           </div>
 
-          <div className="form-group">
+          {/* <div className="form-group">
             <label htmlFor="type" className="form-label">Type</label>
             <input
               type="text"
@@ -109,6 +112,20 @@ const EditPlan: React.FC = () => {
               placeholder="Enter plan type"
               
             />
+          </div> */}
+
+<div className="form-group">
+            <label htmlFor="type" className="form-label">Type</label>
+            <select
+              id="type"
+              name="type"
+              value={formData.type}
+              onChange={handleChange}
+              className="form-select"
+            >
+              <option value="paid">Paid</option>
+              <option value="free">Free</option>
+            </select>
           </div>
 
           {/* Description */}
@@ -122,6 +139,21 @@ const EditPlan: React.FC = () => {
               className="form-textarea"
               placeholder="Enter plan description"
               
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="roomBenefit" className="form-label">Room Benefit</label>
+            <input
+              type="number"
+              id="roomBenefit"
+              name="roomBenefit"
+              value={formData.roomBenefit}
+              onChange={handleChange}
+              className="form-input"
+              placeholder="Enter number of extra rooms (0-20)"
+              min="0"
+              max="20"
             />
           </div>
 
@@ -170,7 +202,7 @@ const EditPlan: React.FC = () => {
 
           {/* Duration & Status */}
           <div className="form-row">
-            <div className="form-group half-width">
+            {/* <div className="form-group half-width">
               <label htmlFor="duration" className="form-label">Duration</label>
               <input
                 type="text"
@@ -182,6 +214,23 @@ const EditPlan: React.FC = () => {
                 placeholder="Enter duration"
                 
               />
+            </div> */}
+
+<div className="form-group half-width">
+              <label htmlFor="duration" className="form-label">Duration</label>
+              <select
+                id="duration"
+                name="duration"
+                value={formData.duration}
+                onChange={handleChange}
+                className="form-select"
+              >
+                <option value="1 month">1 Month</option>
+                <option value="3 months">3 Months</option>
+                <option value="6 months">6 Months</option>
+                <option value="9 months">9 Months</option>
+                <option value="12 months">12 Months</option>
+              </select>
             </div>
             <div className="form-group half-width">
               <label htmlFor="isListed" className="form-label">Status</label>

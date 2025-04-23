@@ -13,5 +13,5 @@ export interface IUserRepository{
   addClaimedReward(userId: string, rewardId: string): Promise<IUser | null>;
   updatePoints(userId: string, points: number): Promise<IUser | null>;
   updateStreak(userId: string, streak: number, lastUpdate: Date): Promise<IUser | null>;
-  updateUserPlans(userId:string,planData:{planId:Types.ObjectId;planName:string;status:"active" | "expired" | 'cancelled';startDate:Date;endDate?:Date;transactionId?:string}):Promise<IUser>
+  updateUserPlans(userId:string,planData:{planId:Types.ObjectId;planName:string;status:"active" | "expired" | 'cancelled';startDate:Date;endDate?:Date;transactionId?:string},roomBenefit?:number):Promise<IUser>
 }
