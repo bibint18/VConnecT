@@ -45,7 +45,6 @@ export class FriendCallManager {
       this.createPeerConnection()
       this.onStreamUpdate(this.state.localStream, null);
       
-      // Add timeout for call initiation
       const timeout = new Promise((_, reject) => 
         setTimeout(() => reject(new Error("Call initiation timeout")), 10000)
       );
