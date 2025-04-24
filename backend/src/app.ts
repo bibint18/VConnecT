@@ -14,6 +14,8 @@ import { CallRepository } from "./repositories/CallRepository"
 import cookieParser from "cookie-parser"
 import { FriendService } from "./services/FriendService"
 import { FriendRepository } from "./repositories/FriendRepository"
+import { DirectCallRepository } from "./repositories/User/call/DirectCallRepository"
+import { DirectCallController } from "./controllers/User/Call/DirectCallController"
 
 dotenv.config();
 const app = express()
@@ -54,11 +56,13 @@ app.use(express.json())
 app.use(cookieParser())
 app.use("/api/auth",authRoutes)
 app.use('/api/auth',publicRoutes)
-app.use("/api/auth",createUserRoutes(chatIo))
-app.use(errorHandler)
-const callService = new CallService(new CallRepository(),io)
-const friendService = new FriendService(new FriendRepository(),io)
 
+const directCallRepository=new DirectCallRepository()
+const directCallController = new DirectCallController(directCallRepository)
+const callService = new CallService(new CallRepository(),directCallRepository,io)
+const friendService = new FriendService(new FriendRepository(),io)
+app.use("/api/auth",createUserRoutes(chatIo,directCallController))
+app.use(errorHandler)
 
 conneectDB()
 export default httpServer

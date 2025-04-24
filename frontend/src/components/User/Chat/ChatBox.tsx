@@ -8,7 +8,9 @@ import { toast } from "react-hot-toast";
 import { useAppSelector } from "@/redux/store";
 import { Paperclip } from "react-feather";
 import axiosInstance from "@/utils/axiosInterceptor";
-
+import { io,Socket } from "socket.io-client";
+import {v4 as uuidv4} from "uuid"
+import { useNavigate } from "react-router-dom";
 interface CloudinaryChatUploadResult {
   secure_url: string;
   resource_type: "image" | "video";
@@ -31,6 +33,7 @@ interface ChatBoxProps {
 }
 
 const ChatBox: React.FC<ChatBoxProps> = ({ friendId }) => {
+  const navigate = useNavigate()
   const [messages, setMessages] = useState<IMessage[]>([]);
   const [newMessage, setNewMessage] = useState("");
   const [isConnected, setIsConnected] = useState(false);
@@ -48,13 +51,48 @@ const ChatBox: React.FC<ChatBoxProps> = ({ friendId }) => {
   const remoteVideoRef = useRef<HTMLVideoElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null); 
   const { userId } = useAppSelector((state) => state.user);
-
+  const socketRef = useRef<Socket | null>(null)
   useEffect(() => {
     if (!userId) {
       console.error("User ID is null, cannot load friends");
       toast.error("Please log in to view friends");
       return;
     }
+
+    socketRef.current = io("http://localhost:3000", {
+      withCredentials: true,
+      reconnection: true,
+      reconnectionAttempts: 5,
+      reconnectionDelay: 1000,
+    });
+
+    socketRef.current.on("connect", () => {
+      console.log("Direct Call socket connected:", socketRef.current?.id);
+      setIsConnected(true);
+      socketRef.current?.emit("join-user", { userId });
+      console.log(`Joined user room: ${userId}`);
+    });
+
+    socketRef.current.on("disconnect", (reason) => {
+      console.log("Direct Call socket disconnected:", reason);
+      setIsConnected(false);
+      if (reason !== "io client disconnect") {
+        toast.error("Disconnected from call server, trying to reconnect...");
+      }
+    });
+
+    socketRef.current.on("reconnect", () => {
+      console.log("Direct Call socket reconnected");
+      toast.success("Reconnected to call server");
+      // CHANGE: Rejoin userId room on reconnect
+      socketRef.current?.emit("join-user", { userId });
+      console.log(`Rejoined user room: ${userId}`);
+    });
+
+    socketRef.current.on("reconnect_failed", () => {
+      console.log("Direct Call socket reconnection failed");
+      toast.error("Failed to reconnect to call server");
+    });
 
 
     const handleMessageReceived = (message: IMessage) => {
@@ -105,6 +143,64 @@ const ChatBox: React.FC<ChatBoxProps> = ({ friendId }) => {
       console.error("Friend call error:", message);
       toast.error(message);
       setCallState("idle");
+    });
+    //direct call icoming
+
+   
+    socketRef.current.on("directCall:incoming", ({ callId, callerId }: { callId: string; callerId: string }) => {
+      console.log("Incoming callllllllllllllllllllllllllllllllllllllllll:", { callId, callerId });
+      toast.custom(
+        (t) => (
+          <div className="bg-white p-4 rounded-lg shadow-lg flex items-center space-x-4">
+            <span>Incoming call from {callerId}</span>
+            <div className="flex space-x-2">
+              <button
+                className="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600"
+                onClick={() => {
+                  console.log("Accepting call:", callId);
+                  socketRef.current?.emit("directCall:accept", { callId });
+                  toast.dismiss(t.id);
+                  // CHANGE: Navigate to call page instead of opening new tab
+                  navigate(`/call/${callId}`);
+                }}
+              >
+                Accept
+              </button>
+              <button
+                className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+                onClick={() => {
+                  console.log("Rejecting call:", callId);
+                  socketRef.current?.emit("directCall:reject", { callId });
+                  toast.dismiss(t.id);
+                }}
+              >
+                Reject
+              </button>
+            </div>
+          </div>
+        ),
+        {
+          id: callId,
+          duration: Infinity,
+          position: "top-center",
+        }
+      );
+    });
+
+
+socketRef.current.on("directCall:rejected", ({ callId }) => {
+      console.log("Call rejected:", callId);
+      toast.error("Call was rejected");
+    });
+
+    socketRef.current.on("directCall:missed", ({ callId }) => {
+      console.log("Call missed:", callId);
+      toast("Call was missed");
+    });
+
+socketRef.current.on("directCall:ended", ({ callId }) => {
+      console.log("Call ended by peer:", callId);
+      toast("Call ended by the other user");
     });
 
     socket?.on(
@@ -189,10 +285,21 @@ const ChatBox: React.FC<ChatBoxProps> = ({ friendId }) => {
 
     return () => {
       callManagerRef.current?.endCall();
+      if (socketRef.current) {
+        socketRef.current.off("directCall:incoming");
+        socketRef.current.off("directCall:rejected");
+        socketRef.current.off("directCall:missed");
+        socketRef.current.off("directCall:ended");
+        socketRef.current.off("connect");
+        socketRef.current.off("disconnect");
+        socketRef.current.off("reconnect");
+        socketRef.current.off("reconnect_failed");
+        socketRef.current.disconnect();
+      }
       socket.off("friend-call-incoming");
       socket.off("friend-call-error");
     };
-  }, [userId,friendId]);
+  }, [userId,friendId,]);
 
   useEffect(() => {
     const socket = chatServiceRef.current?.["socket"];
@@ -357,20 +464,22 @@ const ChatBox: React.FC<ChatBoxProps> = ({ friendId }) => {
   };
 
   // --- New: Handle call button click ---
-  const handleCallButton = async () => {
-    if (callState === "idle") {
-      try {
-        setCallState("ringing");
-        await callManagerRef.current?.startCall(friendId);
-      } catch (error) {
-        setCallState("idle");
-        toast.error((error as Error).message || "Failed to load chat data");
-      }
-    } else if (callState === "active") {
-      callManagerRef.current?.endCall();
-      setCallState("idle");
+  const handleCallButton = () => {
+    if (!socketRef.current || !isConnected) {
+      console.log("Call button clicked but socket not connected");
+      toast.error("Not connected to server");
+      return;
     }
+    const callId = uuidv4();
+    console.log("Initiating call:", { callId, callerId: userId, receiverId: friendId });
+    socketRef.current.emit("directCall:initiate", {
+      callerId: userId,
+      receiverId: friendId,
+      callId,
+    });
+    navigate(`/call/${callId}`);
   };
+
 
   // --- New: Toggle audio/video ---
   const toggleAudio = () =>
@@ -382,16 +491,11 @@ const ChatBox: React.FC<ChatBoxProps> = ({ friendId }) => {
       !localStream?.getVideoTracks()[0]?.enabled
     );
 
-
     return (
       <div className="flex flex-col h-full bg-white rounded-lg shadow-lg">
         <div className="p-4 border-b flex justify-between items-center">
           <div className="flex items-center">
-            <img
-              src={friend?.avatar}
-              alt={friend?.name}
-              className="w-10 h-10 rounded-full object-cover"
-            />
+            <img src={friend?.avatar} alt={friend?.name} className="w-10 h-10 rounded-full object-cover" />
             <div className="ml-3">
               <h3 className="font-medium">{friend?.name || "Loading..."}</h3>
             </div>
@@ -399,19 +503,9 @@ const ChatBox: React.FC<ChatBoxProps> = ({ friendId }) => {
           <button
             onClick={handleCallButton}
             disabled={!isConnected}
-            className={`px-3 py-1 rounded-lg text-white ${
-              callState === "idle"
-                ? "bg-green-500 hover:bg-green-600"
-                : "bg-red-500 hover:bg-red-600"
-            } ${!isConnected && "opacity-50 cursor-not-allowed"}`}
+            className={`px-3 py-1 rounded-lg text-white bg-green-500 hover:bg-green-600 ${!isConnected && "opacity-50 cursor-not-allowed"}`}
           >
-            {!isConnected
-              ? "Connecting..."
-              : callState === "idle"
-              ? "Call"
-              : callState === "ringing"
-              ? "Ringing..."
-              : "End Call"}
+            {isConnected ? "Call" : "Connecting..."}
           </button>
         </div>
   
@@ -419,47 +513,27 @@ const ChatBox: React.FC<ChatBoxProps> = ({ friendId }) => {
           {messages.map((msg) => (
             <div
               key={msg.id}
-              className={`mb-2 flex ${
-                msg.senderId.toString() === userId ? "justify-end" : "justify-start"
-              }`}
+              className={`mb-2 flex ${msg.senderId.toString() === userId ? "justify-end" : "justify-start"}`}
             >
               <div
-                className={`max-w-xs p-3 rounded-lg ${
-                  msg.senderId.toString() === userId
-                    ? "bg-purple-500 text-white"
-                    : "bg-gray-200 text-gray-800"
-                }`}
+                className={`max-w-xs p-3 rounded-lg ${msg.senderId.toString() === userId ? "bg-purple-500 text-white" : "bg-gray-200 text-gray-800"}`}
               >
                 {msg.mediaType === "text" && msg.content && (
                   <>
                     {msg.content}
-                    <span className="block text-xs opacity-75">
-                      {new Date(msg.timestamp).toLocaleTimeString()}
-                    </span>
+                    <span className="block text-xs opacity-75">{new Date(msg.timestamp).toLocaleTimeString()}</span>
                   </>
                 )}
                 {msg.mediaType === "image" && msg.mediaUrl && (
                   <div>
-                    <img
-                      src={msg.mediaUrl}
-                      alt="Chat image"
-                      className="max-w-full rounded-lg"
-                    />
-                    <span className="block text-xs opacity-75">
-                      {new Date(msg.timestamp).toLocaleTimeString()}
-                    </span>
+                    <img src={msg.mediaUrl} alt="Chat image" className="max-w-full rounded-lg" />
+                    <span className="block text-xs opacity-75">{new Date(msg.timestamp).toLocaleTimeString()}</span>
                   </div>
                 )}
                 {msg.mediaType === "video" && msg.mediaUrl && (
                   <div>
-                    <video
-                      src={msg.mediaUrl}
-                      controls
-                      className="max-w-full rounded-lg"
-                    />
-                    <span className="block text-xs opacity-75">
-                      {new Date(msg.timestamp).toLocaleTimeString()}
-                    </span>
+                    <video src={msg.mediaUrl} controls className="max-w-full rounded-lg" />
+                    <span className="block text-xs opacity-75">{new Date(msg.timestamp).toLocaleTimeString()}</span>
                   </div>
                 )}
               </div>
@@ -474,27 +548,14 @@ const ChatBox: React.FC<ChatBoxProps> = ({ friendId }) => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {localStream && (
                   <div className="relative">
-                    <video
-                      ref={localVideoRef}
-                      autoPlay
-                      muted
-                      className="w-full rounded-lg border-2 border-gray-600"
-                    />
-                    <div className="absolute bottom-2 left-2 bg-black bg-opacity-50 text-white px-2 py-1 rounded text-sm">
-                      You
-                    </div>
+                    <video ref={localVideoRef} autoPlay muted className="w-full rounded-lg border-2 border-gray-600" />
+                    <div className="absolute bottom-2 left-2 bg-black bg-opacity-50 text-white px-2 py-1 rounded text-sm">You</div>
                   </div>
                 )}
                 {remoteStream && (
                   <div className="relative">
-                    <video
-                      ref={remoteVideoRef}
-                      autoPlay
-                      className="w-full rounded-lg border-2 border-gray-600"
-                    />
-                    <div className="absolute bottom-2 left-2 bg-black bg-opacity-50 text-white px-2 py-1 rounded text-sm">
-                      {friend?.name || "Friend"}
-                    </div>
+                    <video ref={remoteVideoRef} autoPlay className="w-full rounded-lg border-2 border-gray-600" />
+                    <div className="absolute bottom-2 left-2 bg-black bg-opacity-50 text-white px-2 py-1 rounded text-sm">{friend?.name || "Friend"}</div>
                   </div>
                 )}
               </div>
@@ -560,7 +621,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ friendId }) => {
               onChange={(e) => setNewMessage(e.target.value)}
               onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
               placeholder="Type a message..."
-              className="flex-1 p-2 border rounded-none focus:outline-none focus:ring-2 focus:ring-purple-500 !text-black"
+              className="flex-1 p-2 border rounded-none focus:outline-none focus:ring-2 focus:ring-purple-500 !text-black !w-36"
             />
             <button
               onClick={handleSendMessage}

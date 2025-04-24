@@ -25,8 +25,9 @@ import { UserPlanService } from '../services/User/Plans/UserPlansService'
 import { UserPlanController } from '../controllers/User/Plans/UserPlansController'
 import { PaymentService } from '../services/User/Payment/PaymentService'
 import { PaymentController } from '../controllers/User/Payment/PaymentController'
+import { DirectCallController } from '../controllers/User/Call/DirectCallController'
 
-export const createUserRoutes = (chatIo:Namespace) => {
+export const createUserRoutes = (chatIo:Namespace,directCallController:DirectCallController) => {
 const router = express.Router()
 
 //profile
@@ -98,9 +99,10 @@ router.get('/payments/execute',paymentController.executePayment.bind(paymentCont
 
 
 
+//call detailss
+router.get("/call/details", authenticateToken,directCallController.getCallDetails.bind(directCallController));
 
-
-
+// router.get("/call/details", authenticateToken, (req, res) => directCallController.getCallDetails(req, res));
 
 return router
 }

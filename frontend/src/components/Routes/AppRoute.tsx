@@ -42,6 +42,7 @@ import RewardPage from "../User/Reward/RewardPage";
 import PlansPage from "../User/Plans/PlansPage";
 import PricingSuccess from "../User/Plans/PricingSuccess";
 import UserProtectedRoute from "../User/UserProtectedRoute";
+import DirectCallPage from "../User/Chat/DirectCallPage";
 
 function AppRoute() {
   return (
@@ -67,6 +68,7 @@ function AppRoute() {
       <Route path="/rewards" element={<RewardPage />} />
       <Route path="/user/plans" element={<PlansPage />} />
       <Route path="/pricing/success" element={<PricingSuccess />} />
+      <Route path="/call/:callId" element={<DirectCallPage />} />
   </Route>
 
       {/* Admin Protected Routes */}
