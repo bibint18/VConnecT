@@ -103,6 +103,22 @@ async updateStreak (req:Request,res:Response,next:NextFunction) {
     next(error)
   }
 }
+
+async changePassword(req: Request, res: Response, next: NextFunction) {
+  try {
+    console.log("reached here")
+    const userId = req.user?.id as string;
+    const { currentPassword, newPassword } = req.body;
+    if (!currentPassword || !newPassword) {
+      throw new AppError("Current and new passwords are required", 400);
+    }
+    const updatedUser = await profileService.changePassword(userId, currentPassword, newPassword);
+    res.status(200).json({ user: updatedUser, message: "Password updated successfully" });
+  } catch (error) {
+    next(error);
+  }
+}
+
 }
 
 export default new ProfileController(new ProfileService(new ProfileRepository()))

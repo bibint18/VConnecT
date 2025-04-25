@@ -47,3 +47,15 @@ export const userCheckin = async () => {
     }
   }
 }
+
+export const changePassword = async (data: { currentPassword: string; newPassword: string }) => {
+  try {
+    const response = await axiosInstance.post('/user/profile/change-password', data);
+    return response.data;
+  } catch (error) {
+    if (error instanceof AxiosError && error.response) {
+      throw new Error(error.response.data.message);
+    }
+    throw new Error("Failed to change password");
+  }
+};

@@ -37,7 +37,7 @@ router.get('/user/profile/signature',authenticateToken,ProfileController.getClou
 router.get('/chat/signature',authenticateToken,ProfileController.getChatCloudinarySignature.bind(ProfileController))
 router.post('/user/profile/image',authenticateToken,ProfileController.updateProfileImage.bind(ProfileController))
 router.post('/user/profile/streak',authenticateToken,ProfileController.updateStreak.bind(ProfileController))
-
+router.post('/user/profile/change-password',authenticateToken,ProfileController.changePassword.bind(ProfileController))
 
 //rooms
 router.post('/user/room/create',authenticateToken,RoomController.createRoom.bind(RoomController))

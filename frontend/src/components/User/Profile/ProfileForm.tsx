@@ -2,10 +2,11 @@
 import React, { useEffect } from 'react';
 import { Edit, Check } from 'react-feather';
 import { useState } from 'react';
-import { getUserProfile,updateUserProfile ,userCheckin} from '@/services/ProfileService';
+import { changePassword, getUserProfile,updateUserProfile ,userCheckin} from '@/services/ProfileService';
 import { useAppDispatch } from '@/redux/store';
 import { updateProfile } from '@/redux/userSlice';
 import axiosInstance from '@/utils/axiosInterceptor';
+import toast from 'react-hot-toast';
 interface VerifiedItemProps {
   value: string;
   timestamp: string;
@@ -35,6 +36,11 @@ declare global {
   }
 }
 
+interface PasswordFormData{
+  currentPassword:string;
+  newPassword:string;
+  confirmPassword:string
+}
 const VerifiedItem: React.FC<VerifiedItemProps> = ({ value, timestamp }) => (
   <div className="mt-6">
     <div className="flex items-start space-x-2">
@@ -70,6 +76,11 @@ export const ProfileContent = () => {
   const [loading,setLoading] = useState(true)
   const [formData,setFormData] = useState<User | null>(null)
   const [isEditing,setIsEditing] = useState(false)
+  const [passwordForm, setPasswordForm] = useState<PasswordFormData>({
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: '',
+  });
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -114,6 +125,46 @@ export const ProfileContent = () => {
     setFormData((prev) => prev ? {...prev,[name]:value}: null)
   }
 
+  const handlePasswordChange = (e:React.ChangeEvent<HTMLInputElement>) => {
+    const {name,value} = e.target
+    setPasswordForm((prev) => ({...prev,[name]: value}))
+  }
+
+  const handleResetPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+
+    // Validate inputs
+    if (!passwordForm.currentPassword || !passwordForm.newPassword || !passwordForm.confirmPassword) {
+      toast.error("All password fields are required");
+      return;
+    }
+    if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+      toast.error("New password and confirm password do not match");
+      return;
+    }
+    if (passwordForm.newPassword.length < 8) {
+      toast.error("New password must be at least 8 characters long");
+      return;
+    }
+
+    try {
+      await changePassword({
+        currentPassword: passwordForm.currentPassword,
+        newPassword: passwordForm.newPassword,
+      });
+      setPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
+      setError(null);
+      toast.success("Password updated successfully");
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error("Failed to update password");
+      }
+    }
+  };
+
   const handleSubmit = async (e:React.FormEvent) => {
     e.preventDefault();
     if(!formData) return
@@ -133,6 +184,8 @@ export const ProfileContent = () => {
       } 
     }
   }
+
+  
 
 const handleImageUpload = async () => {
   console.log('handleImageUpload triggered');
@@ -384,6 +437,64 @@ const isCheckInDisabled = () => {
           </div>
         )}
       </form>
+<h3>Rest Your password here </h3>
+<br />
+{/* freset paswordne  */}
+<div className="mt-8">
+        <h3 className="text-lg font-semibold mb-4">Reset Your Password</h3>
+        <form onSubmit={handleResetPassword}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm text-gray-400 mb-2">Current Password</label>
+                <input
+                  type="password"
+                  name="currentPassword"
+                  className="w-full bg-gray-900 rounded-lg px-4 py-3 text-white"
+                  value={passwordForm.currentPassword}
+                  onChange={handlePasswordChange}
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm text-gray-400 mb-2">New Password</label>
+                <input
+                  type="password"
+                  name="newPassword"
+                  className="w-full bg-gray-900 rounded-lg px-4 py-3 text-white"
+                  value={passwordForm.newPassword}
+                  onChange={handlePasswordChange}
+                  required
+                />
+              </div>
+            </div>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm text-gray-400 mb-2">Confirm New Password</label>
+                <input
+                  type="password"
+                  name="confirmPassword"
+                  className="w-full bg-gray-900 rounded-lg px-4 py-3 text-white"
+                  value={passwordForm.confirmPassword}
+                  onChange={handlePasswordChange}
+                  required
+                />
+              </div>
+            </div>
+          </div>
+          <div className="mt-6">
+            <button
+              type="submit"
+              className="bg-blue-600 text-white px-6 py-2 rounded-lg flex items-center space-x-2"
+            >
+              <Edit className="w-4 h-4" />
+              <span>Reset Password</span>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      
 
       {/* Verified Information */}
       <div className="mt-8">
