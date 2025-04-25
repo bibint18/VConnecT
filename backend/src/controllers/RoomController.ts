@@ -40,8 +40,9 @@ export class RoomController {
 
   async getAllRooms(req:Request,res:Response,next:NextFunction){
     try {
-      const rooms = await this.roomService.getAllRooms()
-      res.status(200).json({rooms})
+      const userId = req.user?.id as string
+      const {rooms,user} = await this.roomService.getAllRooms(userId)
+      res.status(200).json({rooms,user})
     } catch (error) {
       next(error)
     }

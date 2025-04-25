@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { getAllRooms, joinRoom } from '@/services/roomService';
 import './ListRoom.css';
 import toast from 'react-hot-toast';
-
+import { IUser } from '@/components/admin/dashboard/CustomerDashboard';
 // Interface matching backend IRoom
 interface Room {
   _id: string;
@@ -28,14 +28,14 @@ const ListRoom: React.FC = () => {
   const [rooms, setRooms] = useState<Room[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  // Fetch rooms from backend on mount
+  const [user,setUser] = useState<IUser | null>(null)
+ 
   useEffect(() => {
     const fetchRooms = async () => {
       try {
         const data = await getAllRooms();
-        // No need to map; Room interface matches backend response
         setRooms(data.rooms);
+        setUser(data.user)
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load rooms');
       } finally {
@@ -45,7 +45,7 @@ const ListRoom: React.FC = () => {
     fetchRooms();
   }, []);
 
-
+console.log("user details",user)
   const handleJoinRoom = async (roomId: string, roomType: string) => {
     if (roomType === 'PRIVATE') {
       setSelectedRoomId(roomId);
@@ -218,15 +218,15 @@ const ListRoom: React.FC = () => {
             </motion.button>
 
             <div className="join-code-section">
-              <h2>JOIN OTHER ROOM BY ENTERING THE SECRET CODE BELOW</h2>
+              <h2>YOUR AVAILABLE LIMIT TO CREATE ROOM:</h2>
               <div className="join-code-input-group">
-                <input
+                {/* <input
                   type="text"
                   value={secretCode}
                   onChange={(e) => setSecretCode(e.target.value)}
                   placeholder="Enter your code here"
                   className="join-code-input"
-                />
+                /> */}
                 <motion.button
                   className="join-code-button"
                   onClick={handleJoinWithCode}
@@ -234,7 +234,7 @@ const ListRoom: React.FC = () => {
                   whileHover="hover"
                   whileTap="tap"
                 >
-                  JOIN
+                  {user?.availableRoomLimit}
                 </motion.button>
               </div>
             </div>
@@ -335,50 +335,7 @@ const ListRoom: React.FC = () => {
           </div>
         </motion.div>
 
-        {/* Pagination */}
-        {/* <motion.div
-          className="pagination"
-          variants={sectionVariants}
-          initial="hidden"
-          animate="visible"
-        >
-          <nav className="pagination-nav">
-            <motion.button
-              className="pagination-button"
-              onClick={() => handlePageChange(currentPage - 1)}
-              disabled={currentPage === 1}
-              variants={buttonVariants}
-              whileHover="hover"
-              whileTap="tap"
-            >
-              {'<'}
-            </motion.button>
-
-            {[1, 2, 3, '...', 9, 10].map((page, index) => (
-              <motion.button
-                key={index}
-                className={`pagination-button ${currentPage === page ? 'active' : ''}`}
-                onClick={() => typeof page === 'number' && handlePageChange(page)}
-                variants={buttonVariants}
-                whileHover="hover"
-                whileTap="tap"
-              >
-                {page}
-              </motion.button>
-            ))}
-
-            <motion.button
-              className="pagination-button"
-              onClick={() => handlePageChange(currentPage + 1)}
-              disabled={currentPage === 10}
-              variants={buttonVariants}
-              whileHover="hover"
-              whileTap="tap"
-            >
-              {'>'}
-            </motion.button>
-          </nav>
-        </motion.div> */}
+        
 
 {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">

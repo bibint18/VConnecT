@@ -15,7 +15,8 @@ export interface IUser{
   isDeleted:boolean;
   isBlocked:boolean;
   point?:number;
-  streak?:number
+  streak?:number;
+  availableRoomLimit:number
 }
 
 import { useState } from "react"

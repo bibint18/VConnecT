@@ -2,6 +2,7 @@ import { promises } from "dns";
 import { IRoomRepository } from "../interfaces/IRoomRepository";
 import { IRoom } from "../models/RoomModel";
 import { v4 as uuidv4 } from 'uuid';
+import { IUser } from "../models/User";
 export class RoomService {
   private roomRepository:IRoomRepository
   constructor(RoomRepo:IRoomRepository){
@@ -15,9 +16,9 @@ export class RoomService {
     return updatedRoom
   }
 
-  async getAllRooms():Promise<IRoom[] | null>{
-    const rooms = await this.roomRepository.getAllRooms()
-    return rooms
+  async getAllRooms(userId:string):Promise<{ rooms: IRoom[], user: IUser | null }>{
+    const result = await this.roomRepository.getAllRooms(userId)
+    return result
   }
 
   async joinRoom(RoomId:string,userId:string,secretCode:string):Promise<IRoom | null>{

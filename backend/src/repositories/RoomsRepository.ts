@@ -2,7 +2,7 @@ import { Room ,IRoom} from "../models/RoomModel";
 import { IRoomRepository } from "../interfaces/IRoomRepository";
 import mongoose from "mongoose";
 import { AppError } from "../utils/AppError";
-import { User } from "../models/User";
+import { User ,IUser} from "../models/User";
 
 export class RoomRepository implements IRoomRepository{
   async createRoom(roomData:IRoom):Promise<IRoom | null>{
@@ -40,10 +40,11 @@ export class RoomRepository implements IRoomRepository{
     return savedRoom
   }
 
-  async getAllRooms(): Promise<IRoom[] | null> {
+  async getAllRooms(userId:string): Promise<{ rooms: IRoom[], user: IUser | null }> {
+    const user = await User.findById(userId)
     const rooms = await Room.find().exec()
     console.log("rooms from service ",rooms)
-    return rooms
+    return {rooms,user}
   }
 
   async joinRoom(RoomId: string, userId: string, secretCode: string): Promise<IRoom | null> {
