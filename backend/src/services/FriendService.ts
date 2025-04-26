@@ -46,6 +46,7 @@ export class FriendService {
       });
 
       socket.on("respond-friend-request", async (data: { requestId: string; accept: boolean }, callback) => {
+        console.log("responded to the friend requestttttttttttttttttttt")
         const userId = (socket as any).userId;
         console.log("userId from respond backend service",userId)
         if (!userId) return callback({ error: "Unauthorized" });

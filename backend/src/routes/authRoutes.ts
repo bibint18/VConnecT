@@ -11,6 +11,9 @@ import { RewardRepository } from '../repositories/Admin/Reward/RewardRepository'
 import { UserRewardRepository } from '../repositories/User/Reward/UserRewardRepository'
 import { AdminRewardService } from '../services/Admin/Reward/RewardService'
 import { AdminRewardController } from '../controllers/Admin/Reward/RewardController'
+import { DashboardRepository } from '../repositories/Admin/Dashboard/DashboardRepository'
+import { DashboardService } from '../services/Admin/Dashboard/DashboardService'
+import { DashboardController } from '../controllers/Admin/Dashboard/DashboardController'
 const router = express.Router()
 
 
@@ -59,4 +62,12 @@ router.put('/admin/rewards/:rewardId',authenticateToken,restrictToAdmin,adminRew
 router.delete('/admin/rewards/:rewardId',authenticateToken,restrictToAdmin,adminRewardController.deleteReward.bind(adminRewardController))
 router.get('/admin/rewards',authenticateToken,restrictToAdmin,adminRewardController.getRewards.bind(adminRewardController))
 router.get('/admin/reward',authenticateToken,restrictToAdmin,adminRewardController.getRewardById.bind(adminRewardController))
+
+
+//dashboard
+const dashboardRepository = new DashboardRepository()
+const dashboardService = new DashboardService(dashboardRepository)
+const dashboardController = new DashboardController(dashboardService)
+router.get('/dashboard',dashboardController.getDashboardData.bind(dashboardController))
+
 export default router

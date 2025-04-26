@@ -14,7 +14,7 @@ const GoogleLoginButton = () => {
       });
       const { accessToken, user } = response.data;
       console.log("googlr login button response",accessToken,user)
-      dispatch(loginTheUser({ name: user.name, email: user.email, accessToken }));
+      dispatch(loginTheUser({ name: user.name, email: user.email, accessToken ,userId:user._id}));
     } catch (error:unknown) {
       console.error('Google login failed:', error);
       // Display error to user (e.g., via state or toast)

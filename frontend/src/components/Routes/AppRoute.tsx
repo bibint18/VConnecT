@@ -43,6 +43,8 @@ import PlansPage from "../User/Plans/PlansPage";
 import PricingSuccess from "../User/Plans/PricingSuccess";
 import UserProtectedRoute from "../User/UserProtectedRoute";
 import DirectCallPage from "../User/Chat/DirectCallPage";
+// import AdminDashboardd from "../admin/Dashboardd/AdminDashboard";
+import DashboardPageAdmin from "@/pages/DashboardPage";
 
 function AppRoute() {
   return (
@@ -92,6 +94,8 @@ function AppRoute() {
           path="/admin/rewards/edit/:rewardId"
           element={<AddRewardPage />}
         />
+        {/* <Route path="/dashboardPage" element={<AdminDashboardd />} /> */}
+        <Route path="/dashboardPage" element={<DashboardPageAdmin />} />
       </Route>
     </Routes>
   );

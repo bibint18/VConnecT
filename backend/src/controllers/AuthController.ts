@@ -41,12 +41,12 @@ export const userLogout = async (req:Request,res:Response) => {
 export const refresh = async(req:Request,res:Response) => {
   try {
     console.log("Reached backend refresh Token")
-    if(!req.cookies.refreshToken){
-      res.status(403).json({message:"NO refresh token provided"})
-    }
-    console.log("refresh token",(req as any).cookies.refreshToken)
+    // if(!req.cookies.refreshToken){
+    //   window.location.href='/login'
+    // }
+    // console.log("refresh token",(req as any).cookies.refreshToken)
     const refreshToken=req.cookies.refreshToken
-    console.log("refresh Token: ",refreshToken)
+    // console.log("refresh Token: ",refreshToken)
     if(!refreshToken){
       res.status(403).json({message:"NO refresh token provided"})
     }
