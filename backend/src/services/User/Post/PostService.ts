@@ -52,4 +52,19 @@ export class PostService implements IPostService {
 
     await this.postRepository.delete(postId);
   }
+
+  async editPost(postId: string, content: string): Promise<void> {
+    const post = await this.postRepository.findById(postId)
+    if(!post){
+      throw new Error("Post not found")
+    }
+    if (!content.trim()) {
+      throw new AppError('Content cannot be empty', 400);
+    }
+    await this.postRepository.update(postId,{content})
+  }
+
+  async getMyPost(userId: string): Promise<IPost[]> {
+    return await this.postRepository.findByUserID(userId)
+  }
 }

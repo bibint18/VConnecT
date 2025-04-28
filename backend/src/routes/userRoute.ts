@@ -119,5 +119,7 @@ router.post('/posts',authenticateToken,[
 ],postController.createPost.bind(postController))
 router.delete('/post/:postId',authenticateToken,postController.deletePost.bind(postController))
 router.get('/post/signature',authenticateToken,postController.getCloudinarySignature.bind(postController))
+router.get('/my-posts',authenticateToken,postController.getMyPosts.bind(postController))
+router.put('/posts/:postId',authenticateToken,[body('content').notEmpty().isString().trim().isLength({ max: 1000 })],postController.editPost.bind(postController))
 return router
 }

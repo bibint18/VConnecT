@@ -54,6 +54,35 @@ export class PostController implements IPostController {
       next(error);
     }
   }
+
+  async getMyPosts(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      console.log("reached my post")
+      const userId = req.user?.id as string
+      if(!userId){
+        throw new Error("No user Id")
+      }
+      const posts = await this.postService.getMyPost(userId)
+      res.status(200).json(posts)
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  async editPost(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const errors = validationResult(req)
+      if (!errors.isEmpty()) {
+        throw new AppError('Validation failed', 400);
+      }
+      const { postId } = req.params;
+      const { content } = req.body;
+      await this.postService.editPost(postId,content)
+      res.status(200).json({message:"Post updated successfully"})
+    } catch (error) {
+      next(error)
+    }
+  }
 }
 
 // export default new PostController(
