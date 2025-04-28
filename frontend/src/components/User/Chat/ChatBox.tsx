@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { ChatService } from "@/services/ChatService";
 import { FriendCallManager } from "@/services/FriendCallManager";
 import { IFriend } from "./FriendList";
-import { toast } from "react-hot-toast";
+import { Toast, toast } from "react-hot-toast";
 import { useAppSelector } from "@/redux/store";
 import { Paperclip } from "react-feather";
 import axiosInstance from "@/utils/axiosInterceptor";
@@ -150,7 +150,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ friendId }) => {
     socketRef.current.on("directCall:incoming", ({ callId, callerId }: { callId: string; callerId: string }) => {
       console.log("Incoming callllllllllllllllllllllllllllllllllllllllll:", { callId, callerId });
       toast.custom(
-        (t) => (
+        (t:Toast) => (
           <div className="bg-white p-4 rounded-lg shadow-lg flex items-center space-x-4">
             <span>Incoming call from {callerId}</span>
             <div className="flex space-x-2">
@@ -209,7 +209,7 @@ socketRef.current.on("directCall:ended", ({ callId }) => {
         console.log("Incoming call:", callId, "from:", callerId);
         setCallState("ringing");
         toast.custom(
-          (t) => (
+          (t:Toast) => (
             <div className="bg-white p-4 rounded-lg shadow-lg flex items-center space-x-4">
               <span>Incoming call from {callerId}</span>
               <div className="flex space-x-2">

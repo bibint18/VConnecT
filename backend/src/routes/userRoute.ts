@@ -26,7 +26,11 @@ import { UserPlanController } from '../controllers/User/Plans/UserPlansControlle
 import { PaymentService } from '../services/User/Payment/PaymentService'
 import { PaymentController } from '../controllers/User/Payment/PaymentController'
 import { DirectCallController } from '../controllers/User/Call/DirectCallController'
-
+import { PostRepository } from '../repositories/User/Post/PostRepository'
+import { PostService } from '../services/User/Post/PostService'
+import { CloudinaryService } from '../services/User/Post/CloudinaryService'
+import { PostController } from '../controllers/User/Post/PostController'
+import { body } from 'express-validator'
 export const createUserRoutes = (chatIo:Namespace,directCallController:DirectCallController) => {
 const router = express.Router()
 
@@ -102,7 +106,18 @@ router.get('/payments/execute',paymentController.executePayment.bind(paymentCont
 //call detailss
 router.get("/call/details", authenticateToken,directCallController.getCallDetails.bind(directCallController));
 
-// router.get("/call/details", authenticateToken, (req, res) => directCallController.getCallDetails(req, res));
 
+//post
+const postRepository = new PostRepository()
+const cloudinaryService = new CloudinaryService()
+const postService = new PostService(postRepository,cloudinaryService)
+const postController = new PostController(postService,cloudinaryService)
+router.post('/posts',authenticateToken,[
+  body('content').optional().isString().trim().isLength({ max: 1000 }),
+  body('mediaUrl').optional().isString(),
+  body('mediaType').optional().isIn(['text', 'image', 'video']),
+],postController.createPost.bind(postController))
+router.delete('/post/:postId',authenticateToken,postController.deletePost.bind(postController))
+router.get('/post/signature',authenticateToken,postController.getCloudinarySignature.bind(postController))
 return router
 }
