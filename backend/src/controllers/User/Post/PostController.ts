@@ -83,9 +83,14 @@ export class PostController implements IPostController {
       next(error)
     }
   }
-}
 
-// export default new PostController(
-//   new PostService(new PostRepository(), new CloudinaryService()),
-//   new CloudinaryService()
-// );
+  async getUserDetails(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const userId = req.user?.id as string
+      const user = await this.postService.getUserDetails(userId)
+      res.status(200).json(user)
+    } catch (error) {
+      next(error)
+    }
+  }
+}

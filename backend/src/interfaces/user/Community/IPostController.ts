@@ -5,4 +5,5 @@ export interface IPostController{
   getCloudinarySignature(req: Request, res: Response, next: NextFunction): Promise<void>;
   getMyPosts(req: Request, res: Response, next: NextFunction): Promise<void>;
   editPost(req: Request, res: Response, next: NextFunction): Promise<void>;
+  getUserDetails(req: Request, res: Response, next: NextFunction): Promise<void>;
 }

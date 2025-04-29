@@ -2,6 +2,7 @@ import { IPostService } from '../../../interfaces/user/Community/IPostService';
 import { IPost, IPostRepository } from '../../../interfaces/user/Community/IPostRepository';
 import { ICloudinaryService } from '../../../interfaces/user/Community/ICloudinaryService';
 import { AppError } from '../../../utils/AppError';
+import { IUser } from '../../../models/User';
 
 export class PostService implements IPostService {
   constructor(
@@ -66,5 +67,9 @@ export class PostService implements IPostService {
 
   async getMyPost(userId: string): Promise<IPost[]> {
     return await this.postRepository.findByUserID(userId)
+  }
+
+  async  getUserDetails(userId: string): Promise<IUser | null> {
+    return await this.postRepository.findUserById(userId)
   }
 }

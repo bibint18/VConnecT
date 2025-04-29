@@ -1,3 +1,4 @@
+import { IUser } from "../../../models/User";
 import { IPost } from "./IPostRepository";
 
 export interface IPostService {
@@ -5,4 +6,5 @@ export interface IPostService {
   deletePost(userId: string, postId: string, isAdmin: boolean): Promise<void>;
   getMyPost(userId:string):Promise<IPost[]>
   editPost(postId:string,content:string):Promise<void>
+  getUserDetails(userId:string):Promise<IUser | null>
 }

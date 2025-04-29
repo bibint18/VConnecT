@@ -1,3 +1,4 @@
+import { IUser } from '@/components/admin/dashboard/CustomerDashboard';
 import axiosInstance from '@/utils/axiosInterceptor'; 
 export interface CloudinarySignature {
   signature: string;
@@ -57,5 +58,10 @@ export class CommunityService {
   async editPost(postId: string, content: string): Promise<{ message: string }> {
     const response = await axiosInstance.put(`/posts/${postId}`, { content });
     return response.data;
+  }
+
+  async getUserDetails():Promise<IUser>{
+    const response = await axiosInstance.get('/posts/user')
+    return response.data
   }
 }

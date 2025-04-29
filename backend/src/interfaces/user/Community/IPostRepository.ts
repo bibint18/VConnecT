@@ -1,3 +1,5 @@
+import { IUser } from "../../../models/User";
+
 export interface IPost {
   _id?:string;
   userId: string;
@@ -18,4 +20,5 @@ export interface IPostRepository{
   findByUserID(userId:string):Promise<IPost[]>
   update(postId:string,updates:Partial<IPost>):Promise<void>
   delete(postId:string):Promise<void>
+  findUserById(userId:string):Promise<IUser | null>
 }

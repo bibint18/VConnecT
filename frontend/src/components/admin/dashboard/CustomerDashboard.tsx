@@ -5,6 +5,8 @@ export interface IUser{
   name:string,
   email:string,
   password:string,
+  profileImage?:string,
+  username?:string,
   otp?:string,
   otpExpiry?:Date,
   isVerified:boolean
@@ -16,7 +18,8 @@ export interface IUser{
   isBlocked:boolean;
   point?:number;
   streak?:number;
-  availableRoomLimit:number
+  availableRoomLimit?:number;
+  friends?: string[];
 }
 
 import { useState } from "react"

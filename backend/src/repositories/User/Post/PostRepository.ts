@@ -3,6 +3,7 @@ import { IPostRepository,IPost } from "../../../interfaces/user/Community/IPostR
 import { Post } from "../../../models/PostModel";
 import { timeStamp } from "console";
 import { AppError } from "../../../utils/AppError";
+import { IUser, User } from "../../../models/User";
 export class PostRepository implements IPostRepository{
   async create(post: IPost): Promise<string> {
     
@@ -63,5 +64,13 @@ export class PostRepository implements IPostRepository{
 
   async delete(postId: string): Promise<void> {
     await Post.updateOne({_id:postId},{isDeleted:true}).exec()
+  }
+
+  async findUserById(userId: string): Promise<IUser | null> {
+    const user = await User.findById(userId)
+    if(!user){
+      return null
+    }
+    return user
   }
 }
