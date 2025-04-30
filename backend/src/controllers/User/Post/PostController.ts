@@ -93,4 +93,65 @@ export class PostController implements IPostController {
       next(error)
     }
   }
+
+  async getFeed(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      console.log("reached feed")
+      const page = parseInt(req.query.page as string,10) || 1;
+      const limit = parseInt(req.query.limit as string,10) || 10;
+      const feed = await this.postService.getFeed(page,limit)
+      console.log('Feed Data Before Sending:', feed);
+      res.status(200).json(feed)
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  async likePost(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      console.log("Like post reached")
+      const {postId} = req.params;
+      const userId = req.user?.id as string;
+      await this.postService.likePost(postId,userId)
+      res.status(200).json({message:"Post Liked"})
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  async dislikePost(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      console.log("dislike post reached")
+      const {postId} = req.params;
+      const userId = req.user?.id as string;
+      console.log("userId dislike",userId)
+      await this.postService.dislikePost(postId,userId)
+      res.status(200).json({message:"Post unliked"})
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  async commentOnPost(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const {postId} = req.params;
+      const userId = req.user?.id as string;
+      const {content} = req.body;
+      const commentId = await this.postService.commentOnPost(postId,userId,content)
+      res.status(200).json({commentId,message:"Comment added"})
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  async getPostComments(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      console.log("get post comments fetched")
+      const {postId} = req.params;
+      const comments = await this.postService.getPostComments(postId);
+      res.status(200).json(comments)
+    } catch (error) {
+      next(error)
+    }
+  }
 }

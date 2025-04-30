@@ -6,4 +6,10 @@ export interface IPostController{
   getMyPosts(req: Request, res: Response, next: NextFunction): Promise<void>;
   editPost(req: Request, res: Response, next: NextFunction): Promise<void>;
   getUserDetails(req: Request, res: Response, next: NextFunction): Promise<void>;
+
+  getFeed(req: Request, res: Response, next: NextFunction): Promise<void>;
+  likePost(req: Request, res: Response, next: NextFunction): Promise<void>;
+  dislikePost(req: Request, res: Response, next: NextFunction): Promise<void>;
+  commentOnPost(req: Request, res: Response, next: NextFunction): Promise<void>;
+  getPostComments(req: Request, res: Response, next: NextFunction): Promise<void>;
 }

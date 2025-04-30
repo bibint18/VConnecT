@@ -30,7 +30,7 @@ import { PostRepository } from '../repositories/User/Post/PostRepository'
 import { PostService } from '../services/User/Post/PostService'
 import { CloudinaryService } from '../services/User/Post/CloudinaryService'
 import { PostController } from '../controllers/User/Post/PostController'
-import { body } from 'express-validator'
+import { body, query } from 'express-validator'
 export const createUserRoutes = (chatIo:Namespace,directCallController:DirectCallController) => {
 const router = express.Router()
 
@@ -122,5 +122,10 @@ router.get('/post/signature',authenticateToken,postController.getCloudinarySigna
 router.get('/my-posts',authenticateToken,postController.getMyPosts.bind(postController))
 router.put('/posts/:postId',authenticateToken,[body('content').notEmpty().isString().trim().isLength({ max: 1000 })],postController.editPost.bind(postController))
 router.get('/posts/user',authenticateToken,postController.getUserDetails.bind(postController))
+router.get('/feed',authenticateToken,[query('page').optional().isInt({ min: 1 }), query('limit').optional().isInt({ min: 1, max: 50 })],postController.getFeed.bind(postController))
+router.post('/posts/:postId/like',authenticateToken,postController.likePost.bind(postController))
+router.post('/posts/:postId/dislike',authenticateToken,postController.dislikePost.bind(postController))
+router.post('/posts/:postId/comments',authenticateToken,[body('content').notEmpty().isString().trim().isLength({ max: 1000 })],postController.commentOnPost.bind(postController))
+router.get('/posts/:postId/comments',authenticateToken,postController.getPostComments.bind(postController))
 return router
 }

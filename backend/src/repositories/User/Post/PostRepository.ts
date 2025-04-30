@@ -1,9 +1,9 @@
 import mongoose from "mongoose";
-import { IPostRepository,IPost } from "../../../interfaces/user/Community/IPostRepository";
+import { IPostRepository,IPost, IComment } from "../../../interfaces/user/Community/IPostRepository";
 import { Post } from "../../../models/PostModel";
-import { timeStamp } from "console";
 import { AppError } from "../../../utils/AppError";
 import { IUser, User } from "../../../models/User";
+import { Comment, ICommentDocument } from "../../../models/CommentModel";
 export class PostRepository implements IPostRepository{
   async create(post: IPost): Promise<string> {
     
@@ -72,5 +72,62 @@ export class PostRepository implements IPostRepository{
       return null
     }
     return user
+  }
+
+  async findAllPosts(page: number, limit: number): Promise<{ posts: IPost[]; total: number; }> {
+    const skip = (page -1) * limit
+    const [postDocs ,total] = await Promise.all([
+      Post.find({isDeleted:false}).populate('userId','username profileImage').sort({timestamp:-1}).skip(skip).limit(limit).exec(),
+      Post.countDocuments({isDeleted:false})
+    ])
+    console.log('Raw Post Docs with Population:', postDocs);
+    const posts = postDocs.map(postDoc => ({
+      _id:postDoc._id.toString(),
+      userId: postDoc.userId._id.toString(),
+      content: postDoc.content,
+      mediaUrl: postDoc.mediaUrl,
+      mediaType: postDoc.mediaType,
+      likes: postDoc.likes,
+      likeCount: postDoc.likeCount,
+      commentCount: postDoc.commentCount,
+      viewCount: postDoc.viewCount,
+      timestamp: postDoc.timestamp,
+      isDeleted: postDoc.isDeleted,
+    })) 
+    return {posts,total}
+  }
+
+  async addLike(postId: string, userId: string): Promise<void> {
+    await Post.updateOne({_id:postId,isDeleted:false,likes:{$ne:userId}},{$push:{likes:userId},$inc:{likeCount:1}})
+  }
+
+  async removeLike(postId: string, userId: string): Promise<void> {
+    console.log("reached repo dislike",postId,userId)
+    await Post.updateOne({_id:postId,isDeleted:false,likes:userId},{$pull:{likes:userId},$inc:{likeCount:-1}}).exec()
+  }
+
+  async addComment(postId: string, comment: IComment): Promise<string> {
+    const commentDoc = new Comment({
+      ...comment,
+      postId:new mongoose.Types.ObjectId(postId),
+      userId:new mongoose.Types.ObjectId(comment.userId),
+      timestamp:new Date(),
+    }) 
+    await commentDoc.save();
+    await Post.updateOne({_id:postId},{$inc:{commentCount:1}}).exec()
+    // return commentDoc._id.toString();
+    return (commentDoc._id as unknown as mongoose.Types.ObjectId).toString()
+  }
+
+  async getComments(postId: string): Promise<IComment[]> {
+    const commentDocs = await Comment.find({postId,isDeleted:false}).populate<{ userId: IUser }>('userId', 'username profilePicture').sort({timestamp:-1}).lean().exec() 
+    return commentDocs.map(commentDoc => ({
+      _id: commentDoc._id.toString(),
+      postId: commentDoc.postId.toString(),
+      userId: commentDoc.userId._id.toString(),
+      content: commentDoc.content,
+      timestamp: commentDoc.timestamp,
+      isDeleted: commentDoc.isDeleted,
+    }))
   }
 }

@@ -1,5 +1,5 @@
 import { IPostService } from '../../../interfaces/user/Community/IPostService';
-import { IPost, IPostRepository } from '../../../interfaces/user/Community/IPostRepository';
+import { IComment, IPost, IPostRepository } from '../../../interfaces/user/Community/IPostRepository';
 import { ICloudinaryService } from '../../../interfaces/user/Community/ICloudinaryService';
 import { AppError } from '../../../utils/AppError';
 import { IUser } from '../../../models/User';
@@ -71,5 +71,41 @@ export class PostService implements IPostService {
 
   async  getUserDetails(userId: string): Promise<IUser | null> {
     return await this.postRepository.findUserById(userId)
+  }
+
+  async getFeed(page: number, limit: number): Promise<{ posts: IPost[]; total: number; }> {
+    return await this.postRepository.findAllPosts(page,limit)
+  }
+
+  async likePost(postId: string, userId: string): Promise<void> {
+    const post = await this.postRepository.findById(postId)
+    if(!post){
+      throw new Error("Post not found")
+    }
+    if(post.likes.includes(userId)){
+      throw new AppError("Already liked",400)
+    }
+    await this.postRepository.addLike(postId,userId)
+  }
+
+  async dislikePost(postId: string, userId: string): Promise<void> {
+    const post = await this.postRepository.findById(postId);
+    if (!post) throw new AppError('Post not found', 404);
+    if (!post.likes.includes(userId)) throw new AppError('Not liked yet', 400);
+    await this.postRepository.removeLike(postId,userId)
+  }
+
+  async commentOnPost(postId: string, userId: string, content: string): Promise<string> {
+    if (!content.trim()) throw new AppError('Content cannot be empty', 400);
+    const post = await this.postRepository.findById(postId)
+    if(!post){
+      throw new AppError("Post not found",400)
+    }
+    const comment :IComment = {userId,content,postId}
+    return await this.postRepository.addComment(postId,comment)
+  }
+  
+  async getPostComments(postId: string): Promise<IComment[]> {
+    return await this.postRepository.getComments(postId)
   }
 }
