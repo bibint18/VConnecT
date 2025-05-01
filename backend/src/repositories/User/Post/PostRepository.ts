@@ -8,7 +8,7 @@ export class PostRepository implements IPostRepository{
   async create(post: IPost): Promise<string> {
     
     const postData = {
-      ...post,userId:new mongoose.Types.ObjectId(post.userId)
+      ...post,userId:new mongoose.Types.ObjectId(post.userId._id)
     }
     const newPost = new Post(post)
     await newPost.save()
@@ -23,7 +23,11 @@ export class PostRepository implements IPostRepository{
     }
     return {
       _id: postDoc._id.toString(),
-      userId: postDoc.userId.toString(),
+      userId: {
+        _id: postDoc.userId._id.toString(),
+        username: (postDoc.userId as any).username,
+        profileImage: (postDoc.userId as any).profileImage,
+      },
       content: postDoc.content,
       mediaUrl: postDoc.mediaUrl,
       mediaType: postDoc.mediaType,
@@ -40,7 +44,11 @@ export class PostRepository implements IPostRepository{
     const postDocs = await Post.find({userId:new mongoose.Types.ObjectId(userId),isDeleted:false}).sort({timeStamp:-1}).exec()
     return postDocs.map(postDoc => ({
       _id: postDoc._id.toString(),
-      userId: postDoc.userId.toString(),
+      userId: {
+        _id: postDoc.userId._id.toString(),
+        username: (postDoc.userId as any).username,
+        profileImage: (postDoc.userId as any).profileImage,
+      },
       content: postDoc.content,
       mediaUrl: postDoc.mediaUrl,
       mediaType: postDoc.mediaType,
@@ -83,7 +91,11 @@ export class PostRepository implements IPostRepository{
     console.log('Raw Post Docs with Population:', postDocs);
     const posts = postDocs.map(postDoc => ({
       _id:postDoc._id.toString(),
-      userId: postDoc.userId._id.toString(),
+      userId: {
+        _id: postDoc.userId._id.toString(),
+        username: (postDoc.userId as any).username,
+        profileImage: (postDoc.userId as any).profileImage,
+      },
       content: postDoc.content,
       mediaUrl: postDoc.mediaUrl,
       mediaType: postDoc.mediaType,

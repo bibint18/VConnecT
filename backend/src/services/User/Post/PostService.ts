@@ -19,9 +19,18 @@ export class PostService implements IPostService {
     if (!content && !mediaUrl) {
       throw new AppError('Content or media required', 400);
     }
+    const user = await this.postRepository.findUserById(userId);
+    if (!user) {
+      throw new AppError('User not found', 404);
+    }
 
     const post: IPost = {
-      userId,
+      // userId,
+      userId: {
+        _id: user._id,
+        username: user.username,
+        profileImage: user.profileImage,
+      },
       content,
       mediaUrl,
       mediaType: mediaUrl ? mediaType : 'text',
@@ -42,9 +51,9 @@ export class PostService implements IPostService {
       throw new AppError('Post not found', 404);
     }
 
-    if (post.userId !== userId && !isAdmin) {
-      throw new AppError('Unauthorized', 403);
-    }
+    // if (post.userId !== userId && !isAdmin) {
+    //   throw new AppError('Unauthorized', 403);
+    // }
 
     if (post.mediaUrl && post.mediaType !== 'text') {
       const publicId = post.mediaUrl.split('/').pop()?.split('.')[0] || '';

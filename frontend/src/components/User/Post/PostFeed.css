@@ -1,23 +1,23 @@
-
+/* 
 .feed-container {
-  background-color: #000;
-  padding: 20px;
   max-width: 600px;
   margin: 0 auto;
+  padding: 20px;
 }
 
 .post-card {
-  background-color: #111;
-  border: 1px solid #1e90ff;
-  border-radius: 10px;
+  background-color: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 8px;
   margin-bottom: 20px;
-  overflow: hidden;
+  padding: 15px;
+  color: #fff;
 }
 
 .post-header {
   display: flex;
   align-items: center;
-  padding: 10px;
+  margin-bottom: 10px;
 }
 
 .profile-pic {
@@ -28,43 +28,163 @@
 }
 
 .username {
-  font-size: 16px;
+  font-weight: bold;
+}
+
+.post-image {
+  width: 100%;
+  max-height: 400px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.post-caption {
+  margin: 10px 0;
+  font-size: 14px;
+  color: #ccc;
+}
+
+.post-actions button {
+  padding: 5px 10px;
+  margin-right: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.comments-section {
+  margin-top: 10px;
+}
+
+.comments-list {
+  margin-bottom: 10px;
+}
+
+.comment {
+  display: flex;
+  margin-bottom: 5px;
+}
+
+.comment-username {
+  font-weight: bold;
+  margin-right: 5px;
+  color: #1e90ff;
+}
+
+.comment-content {
+  color: #ccc;
+}
+
+.comment-input input {
+  width: 70%;
+  padding: 5px;
+  margin-right: 10px;
+}
+
+.comment-input button {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.loading, .end-message, .error {
+  text-align: center;
+  color: #ccc;
+} */
+
+
+.feed-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #000;
+}
+
+.post-card {
+  background-color: #1a1a1a;
+  border: 1px solid #dbdbdb;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  padding: 15px;
+  color: #fff;
+}
+
+.post-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.profile-pic {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.username {
   font-weight: bold;
   color: #1e90ff;
 }
 
 .post-image {
   width: 100%;
-  border-radius: 0 0 10px 10px;
+  max-height: 400px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 10px;
 }
 
-.post-text {
-  padding: 10px;
-  color: #fff;
-}
-
-.post-actions {
-  padding: 10px;
-  display: flex;
-  gap: 10px;
+.post-caption {
+  margin: 10px 0;
+  font-size: 14px;
+  color: #e8e8e8; /* Matches Instagram caption color in dark mode */
 }
 
 .post-actions button {
   padding: 5px 10px;
+  margin-right: 10px;
   border: none;
-  border-radius: 5px;
+  border-radius: 4px;
   cursor: pointer;
+  background-color: #333;
+  color: #fff;
+  display: flex;
+  align-items: center;
+}
+
+.post-actions button svg {
+  margin-right: 5px;
 }
 
 .comments-section {
+  margin-top: 10px;
+  background-color: #262626;
+  border-top: 1px solid #dbdbdb;
   padding: 10px;
-  background-color: #222;
-  border-top: 1px solid #1e90ff;
-  transition: max-height 0.3s ease;
 }
 
 .comments-list {
   margin-bottom: 10px;
+  max-height: 200px; /* Increased for Instagram-like scrollable area */
+  overflow-y: auto;
+}
+
+.comment {
+  display: flex;
+  margin-bottom: 5px;
+}
+
+.comment-username {
+  font-weight: bold;
+  margin-right: 5px;
+  color: #fff;
+}
+
+.comment-content {
+  color: #e8e8e8;
 }
 
 .comment-input {
@@ -74,25 +194,43 @@
 
 .comment-input input {
   flex-grow: 1;
-  padding: 5px;
-  border-radius: 5px;
+  padding: 8px;
+  background-color: #333;
+  color: #fff;
+  border: 1px solid #dbdbdb;
+  border-radius: 4px;
 }
 
 .comment-input button {
-  padding: 5px 10px;
+  padding: 8px 16px;
   border: none;
-  border-radius: 5px;
+  border-radius: 4px;
   cursor: pointer;
+  background-color: #1e90ff;
+  color: #fff;
 }
 
-.loading, .end-message {
-  text-align: center;
-  color: #1e90ff;
-  padding: 10px;
-}
-
+.loading,
+.end-message,
 .error {
   text-align: center;
-  color: #ff4444;
-  margin-bottom: 20px;
+  color: #1e90ff;
+}
+
+/* Custom scrollbar for comments */
+.comments-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.comments-list::-webkit-scrollbar-track {
+  background-color: #262626;
+}
+
+.comments-list::-webkit-scrollbar-thumb {
+  background-color: #555;
+  border-radius: 3px;
+}
+
+.comments-list::-webkit-scrollbar-thumb:hover {
+  background-color: #777;
 }

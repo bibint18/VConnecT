@@ -1,8 +1,14 @@
 import { IUser } from "../../../models/User";
 
+export interface IPostIUser {
+  _id: string;
+  username: string | undefined;
+  profileImage?: string;
+}
+
 export interface IPost {
   _id?:string;
-  userId: string;
+  userId: IPostIUser;
   content?: string;
   mediaUrl?: string;
   mediaType?: 'text' | 'image' | 'video';
