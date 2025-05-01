@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { ChevronRight, ChevronLeft } from "lucide-react";
 import { fetchRewards,deleteReward } from "@/services/AdminRewardService";
+import { useDebounce } from "@/hooks/useDebounce";
 export interface IReward {
   _id: string;
   rewardId: string;
@@ -21,6 +22,7 @@ export interface IReward {
 const AdminRewardsList: React.FC = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
+  const debouncedSearchTerm = useDebounce(searchTerm,1000);
   const [page, setPage] = useState(1);
   const limit = 4;
   const [data, setData] = useState<{ rewards: IReward[]; total: number }>({ rewards: [], total: 0 });
@@ -30,7 +32,7 @@ const AdminRewardsList: React.FC = () => {
   const loadRewards = async () => {
     try {
       setIsPending(true);
-      const fetchedData = await fetchRewards(page, limit, searchTerm);
+      const fetchedData = await fetchRewards(page, limit, debouncedSearchTerm);
       setData(fetchedData);
     } catch (error: unknown) {
       if (error instanceof Error) {
@@ -47,7 +49,7 @@ const AdminRewardsList: React.FC = () => {
 
   useEffect(() => {
     loadRewards();
-  }, [page, searchTerm]);
+  }, [page, debouncedSearchTerm]);
 
   const handleDelete = (rewardId: string) => {
     Swal.fire({
