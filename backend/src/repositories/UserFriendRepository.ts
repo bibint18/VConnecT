@@ -10,23 +10,18 @@ export class UserFriendRespository implements IUserFriendRepository{
       if(!user){
         throw new AppError("User not found",404)
       }
-      // const friendList = user.friends.map((friend:any) => ({
-      //   id:friend._id.toString(),
-      //   name:friend.name,
-      //   avatar:friend.profileImage || "https://via.placeholder.com/150",
-      //   lastMessage:'Hey how are you',
-      //   timestamp: new Date().toISOString().slice(0,10),
-      //   isOnline:false,
-      // }))
-      // return friendList
+      
       const friendList = await Promise.all(
         user.friends.map(async (friend:any) => {
           const lastMessage = await Message.findOne({
             $or:[
-              {senderId:user._id,recieverId:friend._id},
-              {senderId:friend._id,recieverId:user._id}
-            ],   // have a doubt in this coma
+              {senderId:user._id,receiverId:friend._id},
+              {senderId:friend._id,receiverId:user._id}
+            ]
           }).sort({timestamp:-1})
+          console.log("getUser repo lastmessafe",lastMessage)
+          console.log("getUser repo friendId",friend._id)
+          console.log("getUser repo UserId",user._id)
           return{
             id:friend._id.toString(),
             name:friend.name,
@@ -37,6 +32,7 @@ export class UserFriendRespository implements IUserFriendRepository{
           }
         })
       )
+      console.log("getUser repo friendList",friendList)
       return friendList
     } catch (error) {
       throw error instanceof AppError ? error : new AppError("Failed to fetch friends", 500);

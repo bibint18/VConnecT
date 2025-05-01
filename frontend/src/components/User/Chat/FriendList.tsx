@@ -44,6 +44,7 @@ const FriendsList: React.FC<FriendsListProps> = ({ activeChat, onSelectFriend })
       try {
         const friendList = await chatService.fetchFriends();
         setFriends(friendList);
+        console.log("friendList fetched",friendList)
         if (friendList.length > 0 && !activeChat) {
           onSelectFriend(friendList[0].id);
         }
@@ -52,7 +53,6 @@ const FriendsList: React.FC<FriendsListProps> = ({ activeChat, onSelectFriend })
         toast.error((error as Error).message || "Failed to load friends list");
       } finally {
         setLoading(false);
-        // chatService.disconnect();
       }
     };
 
@@ -104,6 +104,8 @@ const FriendsList: React.FC<FriendsListProps> = ({ activeChat, onSelectFriend })
               }`}
               onClick={() => onSelectFriend(friend.id)}
             >
+              
+              
               <div className="relative">
                 <img
                   src={friend.avatar}
@@ -117,7 +119,7 @@ const FriendsList: React.FC<FriendsListProps> = ({ activeChat, onSelectFriend })
               <div className="ml-3 flex-1">
                 <div className="flex justify-between items-center">
                   <h3 className="font-medium">{friend.name}</h3>
-                  <span className="text-xs text-gray-500">{new Date(friend.timestamp).toLocaleTimeString()}</span>
+                  <span className="text-xs text-gray-500">{friend.timestamp}</span>
                 </div>
                 <p className="text-sm text-gray-500 truncate">{friend.lastMessage}</p>
               </div>
