@@ -15,13 +15,16 @@ export class UserRewardService implements IUserRewardService {
     const user = await this.userRepository.findById(userId);
     if (!user) throw new Error("User not found");
     const { rewards } = await this.rewardRepository.findAllRewards(1, 100, "");
-    return rewards.map((reward) => ({
+
+    const data = rewards.map((reward) => ({
       ...reward, // .lean() ensures plain object
       isUnlocked: (reward.requiredPoints && user.point >= reward.requiredPoints) ||
                   (reward.requiredStreak && user.streak >= reward.requiredStreak) ||
                   false,
       isClaimed: user.claimedRewards.some((cr) => cr.rewardId === reward.rewardId),
     }));
+    console.log("list rewards",data)
+    return data
   }
 
   async claimReward(userId: string, rewardId: string): Promise<void> {
@@ -39,6 +42,10 @@ export class UserRewardService implements IUserRewardService {
       await this.userRepository.updateRoomLimit(userId, reward.value);
     } else if (reward.type === "bonus_points") {
       await this.userRepository.updatePoints(userId, reward.value);
+    }
+    if(reward.requiredPoints){
+      console.log("logged decrement")
+      await this.userRepository.updatePoints(userId,-reward.requiredPoints)
     }
     await this.userRepository.addClaimedReward(userId, rewardId);
   }

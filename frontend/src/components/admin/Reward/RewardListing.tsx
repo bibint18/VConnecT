@@ -106,8 +106,8 @@ const AdminRewardsList: React.FC = () => {
               </button>
             </div>
 
-            <div className="table-container">
-              <table className="w-full">
+            <div className="table-container !text-dark">
+              <table className="w-full !text-black">
                 <thead>
                   <tr className="table-header">
                     <th className="rounded-tl-lg px-4 py-3 text-left text-sm">S. No</th>

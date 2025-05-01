@@ -107,7 +107,7 @@ const AddReward: React.FC = () => {
       </h1>
       <form
         onSubmit={handleSubmit}
-        className="max-w-lg bg-white p-6 rounded-lg shadow-lg"
+        className="max-w-lg bg-white p-6 rounded-lg shadow-lg !text-black"
       >
         {/* Title */}
         <div className="mb-4">
