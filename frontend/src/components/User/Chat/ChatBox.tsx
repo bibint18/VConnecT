@@ -10,6 +10,7 @@ import axiosInstance from "@/utils/axiosInterceptor";
 import { io,Socket } from "socket.io-client";
 import {v4 as uuidv4} from "uuid"
 import { useNavigate } from "react-router-dom";
+import {Check,CheckCheck} from "lucide-react"
 interface CloudinaryChatUploadResult {
   secure_url: string;
   resource_type: "image" | "video";
@@ -530,18 +531,39 @@ socketRef.current.on("directCall:ended", ({ callId }) => {
                   <>
                     {msg.content}
                     <span className="block text-xs opacity-75">{new Date(msg.timestamp).toLocaleTimeString()}</span>
+                    {msg.senderId.toString() === userId && (
+                      msg.isRead ? (
+                        <CheckCheck className="w-4 h-4 text-black-500" />
+                      ) : (
+                        <Check className="w-4 h-4 text-gray-400" />
+                      )
+                    )}
                   </>
                 )}
                 {msg.mediaType === "image" && msg.mediaUrl && (
                   <div>
                     <img src={msg.mediaUrl} alt="Chat image" className="max-w-full rounded-lg" />
                     <span className="block text-xs opacity-75">{new Date(msg.timestamp).toLocaleTimeString()}</span>
+                    {msg.senderId.toString() === userId && (
+                      msg.isRead ? (
+                        <CheckCheck className="w-4 h-4 text-blue-500" />
+                      ) : (
+                        <Check className="w-4 h-4 text-gray-400" />
+                      )
+                    )}
                   </div>
                 )}
                 {msg.mediaType === "video" && msg.mediaUrl && (
                   <div>
                     <video src={msg.mediaUrl} controls className="max-w-full rounded-lg" />
                     <span className="block text-xs opacity-75">{new Date(msg.timestamp).toLocaleTimeString()}</span>
+                    {msg.senderId.toString() === userId && (
+                      msg.isRead ? (
+                        <CheckCheck className="w-4 h-4 text-dark-500" />
+                      ) : (
+                        <Check className="w-4 h-4 text-gray-400" />
+                      )
+                    )}
                   </div>
                 )}
               </div>
