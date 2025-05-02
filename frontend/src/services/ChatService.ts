@@ -175,6 +175,17 @@ export class ChatService {
     }
   }
 
+  public async markMessageAsRead(userId:string,friendId:string):Promise<void>{
+    try {
+      await axiosInstance.post('/chat/mark-read',{userId,friendId})
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        throw new Error(error.response?.data.message || "Failed to mark messages as read");
+      }
+      throw new Error("Failed to mark messages as read");
+    }
+  }
+
   public disconnect() {
     this.socket.disconnect();
   }

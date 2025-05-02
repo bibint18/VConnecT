@@ -77,7 +77,7 @@ const chatService = new ChatService(chatRepository,chatIo,callRepository)
 const chatController = new ChatController(chatService)
 router.post('/chat/send',authenticateToken,chatController.sendMessage.bind(chatController))
 router.get('/chat/history',authenticateToken,chatController.getChatHistory.bind(chatController))
-
+router.post('/chat/mark-read',authenticateToken,chatController.markMessageAsRead.bind(chatController))
 // reward
 const rewardRepository = new UserRewardRepository()
 const userRepository = new UserRepository()

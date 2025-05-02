@@ -13,4 +13,6 @@ export interface IChatService{
   acceptFriendCall(callId: string, userId: string,socket:Socket): Promise<void>;
   rejectFriendCall(callId: string, userId: string): Promise<void>;
   endFriendCall(callId: string, userId: string): Promise<void>;
+  getUnreadMessageCount(userId: string, friendId: string): Promise<number>;
+  markMessagesAsRead(userId: string, friendId: string): Promise<void>;
 }

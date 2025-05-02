@@ -28,6 +28,18 @@ export class ChatService implements IChatService{
     this.chatIo.to(recieverId).emit("receive-message",message);
     this.chatIo.to(senderId).emit("receive-message",message)
     console.log("passed to sender and reciever")
+    const lastMessage = await this.chatRepository.getLastMessage(senderId,recieverId);
+    console.log("service last Message",lastMessage)
+    const unreadCountSender = await this.chatRepository.getUnreadMessageCount(senderId,recieverId)
+    console.log("service unread sender count",unreadCountSender)
+    const unreadCountReceiver = await this.chatRepository.getUnreadMessageCount(recieverId,senderId)
+    console.log("service unread receiever count",unreadCountReceiver)
+    this.chatIo.to(senderId).emit('update-last-message',{
+      friendId:recieverId,lastMessage,unreadCount:unreadCountSender
+    })
+    this.chatIo.to(recieverId).emit('update-last-message',{
+      friendId:senderId,lastMessage,unreadCount:unreadCountReceiver
+    })
   }
 
   async getChatHistory(senderId: string, recieverId: string): Promise<IMessage[]> {
@@ -35,7 +47,15 @@ export class ChatService implements IChatService{
   }
 
   async getLastMessage(senderId: string, recieverId: string): Promise<IMessage | null> {
-    return this.chatRepository.getLastMessage(senderId,recieverId)
+    const lastMessage = await this.chatRepository.getLastMessage(senderId,recieverId)
+    console.log("get Lastmessafe",lastMessage)
+    return lastMessage
+  }
+
+  async getUnreadMessageCount(userId:string,friendId:string):Promise<number>{
+    const count =await this.chatRepository.getUnreadMessageCount(userId,friendId)
+    console.log("geyUnread count",count)
+    return count
   }
 
   handleSocketEvents(socket: Socket): void {
@@ -208,5 +228,9 @@ export class ChatService implements IChatService{
       this.chatIo.to(callId).emit("friend-call-ended", { callId });
       console.log(`Call ended: ${callId} by ${userId}`);
     }
+  }
+
+  async markMessagesAsRead(userId:string,friendId:string):Promise<void>{
+    await this.chatRepository.markMessageAsRead(userId,friendId)
   }
 }

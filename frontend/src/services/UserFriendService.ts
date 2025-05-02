@@ -8,6 +8,8 @@ export interface IFriend{
   lastMessage:string;
   timestamp:string;
   isOnline:boolean;
+  unreadCount:number;
+  fullTimestamp:Date;
 }
 
 export const fetchUserFriends = async ():Promise<IFriend[]> => {

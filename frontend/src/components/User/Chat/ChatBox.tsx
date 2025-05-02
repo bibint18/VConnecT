@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState, useEffect, useRef } from "react";
 import { ChatService } from "@/services/ChatService";
 import { FriendCallManager } from "@/services/FriendCallManager";
@@ -267,6 +266,15 @@ socketRef.current.on("directCall:ended", ({ callId }) => {
 
         const history = await chatServiceRef.current.fetchChatHistory(friendId);
         console.log("Chat history:", history);
+
+        //changed now
+        await chatServiceRef.current.markMessageAsRead(userId,friendId)
+        const socket = chatServiceRef.current['socket']
+        const lastMessage = history.length > 0 ? history[history.length -1] : null
+        const unreadCount = 0;
+        socket.emit('update-last-message',{
+          friendId,lastMessage,unreadCount
+        })
 
         setFriend(friendData);
         setMessages(

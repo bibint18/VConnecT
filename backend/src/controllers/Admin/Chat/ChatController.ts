@@ -2,7 +2,7 @@ import { Request,Response,NextFunction } from "express";
 import { IChatController } from "../../../interfaces/user/Chat/IChatController";
 import { IChatService } from "../../../interfaces/user/Chat/IChatService";
 import { AppError } from "../../../utils/AppError";
-
+import { chatIo } from "../../../app";
 export class ChatController implements IChatController{
   private chatService:IChatService;
   constructor(chatService:IChatService){
@@ -40,6 +40,24 @@ export class ChatController implements IChatController{
       const history = await this.chatService.getChatHistory(senderId,receiverId as string)
       // console.log("data from controller history",history)
       res.status(200).json  ({success:true,data:history})
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  async markMessageAsRead(req:Request,res:Response,next:NextFunction):Promise<void>{
+    try {
+      const {userId,friendId} = req.body;
+      await this.chatService.markMessagesAsRead(userId,friendId)
+      const lastMessage = await this.chatService.getLastMessage
+      (userId,friendId)
+      console.log("controller lastmnessage update",lastMessage)
+      const unreadCount = await this.chatService.getUnreadMessageCount(userId,friendId)
+      console.log("controller unreadCOunt update",unreadCount)
+      chatIo.to(userId).emit('update-last-message',{
+        friendId,lastMessage,unreadCount
+      })
+      res.status(200).json({success:true,message:"Mark messages as read"})
     } catch (error) {
       next(error)
     }

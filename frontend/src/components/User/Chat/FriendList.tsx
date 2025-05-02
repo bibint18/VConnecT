@@ -1,5 +1,4 @@
 
-// frontend/src/components/FriendsList.tsx
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -14,6 +13,8 @@ export interface IFriend {
   lastMessage: string;
   timestamp: string;
   isOnline: boolean;
+  unreadCount:number;
+  fullTimestamp: Date;
 }
 
 interface FriendsListProps {
@@ -25,7 +26,6 @@ const FriendsList: React.FC<FriendsListProps> = ({ activeChat, onSelectFriend })
   const [searchQuery, setSearchQuery] = useState("");
   const [friends, setFriends] = useState<IFriend[]>([]);
   const [loading, setLoading] = useState(true);
-  // const userId ='demo'
   const {userId} = useAppSelector((state) => state.user)
   
   useEffect(() => {
@@ -40,10 +40,45 @@ const FriendsList: React.FC<FriendsListProps> = ({ activeChat, onSelectFriend })
       console.log("Message recieved in friendList",message)
     })
 
+    const socket  = chatService['socket'];
+    socket.on('update-last-message', ({ friendId, lastMessage, unreadCount }) => {
+      console.log('update event data', friendId, lastMessage, unreadCount);
+      setFriends((prevFriends) => {
+        const updatedFriends = prevFriends.map((friend) =>
+          friend.id === friendId
+            ? {
+                ...friend,
+                lastMessage: lastMessage?.content || "NO MESSAGES YET",
+                timestamp: lastMessage?.timestamp
+                  ? new Date(lastMessage.timestamp).toLocaleString('en-US', {
+                      month: '2-digit',
+                      day: '2-digit',
+                      year: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit',
+                      hour12: true,
+                    })
+                  : friend.timestamp,
+                // CHANGE: Update fullTimestamp for sorting
+                fullTimestamp: lastMessage?.timestamp || friend.fullTimestamp,
+                unreadCount: unreadCount || 0,
+              }
+            : friend
+        );
+        return updatedFriends.sort((a, b) => new Date(b.fullTimestamp).getTime() - new Date(a.fullTimestamp).getTime());
+      });
+    });
+    // socket.on('update-last-message',({friendId,lastMessage,unreadCount}) => {
+    //   console.log('update event data',friendId,lastMessage,unreadCount)
+    //   setFriends((prevFriends) => prevFriends.map((friend) => friend.id ===friendId ? {...friend,lastMessage:lastMessage?.content || "NO MESSEGES YET",timestamp:lastMessage?.timestamp || friend.fullTimestamp,unreadCount:unreadCount || 0,} : friend))
+    // })
+
     const loadFriends = async () => {
       try {
         const friendList = await chatService.fetchFriends();
-        setFriends(friendList);
+        const sortedFriendList = friendList.sort((a,b) => new Date(b.fullTimestamp).getTime() - new Date(a.fullTimestamp).getTime())
+        // setFriends(friendList);
+        setFriends(sortedFriendList)
         console.log("friendList fetched",friendList)
         if (friendList.length > 0 && !activeChat) {
           onSelectFriend(friendList[0].id);
@@ -57,11 +92,15 @@ const FriendsList: React.FC<FriendsListProps> = ({ activeChat, onSelectFriend })
     };
 
     loadFriends();
+    //cleanup added now
+    return () => {
+      socket.off("update-last-message")
+    }
   }, [activeChat, onSelectFriend,userId]);
 
   const filteredFriends = friends.filter((friend) =>
-    friend.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+    friend.name.toLowerCase().includes(searchQuery.toLowerCase()))
+  .sort((a, b) => new Date(b.fullTimestamp).getTime() - new Date(a.fullTimestamp).getTime());
 
   return (
     <div className="flex flex-col h-full bg-white rounded-lg shadow-lg overflow-hidden">
@@ -120,6 +159,12 @@ const FriendsList: React.FC<FriendsListProps> = ({ activeChat, onSelectFriend })
                 <div className="flex justify-between items-center">
                   <h3 className="font-medium">{friend.name}</h3>
                   <span className="text-xs text-gray-500">{friend.timestamp}</span>
+                  {/* CHANGE: Display unread message count */}
+                  {friend.unreadCount > 0 && (
+                      <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-full">
+                        {friend.unreadCount}
+                      </span>
+                    )}
                 </div>
                 <p className="text-sm text-gray-500 truncate">{friend.lastMessage}</p>
               </div>
