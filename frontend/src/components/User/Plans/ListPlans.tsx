@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { PlanService, IPlan } from "@/services/PlanService";
+import { PlanService, IPlan, IUserPlan } from "@/services/PlanService";
 import toast from "react-hot-toast";
 import { useAppSelector } from "@/redux/store";
 import { useNavigate } from "react-router-dom";
@@ -8,9 +8,11 @@ import "./ListPlans.css";
 
 const PricingPlans = () => {
   const [plans, setPlans] = useState<IPlan[]>([]);
+  const [userPlan,setUserPlan] = useState<IUserPlan | null>(null)
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [paymentLoading, setPaymentLoading] = useState(false);
+  const [userPlanLoading,setUserPlanLoading] = useState(true)
   const planService = new PlanService();
   const userId = useAppSelector((state) => state.user.userId);
   const navigate = useNavigate();
@@ -28,8 +30,26 @@ const PricingPlans = () => {
       }
     };
 
+    const fetchUserPlan = async () => {
+      if (!userId) {
+        setUserPlanLoading(false);
+        return;
+      }
+      try {
+        const fetchedUserPlan = await planService.getUserPlan();
+        setUserPlan(fetchedUserPlan);
+        setUserPlanLoading(false);
+      } catch (error: unknown) {
+        toast.error(
+          error instanceof Error ? error.message : "Failed to fetch user plan"
+        );
+        setUserPlanLoading(false);
+      }
+    };
+
     fetchPlans();
-  }, []);
+    fetchUserPlan();
+  }, [userId]);
 
   const handleSelectPlan = async (planId: string) => {
     if (!userId) {
@@ -54,10 +74,10 @@ const PricingPlans = () => {
     }
   };
 
-  if (loading) {
+  if (loading || userPlanLoading) {
     return (
       <div className="flex justify-center items-center min-h-[calc(100vh-4rem)] bg-black text-white ml-20 md:ml-64 pt-16">
-        Loading plans...
+        Loading...
       </div>
     );
   }
@@ -80,6 +100,50 @@ const PricingPlans = () => {
       >
         Choose Your Plan
       </motion.h1>
+
+
+
+      {userPlan && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="relative rounded-3xl overflow-hidden border border-gray-800 shadow-lg bg-gray-900 w-full max-w-2xl mb-12"
+        >
+          <div className="relative p-6 sm:p-8 flex flex-col">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-200 mb-2">
+              Your Current Plan: {userPlan.planName}
+            </h2>
+            <p className="text-sm text-gray-400 mb-4">
+              Status: <span className={`capitalize ${userPlan.status === "active" ? "text-green-400" : "text-red-400"}`}>{userPlan.status}</span>
+            </p>
+            <div className="my-4 sm:my-6">
+              <p className="text-sm text-gray-400">
+                Purchased On: {new Date(userPlan.startDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+              </p>
+              <p className="text-sm text-gray-400">
+                Expires On: {
+                  userPlan.endDate
+                    ? new Date(userPlan.endDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+                    : "N/A"
+                }
+              </p>
+              <p className="text-sm text-gray-400">
+                Transaction ID: {userPlan.transactionId || "N/A"}
+              </p>
+              <p className="text-sm text-gray-400">
+                Room Benefit: {userPlan.roomBenefit} rooms
+              </p>
+            </div>
+            <button
+              onClick={() => navigate("/plans")}
+              className="w-full py-2 sm:py-3 rounded-full bg-gradient-to-r from-pink-400 to-purple-400 text-white font-semibold hover:brightness-110 transition-all duration-300 mt-4"
+            >
+              Change Plan
+            </button>
+          </div>
+        </motion.div>
+      )}
 
       <AnimatePresence>
         <div className="w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 justify-center">

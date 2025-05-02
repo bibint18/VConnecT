@@ -21,4 +21,22 @@ export class UserPlanController implements IUserPlanController{
       next(error)
     }
   }
+
+  async getUserPlan(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      console.log("reached userPlan getting")
+      const userId = req.user?.id as string;
+      if (!userId) {
+        throw new Error("User not authenticated");
+      }
+      const userPlan = await this.planService.getUserPlan(userId);
+      res.status(200).json({
+        success: true,
+        data: userPlan,
+        message: "User plan fetched successfully",
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
 }

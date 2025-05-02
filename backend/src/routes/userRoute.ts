@@ -93,6 +93,7 @@ const plansRepository = new UserPlanRepository()
 const plansService = new UserPlanService(plansRepository,userRepository)
 const plansController = new UserPlanController(plansService)
 router.get('/plans',authenticateToken,plansController.getPlans.bind(plansController))
+router.get('/user-plan',authenticateToken,plansController.getUserPlan.bind(plansController))
 
 
 //payment

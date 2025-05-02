@@ -66,4 +66,24 @@ export class UserPlanService implements UserIPlanService{
       throw new Error(`Service error ${error}`);
     }
   }
+
+  async getUserPlan(userId: string): Promise<{ planId: string; planName: string; status: string; startDate: Date; endDate?: Date; transactionId?: string; roomBenefit: number; } | null> {
+    const user = await this.userRepository.findById(userId);
+    if(!user){
+      throw new Error("User not found")
+    }
+    const activePlan = user.plan.filter((p) => p.status ==='active').sort((a,b) => new Date(b.startDate).getTime() - new Date(a.startDate).getTime())[0]
+    if(!activePlan){
+      return null
+    }
+    return {
+      planId: activePlan.planId.toString(),
+      planName: activePlan.planName,
+      status: activePlan.status,
+      startDate: activePlan.startDate,
+      endDate: activePlan.endDate, 
+      transactionId: activePlan.transactionId, 
+      roomBenefit: user.availableRoomLimit || 0, 
+    };
+  }
 }

@@ -16,6 +16,16 @@ export interface IPlan{
   isPopular: boolean;
 }
 
+export interface IUserPlan {
+  planId: string;
+  planName: string;
+  status: string;
+  startDate: Date;
+  endDate?: Date; 
+  transactionId?: string; 
+  roomBenefit: number;
+}
+
 export class PlanService{
   async getPlans():Promise<IPlan[]>{
     try {
@@ -38,6 +48,19 @@ export class PlanService{
          }
          throw new Error("Failed to fetch plans")
        }
+  }
+
+  async getUserPlan(): Promise<IUserPlan | null> {
+    try {
+      const response = await axiosInstance.get('/user-plan');
+      console.log('user plan from plan service response ', response);
+      return response.data.data || null;
+    } catch (error: unknown) {
+      if (error instanceof AxiosError && error.message) {
+        throw new Error(error.response?.data.message);
+      }
+      throw new Error("Failed to fetch user plan");
+    }
   }
 
   async createPayment(userId:string,planId:string,amount:number):Promise<{approvalUrl:string; paymentId:string}>{
