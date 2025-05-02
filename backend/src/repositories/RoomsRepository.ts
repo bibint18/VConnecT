@@ -40,11 +40,27 @@ export class RoomRepository implements IRoomRepository{
     return savedRoom
   }
 
-  async getAllRooms(userId:string): Promise<{ rooms: IRoom[], user: IUser | null }> {
+  async getAllRooms(userId: string,
+    page: number = 1,
+    limit: number = 10,
+    search?: string,
+    type?: "PUBLIC" | "PRIVATE"): Promise<{ rooms: IRoom[], user: IUser | null ; total:number }> {
     const user = await User.findById(userId)
-    const rooms = await Room.find().exec()
+    const query:any = {};
+    if(search){
+      query.$or = [{title:{$regex:search,$options:'i'}},{description:{$regex:search,$options:'i'}}]
+    }
+    if(type){
+      query.type =type;
+    }
+    query.isDeleted = false;
+    query.isBlocked = false;
+    const skip = (page -1) * limit;
+
+    const rooms = await Room.find(query).skip(skip).limit(limit).exec()
     console.log("rooms from service ",rooms)
-    return {rooms,user}
+    const total = await Room.countDocuments(query)
+    return {rooms,user,total}
   }
 
   async joinRoom(RoomId: string, userId: string, secretCode: string): Promise<IRoom | null> {

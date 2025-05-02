@@ -19,11 +19,14 @@ interface Room {
 
 const ListRoom: React.FC = () => {
   const [secretCode, setSecretCode] = useState('');
-  // const [currentPage, setCurrentPage] = useState(1);
-  const [modalSecretCode, setModalSecretCode] = useState(''); // Secret code for modal
+  const [currentPage, setCurrentPage] = useState(1);
+  const [modalSecretCode, setModalSecretCode] = useState(''); 
   const [showModal, setShowModal] = useState(false); // Modal visibility
   const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null);
-  // const [filter, setFilter] = useState('');
+  const [filter, setFilter] = useState<"" | "PUBLIC" | "PRIVATE">('');
+  const [search,setSearch] = useState('')
+  const [totalRooms,setTotalRooms] = useState(0)
+  const roomsPerPage = 10;
   const navigate = useNavigate();
   const [rooms, setRooms] = useState<Room[]>([]);
   const [loading, setLoading] = useState(true);
@@ -33,9 +36,10 @@ const ListRoom: React.FC = () => {
   useEffect(() => {
     const fetchRooms = async () => {
       try {
-        const data = await getAllRooms();
+        const data = await getAllRooms(currentPage, roomsPerPage, search, filter);
         setRooms(data.rooms);
         setUser(data.user)
+        setTotalRooms(data.total)
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load rooms');
       } finally {
@@ -43,7 +47,7 @@ const ListRoom: React.FC = () => {
       }
     };
     fetchRooms();
-  }, []);
+  }, [search,filter,currentPage]);
 
 console.log("user details",user)
   const handleJoinRoom = async (roomId: string, roomType: string) => {
@@ -91,9 +95,9 @@ console.log("user details",user)
     setSecretCode('');
   };
 
-  // const handlePageChange = (page: number) => {
-  //   setCurrentPage(page);
-  // };
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
 
   // Animation Variants
   const cardVariants = {
@@ -123,7 +127,7 @@ console.log("user details",user)
   // Loading and error states
   if (loading) return <div className="text-center mt-10">Loading rooms...</div>;
   if (error) return <div className="text-red-500 text-center mt-10">{error}</div>;
-
+  const totalPages = Math.ceil(totalRooms/roomsPerPage);
   return (
     <div className="list-room-container">
       <div className="list-room-inner">
@@ -250,23 +254,35 @@ console.log("user details",user)
         >
           <div className="available-rooms-header">
             <h2>Available Rooms</h2>
-            {/* <div className="filter-select-wrapper">
-              <select
-                className="filter-select"
-                value={filter}
-                onChange={(e) => setFilter(e.target.value)}
-              >
-                <option value="">Filter</option>
-                <option value="popular">Popular</option>
-                <option value="new">New</option>
-                <option value="featured">Featured</option>
-              </select>
+            <input
+                type="text"
+                value={search}
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                  setCurrentPage(1); // Reset to first page on search
+                }}
+                placeholder="Search by title or description..."
+                className="search-input !text-black  p-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 !max-w-66"
+              />
+            <div className="filter-select-wrapper">
+            <select
+                  className="filter-select p-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                  value={filter}
+                  onChange={(e) => {
+                    setFilter(e.target.value as "" | "PUBLIC" | "PRIVATE");
+                    setCurrentPage(1); // Reset to first page on filter change
+                  }}
+                >
+                  <option value="" className='!text-black'>All Types</option>
+                  <option value="PUBLIC" className='!text-black'>Public</option>
+                  <option value="PRIVATE" className='!text-black'>Private</option>
+                </select>
               <div className="filter-select-arrow">
                 <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20">
                   <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
                 </svg>
               </div>
-            </div> */}
+            </div>
           </div>
 
           {/* Room Grid */}
@@ -335,6 +351,33 @@ console.log("user details",user)
           </div>
         </motion.div>
 
+        {totalPages > 1 && (
+            <div className="pagination mt-6 flex justify-center items-center gap-2">
+              <motion.button
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+                className={`px-4 py-2 rounded-md ${currentPage === 1 ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-indigo-600 text-white hover:bg-indigo-700'}`}
+                variants={buttonVariants}
+                whileHover={currentPage !== 1 ? "hover" : undefined}
+                whileTap={currentPage !== 1 ? "tap" : undefined}
+              >
+                Previous
+              </motion.button>
+              <span className="px-4 py-2">
+                Page {currentPage} of {totalPages}
+              </span>
+              <motion.button
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+                className={`px-4 py-2 rounded-md ${currentPage === totalPages ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-indigo-600 text-white hover:bg-indigo-700'}`}
+                variants={buttonVariants}
+                whileHover={currentPage !== totalPages ? "hover" : undefined}
+                whileTap={currentPage !== totalPages ? "tap" : undefined}
+              >
+                Next
+              </motion.button>
+            </div>
+          )}
         
 
 {showModal && (

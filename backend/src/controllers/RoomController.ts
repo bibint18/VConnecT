@@ -41,8 +41,14 @@ export class RoomController {
   async getAllRooms(req:Request,res:Response,next:NextFunction){
     try {
       const userId = req.user?.id as string
-      const {rooms,user} = await this.roomService.getAllRooms(userId)
-      res.status(200).json({rooms,user})
+      const { search, type, page = "1", limit = "10" } = req.query;
+      console.log("getRooms",search,type)
+      const {rooms,user,total} = await this.roomService.getAllRooms(userId,
+        parseInt(page as string, 10),
+        parseInt(limit as string, 10),
+        search as string,
+        type as "PUBLIC" | "PRIVATE")
+      res.status(200).json({rooms,user,total})
     } catch (error) {
       next(error)
     }

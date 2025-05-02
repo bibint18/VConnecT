@@ -98,7 +98,7 @@ const PricingPlans = () => {
         transition={{ duration: 0.5 }}
         className="text-3xl sm:text-4xl font-bold mb-12 text-center"
       >
-        Choose Your Plan
+        Your Current Plan
       </motion.h1>
 
 
@@ -144,6 +144,15 @@ const PricingPlans = () => {
           </div>
         </motion.div>
       )}
+
+<motion.h1
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="text-3xl sm:text-4xl font-bold mb-12 text-center"
+      >
+        Choose Your New Plan
+      </motion.h1>
 
       <AnimatePresence>
         <div className="w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 justify-center">

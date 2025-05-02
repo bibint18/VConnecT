@@ -16,8 +16,12 @@ export class RoomService {
     return updatedRoom
   }
 
-  async getAllRooms(userId:string):Promise<{ rooms: IRoom[], user: IUser | null }>{
-    const result = await this.roomRepository.getAllRooms(userId)
+  async getAllRooms(userId: string,
+    page: number = 1,
+    limit: number = 10,
+    search?: string,
+    type?: "PUBLIC" | "PRIVATE"):Promise<{ rooms: IRoom[], user: IUser | null, total: number }>{
+    const result = await this.roomRepository.getAllRooms(userId, page, limit, search, type)
     return result
   }
 
