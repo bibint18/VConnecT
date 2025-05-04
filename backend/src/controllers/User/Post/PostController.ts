@@ -154,4 +154,15 @@ export class PostController implements IPostController {
       next(error)
     }
   }
+
+  async getPostById(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      console.log("Reached getPostById");
+      const { postId } = req.params;
+      const post = await this.postService.getPostById(postId);
+      res.status(200).json(post);
+    } catch (error) {
+      next(error);
+    }
+  }
 }

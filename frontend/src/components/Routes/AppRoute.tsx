@@ -49,6 +49,7 @@ import CreatePost from "../User/Post/CreatePost";
 // import MyPosts from "../User/Post/MyPost";
 import PostFeed from "../User/Post/PostFeed";
 import MyPostPage from "../User/Post/MyPostPage";
+import PostView from "../User/Post/PostView";
 
 function AppRoute() {
   return (
@@ -78,6 +79,7 @@ function AppRoute() {
       <Route path="/createPost" element={<CreatePost />} />
       <Route path="/myPost" element={<MyPostPage />} />
       <Route path="/feed" element={<PostFeed />} />
+      <Route path="/post/:postId" element={<PostView />} />
 
   </Route>
 

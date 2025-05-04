@@ -8,7 +8,7 @@ import { useAppSelector } from "@/redux/store";
 import { Paperclip } from "react-feather";
 import axiosInstance from "@/utils/axiosInterceptor";
 import { io,Socket } from "socket.io-client";
-import {v4 as uuidv4} from "uuid"
+// import {v4 as uuidv4} from "uuid"
 import { useNavigate } from "react-router-dom";
 import {Check,CheckCheck} from "lucide-react"
 interface CloudinaryChatUploadResult {
@@ -99,6 +99,34 @@ const ChatBox: React.FC<ChatBoxProps> = ({ friendId }) => {
       if (message.senderId === userId || message.receiverId === userId) {
         if (message.senderId === friendId || message.receiverId === friendId) {
           setMessages((prev) => {
+            const isDuplicate = prev.some((msg) => {
+              const timeDiff = Math.abs(
+                new Date(msg.timestamp).getTime() - new Date(message.timestamp).getTime()
+              );
+              return (
+                msg.senderId === message.senderId &&
+                msg.receiverId === message.receiverId &&
+                msg.content === message.content &&
+                timeDiff < 1000 
+              );
+            });
+
+            if (isDuplicate) {
+              return prev.map((msg) => {
+                const timeDiff = Math.abs(
+                  new Date(msg.timestamp).getTime() - new Date(message.timestamp).getTime()
+                );
+                if (
+                  msg.senderId === message.senderId &&
+                  msg.receiverId === message.receiverId &&
+                  msg.content === message.content &&
+                  timeDiff < 1000
+                ) {
+                  return message; 
+                }
+                return msg;
+              });
+            }
             const updatedMessages = [...prev, message];
             return updatedMessages.sort(
               (a, b) =>
@@ -308,7 +336,7 @@ socketRef.current.on("directCall:ended", ({ callId }) => {
       socket.off("friend-call-incoming");
       socket.off("friend-call-error");
     };
-  }, [userId,friendId,]);
+  }, [userId,friendId,callState,navigate]);
 
   useEffect(() => {
     const socket = chatServiceRef.current?.["socket"];
@@ -473,21 +501,21 @@ socketRef.current.on("directCall:ended", ({ callId }) => {
   };
 
   // --- New: Handle call button click ---
-  const handleCallButton = () => {
-    if (!socketRef.current || !isConnected) {
-      console.log("Call button clicked but socket not connected");
-      toast.error("Not connected to server");
-      return;
-    }
-    const callId = uuidv4();
-    console.log("Initiating call:", { callId, callerId: userId, receiverId: friendId });
-    socketRef.current.emit("directCall:initiate", {
-      callerId: userId,
-      receiverId: friendId,
-      callId,
-    });
-    navigate(`/call/${callId}`);
-  };
+  // const handleCallButton = () => {
+  //   if (!socketRef.current || !isConnected) {
+  //     console.log("Call button clicked but socket not connected");
+  //     toast.error("Not connected to server");
+  //     return;
+  //   }
+  //   const callId = uuidv4();
+  //   console.log("Initiating call:", { callId, callerId: userId, receiverId: friendId });
+  //   socketRef.current.emit("directCall:initiate", {
+  //     callerId: userId,
+  //     receiverId: friendId,
+  //     callId,
+  //   });
+  //   navigate(`/call/${callId}`);
+  // };
 
 
   // --- New: Toggle audio/video ---
@@ -509,13 +537,13 @@ socketRef.current.on("directCall:ended", ({ callId }) => {
               <h3 className="font-medium">{friend?.name || "Loading..."}</h3>
             </div>
           </div>
-          <button
+          {/* <button
             onClick={handleCallButton}
             disabled={!isConnected}
             className={`px-3 py-1 rounded-lg text-white bg-green-500 hover:bg-green-600 ${!isConnected && "opacity-50 cursor-not-allowed"}`}
           >
             {isConnected ? "Call" : "Connecting..."}
-          </button>
+          </button> */}
         </div>
   
         <div className="flex-1 p-4 overflow-y-auto">
@@ -618,12 +646,12 @@ socketRef.current.on("directCall:ended", ({ callId }) => {
                     </>
                   )}
                 </button>
-                <button
+                {/* <button
                   onClick={handleCallButton}
                   className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 flex items-center"
                 >
                   <span className="mr-2">📞</span> End Call
-                </button>
+                </button> */}
               </div>
             </div>
           </div>

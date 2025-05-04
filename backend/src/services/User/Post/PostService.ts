@@ -117,4 +117,12 @@ export class PostService implements IPostService {
   async getPostComments(postId: string): Promise<IComment[]> {
     return await this.postRepository.getComments(postId)
   }
+
+  async getPostById(postId: string): Promise<IPost> {
+    const post = await this.postRepository.findById(postId);
+    if (!post) {
+      throw new AppError('Post not found', 404);
+    }
+    return post;
+  }
 }

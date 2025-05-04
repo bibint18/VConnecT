@@ -1,58 +1,36 @@
-
 import { useEffect, useState } from 'react';
-import { 
-  useInfiniteQuery, 
-  useMutation, 
-  useQueryClient,
-} from '@tanstack/react-query';
+import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 import { CommunityService, IPost } from '@/services/CommunityService';
-import toast from 'react-hot-toast';
-interface FeedResponse {
-  posts: IPost[];
-  total: number;
-}
+import { toast } from 'react-hot-toast';
 
 interface CommentInput {
   postId: string;
   content: string;
 }
 
-export const usePostFeed = () => {
+export const usePostView = (postId: string) => {
   const [error, setError] = useState<string | null>(null);
   const queryClient = useQueryClient();
   const communityService = new CommunityService();
 
-  // Infinite query for fetching the feed
-  const {
-    data,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    isError,
-    error: queryError,
-  } = useInfiniteQuery<FeedResponse, Error>({
-    queryKey: ['feed'],
-    queryFn: ({ pageParam = 1 }) => communityService.getFeed(pageParam as number, 10),
-    getNextPageParam: (lastPage, allPages) => {
-      const totalPostsFetched = allPages.reduce((acc, page) => acc + page.posts.length, 0);
-      console.log('Debug:', { lastPage, totalPostsFetched });
-      return lastPage.total > totalPostsFetched ? Math.floor(totalPostsFetched / 10) + 1 : undefined;
-    },
-    initialPageParam: 1, 
+  
+  const { data: post, isLoading, isError, error: queryError } = useQuery<IPost, Error>({
+    queryKey: ['post', postId],
+    queryFn: () => communityService.getPostById(postId),
   });
 
   useEffect(() => {
     if (queryError) {
-      setError(queryError.message || 'Failed to load feed');
+      setError(queryError.message || 'Failed to load post');
       console.error('Query error:', queryError);
     }
   }, [queryError]);
 
-  // Mutation for liking a post
+
   const likeMutation = useMutation({
     mutationFn: (postId: string) => communityService.likePost(postId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['feed'] });
+      queryClient.invalidateQueries({ queryKey: ['post', postId] });
     },
     onError: (err: Error) => {
       setError(err.message || 'Failed to like post');
@@ -60,11 +38,10 @@ export const usePostFeed = () => {
     },
   });
 
-  // Mutation for disliking a post
   const dislikeMutation = useMutation({
     mutationFn: (postId: string) => communityService.dislikePost(postId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['feed'] });
+      queryClient.invalidateQueries({ queryKey: ['post', postId] });
     },
     onError: (err: Error) => {
       setError(err.message || 'Failed to dislike post');
@@ -72,12 +49,11 @@ export const usePostFeed = () => {
     },
   });
 
-  // Mutation for commenting on a post
   const commentMutation = useMutation({
-    mutationFn: ({ postId, content }: CommentInput) => 
+    mutationFn: ({ postId, content }: CommentInput) =>
       communityService.commentOnPost(postId, content),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['feed'] });
+      queryClient.invalidateQueries({ queryKey: ['post', postId] });
     },
     onError: (err: Error) => {
       setError(err.message || 'Failed to add comment');
@@ -85,7 +61,7 @@ export const usePostFeed = () => {
     },
   });
 
-  //share 
+
   const handleShare = async (postId: string) => {
     try {
       const shareUrl = await communityService.getPostShareUrl(postId);
@@ -95,12 +71,10 @@ export const usePostFeed = () => {
         url: shareUrl,
       };
 
-      // Check if Web Share API is supported
       if (navigator.share) {
         await navigator.share(shareData);
         toast.success('Post shared successfully!');
       } else {
-        // Fallback to copying the URL to clipboard
         await navigator.clipboard.writeText(shareUrl);
         toast.success('Link copied to clipboard!');
       }
@@ -120,19 +94,15 @@ export const usePostFeed = () => {
     }
   };
 
-  const allPosts = data?.pages.flatMap((page: FeedResponse) => page.posts) || [];
-
   return {
-    allPosts,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
+    post,
+    isLoading,
     isError,
     error,
     setError,
     handleLike,
     handleDislike,
     handleComment,
-    handleShare
+    handleShare,
   };
 };

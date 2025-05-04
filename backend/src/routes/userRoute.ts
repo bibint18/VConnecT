@@ -128,5 +128,6 @@ router.post('/posts/:postId/like',authenticateToken,postController.likePost.bind
 router.post('/posts/:postId/dislike',authenticateToken,postController.dislikePost.bind(postController))
 router.post('/posts/:postId/comments',authenticateToken,[body('content').notEmpty().isString().trim().isLength({ max: 1000 })],postController.commentOnPost.bind(postController))
 router.get('/posts/:postId/comments',authenticateToken,postController.getPostComments.bind(postController))
+router.get("/posts/:postId",authenticateToken,postController.getPostById.bind(postController))
 return router
 }

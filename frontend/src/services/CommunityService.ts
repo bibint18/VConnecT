@@ -106,4 +106,16 @@ export class CommunityService {
     const response = await axiosInstance.get(`/posts/${postId}/comments`)
     return response.data
   }
+
+  async getPostShareUrl(postId: string): Promise<string> {
+    // In a real app, you might fetch this from your backend
+    // For now, construct the URL client-side
+    const baseUrl = window.location.origin; // e.g., "https://yourapp.com"
+    return `${baseUrl}/post/${postId}`;
+  }
+
+  async getPostById(postId: string): Promise<IPost> {
+    const response = await axiosInstance.get(`/posts/${postId}`);
+    return response.data;
+  }
 }

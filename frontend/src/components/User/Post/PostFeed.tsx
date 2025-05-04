@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { usePostFeed } from '@/hooks/usePostFeed';
 import { CommunityService, IComment } from '@/services/CommunityService';
-import { Heart, HeartCrack, MessageSquare, ChevronDown, ChevronUp, Send } from 'lucide-react';
+import { Heart, HeartCrack, MessageSquare, ChevronDown, ChevronUp, Send, Share2 } from 'lucide-react';
 import { useAppSelector } from '@/redux/store';
 import { motion, AnimatePresence } from 'framer-motion';
 import { formatDistanceToNow } from 'date-fns';
+import { Toaster } from 'react-hot-toast';
 
 const PostFeed: React.FC = () => {
   const [showComments, setShowComments] = useState<string[]>([]);
@@ -22,6 +23,7 @@ const PostFeed: React.FC = () => {
     handleLike,
     handleDislike,
     handleComment,
+    handleShare, // Add handleShare from the hook
   } = usePostFeed();
   console.log('allPosts in PostFeed:', allPosts);
 
@@ -82,7 +84,20 @@ const PostFeed: React.FC = () => {
 
   return (
     <div className="!p-4 !bg-black">
-      {/* Animated "COMMUNITY" Text */}
+      <Toaster
+        position="top-center"
+        toastOptions={{
+          style: {
+            background: '#333',
+            color: '#fff',
+            borderRadius: '8px',
+            padding: '8px 16px',
+            fontSize: '14px',
+          },
+        }}
+      />
+
+      
       <motion.div
         className="!max-w-md !mx-auto !mb-6 !text-center"
         variants={containerVariants}
@@ -99,7 +114,7 @@ const PostFeed: React.FC = () => {
               {letter}
             </motion.span>
           ))}
-          {/* Gradient Underline */}
+         
           <span className="!absolute !bottom-0 !left-0 !w-full !h-1 !bg-gradient-to-r !from-blue-500 !to-gray-500 !rounded-full" />
         </h1>
       </motion.div>
@@ -117,7 +132,7 @@ const PostFeed: React.FC = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
             >
-              {/* Post Header */}
+              
               <div className="!flex !items-center !p-3 !border-b !border-gray-200">
                 <img
                   src={post.userId.profileImage || 'https://via.placeholder.com/40'}
@@ -134,7 +149,7 @@ const PostFeed: React.FC = () => {
                 </div>
               </div>
 
-              {/* Post Content */}
+             
               <div className="!flex !flex-col">
                 {post.mediaUrl && (
                   <div className="!w-full !aspect-square">
@@ -151,11 +166,11 @@ const PostFeed: React.FC = () => {
                   </p>
                 </div>
 
-                {/* Actions */}
+                
                 <div className="!p-3 !border-t !border-gray-200 !flex !flex-col !gap-2">
                   <div className="!flex !gap-4 !text-sm !text-gray-600">
                     <motion.button
-                    className='!bg-white'
+                      className='!bg-white'
                       onClick={() => handleLike(post._id!)}
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.9 }}
@@ -170,7 +185,7 @@ const PostFeed: React.FC = () => {
                       />
                     </motion.button>
                     <motion.button
-                    className='!bg-white'
+                      className='!bg-white'
                       onClick={() => handleDislike(post._id!)}
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.9 }}
@@ -185,12 +200,23 @@ const PostFeed: React.FC = () => {
                       />
                     </motion.button>
                     <motion.button
-                    className='!bg-white'
+                      className='!bg-white'
                       onClick={() => toggleComments(post._id!)}
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.9 }}
                     >
                       <MessageSquare
+                        size={20}
+                        className="!text-gray-600 !hover:text-gray-500"
+                      />
+                    </motion.button>
+                    <motion.button
+                      className='!bg-white'
+                      onClick={() => handleShare(post._id!)}
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
+                    >
+                      <Share2
                         size={20}
                         className="!text-gray-600 !hover:text-gray-500"
                       />
@@ -231,7 +257,7 @@ const PostFeed: React.FC = () => {
                             placeholder="Add a comment..."
                           />
                           <motion.button
-                          className='!bg-white'
+                            className='!bg-white'
                             onClick={() => handleCommentSubmit(post._id!)}
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.9 }}
@@ -243,7 +269,7 @@ const PostFeed: React.FC = () => {
                           </motion.button>
                         </div>
 
-                        {/* Comment List */}
+                        
                         {comments[post._id!] && comments[post._id!].length > 0 ? (
                           comments[post._id!].map((comment, index) => (
                             <div key={index} className="!flex !gap-2 !text-xs">
@@ -262,9 +288,8 @@ const PostFeed: React.FC = () => {
                     )}
                   </AnimatePresence>
 
-                  {/* Toggle Comments Button */}
+                 
                   <motion.button
-                  
                     className="!flex !items-center !justify-center !gap-1 !text-xs !text-gray-500 !mt-1 !bg-white"
                     onClick={() => toggleComments(post._id!)}
                     whileHover={{ scale: 1.05 }}

@@ -12,4 +12,5 @@ export interface IPostController{
   dislikePost(req: Request, res: Response, next: NextFunction): Promise<void>;
   commentOnPost(req: Request, res: Response, next: NextFunction): Promise<void>;
   getPostComments(req: Request, res: Response, next: NextFunction): Promise<void>;
+  getPostById(req: Request, res: Response, next: NextFunction): Promise<void>
 }

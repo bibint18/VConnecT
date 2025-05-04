@@ -12,4 +12,5 @@ export interface IPostService {
   dislikePost(postId: string, userId: string): Promise<void>;
   commentOnPost(postId: string, userId: string, content: string): Promise<string>;
   getPostComments(postId: string): Promise<IComment[]>;
+  getPostById(postId: string): Promise<IPost>
 }
