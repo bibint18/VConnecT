@@ -56,7 +56,7 @@ export default function SubscriptionPlans() {
   if (isError) return <div className="text-center py-12 text-red-500">Failed to load plans.</div>;
   return (
     <div className="subscription-plans flex-1">
-      <div className="container">
+      {/* <div className="container"> */}
         <div className="mb-6 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
           {/* Search Bar */}
           <div className="search-container">
@@ -175,7 +175,7 @@ export default function SubscriptionPlans() {
             <p className="text-gray-500 text-lg">No plans found. Try adjusting your search or add a new plan.</p>
           </div>
         )}
-      </div>
+      {/* </div> */}
 
       <div className="pagination">
               <button disabled={page === 1} onClick={() => setPage((prev) => prev - 1)} className="page-button">

@@ -22,8 +22,6 @@ import { CalendarIcon } from "lucide-react";
 import {
   LineChart,
   Line,
-  // BarChart,
-  // Bar,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -142,7 +140,7 @@ const AdminDashboardd: React.FC = () => {
   if (!data) return <div className="text-red-500 text-center mt-10">Failed to load data</div>;
 
   return (
-    <div className="container mx-auto p-6">
+    <div className="container !bg-pink-50 mx-auto p-6 !text-black">
       <h1 className="text-3xl font-bold mb-6">Admin Dashboard</h1>
 
       {/* Date Range Filter */}

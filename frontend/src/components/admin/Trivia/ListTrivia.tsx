@@ -51,7 +51,7 @@ export default function ListTrivia() {
 
   return (
     <div className="trivia-list flex-1">
-      <div className="container">
+      {/* <div className="container"> */}
         <div className="mb-6 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
           {/* Search Bar */}
           <div className="search-container">
@@ -158,7 +158,7 @@ export default function ListTrivia() {
             <ChevronRight className="h-4 w-4" />
           </button>
         </div>
-      </div>
+      {/* </div> */}
     </div>
   );
 }

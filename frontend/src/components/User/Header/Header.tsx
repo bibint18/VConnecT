@@ -27,6 +27,7 @@ const Header: React.FC = () => {
         <a href="/friends" className="hover:text-purple-500">Friends</a>
         <a href="/profile" className="hover:text-purple-500">Profile</a>
         <a href="/dailyTrivia" className="hover:text-purple-500">Daily Trivia</a>
+        <a href="/feed" className="hover:text-purple-500">Community</a>
       </nav>
 
       <div className="flex items-center space-x-4">

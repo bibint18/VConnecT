@@ -55,10 +55,10 @@ export class PostService implements IPostService {
     //   throw new AppError('Unauthorized', 403);
     // }
 
-    if (post.mediaUrl && post.mediaType !== 'text') {
-      const publicId = post.mediaUrl.split('/').pop()?.split('.')[0] || '';
-      await this.cloudinaryService.deleteMedia(publicId, post.mediaType as 'image' | 'video');
-    }
+    // if (post.mediaUrl && post.mediaType !== 'text') {
+    //   const publicId = post.mediaUrl.split('/').pop()?.split('.')[0] || '';
+    //   await this.cloudinaryService.deleteMedia(publicId, post.mediaType as 'image' | 'video');
+    // }
 
     await this.postRepository.delete(postId);
   }

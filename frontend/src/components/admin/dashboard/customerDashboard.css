@@ -148,6 +148,19 @@ body {
   color: white;
 }
 
+.sort-item select {
+  background: transparent;
+  border: none;
+  font-size: 1rem;
+  color: #333;
+  padding: 0.5rem 0;
+  cursor: pointer;
+}
+
+.sort-item select:focus {
+  outline: none;
+}
+
 /* Table */
 .table-container {
   background: white;

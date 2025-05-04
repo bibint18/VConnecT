@@ -21,8 +21,8 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { name: 'Profile', icon: Home, isActive: true,path:'/profile' },
-  { name: 'Stats', icon: BarChart2,path:'/rewards' },
-  { name: 'Posts', icon: FileText,path:'/posts' },
+  { name: 'Reward', icon: BarChart2,path:'/rewards' },
+  { name: 'Posts', icon: FileText,path:'/myPost' },
   { name: 'Rooms', icon: MessageSquare,path:'/rooms' },
   { name: 'Friends', icon: Users ,path:'/friends/request'},
   { name: 'Premium', icon: Star ,path:'/user/plans'},

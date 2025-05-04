@@ -13,7 +13,14 @@ export interface IUser{
   isAdmin:boolean
   failedLoginAttempts: number;
   lockUntil: Date | null;
-  plan:string;
+  plan?: {
+    planId: string;
+    planName: string;
+    status: "active" | "expired" | "cancelled";
+    startDate: Date;
+    endDate?: Date;
+    transactionId?: string;
+  }[];
   isDeleted:boolean;
   isBlocked:boolean;
   point?:number;
@@ -112,11 +119,20 @@ const totalPages = Math.ceil(totalUsers/limit)
     });
   };
 
+  const getActivePlanName = (plans: IUser['plan']) => {
+    
+    if(plans){
+     const activePlan = plans.find(plan => plan.status === "active");
+    return activePlan ? activePlan.planName : "No Active Plan";
+    }
+    
+  };
+
   if(isLoading) return <p>Loading users...</p>
   if(isError) return <p>Error fetching users..</p>
   return (
     <div className="customer-dashboard flex-1">
-      <div className="container">
+      {/* <div className="container"> */}
         <div className="grid-layout">
           <div>
             <div className="mb-6 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
@@ -142,11 +158,12 @@ const totalPages = Math.ceil(totalUsers/limit)
                   value={sortOption}
                   onChange={(e) => setSortOption(e.target.value)}
                   >
-                    <ChevronDown className="h-4 w-4" />
                     <option className="text-black" value="A-Z">A-Z</option>
     <option className="text-black " value="Z-A">Z-A</option>
     <option className="text-black " value="recent">Recently Joined</option>
                   </select>
+                  {/* <ChevronDown className="h-4 w-4" /> */}
+
                 </div>
 
                 {/* <div className="sort-item">
@@ -185,7 +202,7 @@ const totalPages = Math.ceil(totalUsers/limit)
                       </td>
                       <td className="px-4 py-3">{user.name}</td>
                       <td className="px-4 py-3">{user.email}</td>
-                      <td className="px-4 py-3">{user.plan}</td>
+                      <td className="px-4 py-3">{getActivePlanName(user.plan)}</td>
                       
 
                         <td className="px-4 py-3">
@@ -254,7 +271,7 @@ const totalPages = Math.ceil(totalUsers/limit)
             </div>
           </div> */}
         </div>
-      </div>
+      {/* </div> */}
     </div>
   )
 }

@@ -115,7 +115,7 @@ const totalPages = Math.ceil(totalRooms/limit)
   if(isError) return <p>Error fetching Rooms..</p>
   return (
     <div className="customer-dashboard flex-1">
-      <div className="container">
+      {/* <div className="container"> */}
         <div className="grid-layout">
           <div>
             <div className="mb-6 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
@@ -254,7 +254,7 @@ const totalPages = Math.ceil(totalRooms/limit)
             </div>
           </div> */}
         </div>
-      </div>
+      {/* </div> */}
     </div>
   )
 }

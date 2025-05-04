@@ -86,7 +86,7 @@ const AdminRewardsList: React.FC = () => {
 
   return (
     <div className="customer-dashboard flex-1">
-      <div className="container">
+      {/* <div className="container"> */}
         <div className="grid-layout">
           <div>
             <div className="mb-6 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
@@ -181,7 +181,7 @@ const AdminRewardsList: React.FC = () => {
             </div>
           </div>
         </div>
-      </div>
+      {/* </div> */}
     </div>
   );
 };

@@ -91,7 +91,7 @@ const PricingPlans = () => {
   }
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] bg-black text-white px-4 sm:px-6 py-12 flex flex-col items-center ml-20 md:ml-64 pt-16">
+    <div className="min-h-[calc(100vh-4rem)] bg-black text-white px-4 sm:px-6 py-12 flex flex-col items-center   pt-16">
       <motion.h1
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -135,12 +135,12 @@ const PricingPlans = () => {
                 Room Benefit: {userPlan.roomBenefit} rooms
               </p>
             </div>
-            <button
+            {/* <button
               onClick={() => navigate("/plans")}
               className="w-full py-2 sm:py-3 rounded-full bg-gradient-to-r from-pink-400 to-purple-400 text-white font-semibold hover:brightness-110 transition-all duration-300 mt-4"
             >
               Change Plan
-            </button>
+            </button> */}
           </div>
         </motion.div>
       )}

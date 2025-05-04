@@ -101,14 +101,16 @@ const AddReward: React.FC = () => {
   };
 
   return (
-  <div className="container mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-6">
-        {rewardId ? "Edit Reward" : "Add New Reward"}
-      </h1>
+  <div className="container !bg-white mx-auto p-6">
+      
       <form
         onSubmit={handleSubmit}
         className="max-w-lg bg-white p-6 rounded-lg shadow-lg !text-black"
       >
+
+<h1 className="text-3xl font-bold mb-6">
+        {rewardId ? "Edit Reward" : "Add New Reward"}
+      </h1>
         {/* Title */}
         <div className="mb-4">
           <label className="block text-sm font-medium mb-1">Title</label>

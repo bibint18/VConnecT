@@ -33,7 +33,7 @@ import logo from '../../../assets/logovct1.png'
 const Header: React.FC = () => {
   return (
     <header className="w-full bg-white shadow-md fixed top-0 left-0 right-0 z-50">
-      <div className="container mx-auto px-6 py-4 flex justify-between items-center">
+      <div className=" mx-auto px-6 py-4 flex justify-between items-center">
         {/* Left Side: Logo */}
         <div className="flex items-center">
           <img

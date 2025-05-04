@@ -46,8 +46,9 @@ import DirectCallPage from "../User/Chat/DirectCallPage";
 // import AdminDashboardd from "../admin/Dashboardd/AdminDashboard";
 import DashboardPageAdmin from "@/pages/DashboardPage";
 import CreatePost from "../User/Post/CreatePost";
-import MyPosts from "../User/Post/MyPost";
+// import MyPosts from "../User/Post/MyPost";
 import PostFeed from "../User/Post/PostFeed";
+import MyPostPage from "../User/Post/MyPostPage";
 
 function AppRoute() {
   return (
@@ -75,7 +76,7 @@ function AppRoute() {
       <Route path="/pricing/success" element={<PricingSuccess />} />
       <Route path="/call/:callId" element={<DirectCallPage />} />
       <Route path="/createPost" element={<CreatePost />} />
-      <Route path="/myPost" element={<MyPosts />} />
+      <Route path="/myPost" element={<MyPostPage />} />
       <Route path="/feed" element={<PostFeed />} />
 
   </Route>

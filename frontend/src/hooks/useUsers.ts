@@ -10,7 +10,14 @@ interface User{
   isAdmin:boolean
   failedLoginAttempts: number;
   lockUntil: Date | null;
-  plan:string;
+  plan?: {
+    planId: string;
+    planName: string;
+    status: "active" | "expired" | "cancelled";
+    startDate: Date;
+    endDate?: Date;
+    transactionId?: string;
+  }[];
   isDeleted:boolean;
   isBlocked:boolean
 }

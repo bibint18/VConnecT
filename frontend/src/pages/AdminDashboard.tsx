@@ -8,8 +8,11 @@ export default function AdminDashboardd() {
       <Header />
       <div className="flex flex-1 pt-16 bg-white">
         <Sidebar />
+        <h1 className='mt-[228px] ml-[403px] !text-2xl'>Welcome to the Admin Dashboard</h1>
       </div>
+     
     </div>
+     
   );
 }
 
