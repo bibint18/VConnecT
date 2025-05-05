@@ -43,10 +43,10 @@ const AddRoom: React.FC = () => {
       const newRoom = response.room;
       console.log('Room created:', newRoom);
       if (newRoom.type === 'PRIVATE' && newRoom.secretCode) {
-        setSecretCode(newRoom.secretCode); // Set secret code for private rooms
-        setShowModal(true); // Show modal
+        setSecretCode(newRoom.secretCode);
+        setShowModal(true); 
       } else {
-        navigate('/rooms'); // Navigate back for public rooms
+        navigate('/rooms'); 
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to create room');
@@ -174,7 +174,6 @@ const AddRoom: React.FC = () => {
         </form>
       </motion.div>
 
-      {/* Secret Code Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <motion.div

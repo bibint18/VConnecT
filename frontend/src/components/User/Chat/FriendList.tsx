@@ -92,7 +92,6 @@ const FriendsList: React.FC<FriendsListProps> = ({ activeChat, onSelectFriend })
     };
 
     loadFriends();
-    //cleanup added now
     return () => {
       socket.off("update-last-message")
     }
@@ -159,7 +158,6 @@ const FriendsList: React.FC<FriendsListProps> = ({ activeChat, onSelectFriend })
                 <div className="flex justify-between items-center">
                   <h3 className="font-medium">{friend.name}</h3>
                   <span className="text-xs text-gray-500">{friend.timestamp}</span>
-                  {/* CHANGE: Display unread message count */}
                   {friend.unreadCount > 0 && (
                       <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-full">
                         {friend.unreadCount}

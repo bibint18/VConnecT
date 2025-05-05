@@ -1,4 +1,4 @@
-// frontend/src/components/ChatDashboard.tsx
+
 "use client";
 
 import React, { useEffect, useState } from "react";

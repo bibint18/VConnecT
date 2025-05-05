@@ -59,7 +59,7 @@ export class DashboardRepository implements IDashboardRepository{
       { $project: { _id: 0, planName: 1, count: 1, discountAmount: 1 } },
     ]);
 
-    // Total Income
+   
     const totalIncomeResult = await User.aggregate([
       { $match: { isDeleted: false } },
       { $unwind: "$plan" },
@@ -87,7 +87,6 @@ export class DashboardRepository implements IDashboardRepository{
     ]);
     const totalIncome = totalIncomeResult[0]?.totalIncome || 0;
 
-    // Income Over Time
     const incomeOverTime = await User.aggregate([
       { $match: { isDeleted: false } },
       { $unwind: "$plan" },
@@ -125,10 +124,8 @@ export class DashboardRepository implements IDashboardRepository{
       },
     ]);
 
-    // Total Rooms
     const totalRooms = await Room.countDocuments({ isDeleted: false });
 
-    // Public and Private Rooms
     const roomTypes = await Room.aggregate([
       { $match: { isDeleted: false } },
       {
@@ -146,7 +143,6 @@ export class DashboardRepository implements IDashboardRepository{
       },
     ]);
 
-    // User Creation Over Time
     const userCreationOverTime = await User.aggregate([
       { $match: { isDeleted: false } },
       ...(startDate && endDate

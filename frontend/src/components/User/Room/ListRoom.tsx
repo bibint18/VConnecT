@@ -6,7 +6,7 @@ import { getAllRooms, joinRoom } from '@/services/roomService';
 import './ListRoom.css';
 import toast from 'react-hot-toast';
 import { IUser } from '@/components/admin/dashboard/CustomerDashboard';
-// Interface matching backend IRoom
+
 interface Room {
   _id: string;
   title: string;
@@ -91,7 +91,6 @@ console.log("user details",user)
 
   const handleJoinWithCode = () => {
     console.log(`Joining with code: ${secretCode}`);
-    // Implement your join with code logic here
     setSecretCode('');
   };
 
@@ -99,7 +98,6 @@ console.log("user details",user)
     setCurrentPage(page);
   };
 
-  // Animation Variants
   const cardVariants = {
     hidden: { opacity: 0, y: 30 },
     visible: (i: number) => ({
@@ -124,21 +122,21 @@ console.log("user details",user)
     visible: { opacity: 1, scale: 1, transition: { duration: 0.3 } },
   };
 
-  // Loading and error states
+
   if (loading) return <div className="text-center mt-10">Loading rooms...</div>;
   if (error) return <div className="text-red-500 text-center mt-10">{error}</div>;
   const totalPages = Math.ceil(totalRooms/roomsPerPage);
   return (
     <div className="list-room-container">
       <div className="list-room-inner">
-        {/* Top section with create room and join by code */}
+       
         <motion.div
           className="top-section"
           variants={sectionVariants}
           initial="hidden"
           animate="visible"
         >
-          {/* Featured Room Card (unchanged) */}
+         
           <motion.div
             className="featured-room-card"
             variants={cardVariants}
@@ -204,7 +202,6 @@ console.log("user details",user)
             </div>
           </motion.div>
 
-          {/* Create Room and Join by Code */}
           <motion.div
             className="create-join-section"
             variants={sectionVariants}
@@ -245,7 +242,7 @@ console.log("user details",user)
           </motion.div>
         </motion.div>
 
-        {/* Available Rooms Section */}
+     
         <motion.div
           className="available-rooms-section"
           variants={sectionVariants}
@@ -259,7 +256,7 @@ console.log("user details",user)
                 value={search}
                 onChange={(e) => {
                   setSearch(e.target.value);
-                  setCurrentPage(1); // Reset to first page on search
+                  setCurrentPage(1); 
                 }}
                 placeholder="Search by title or description..."
                 className="search-input !text-black  p-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 !max-w-66"
@@ -270,7 +267,7 @@ console.log("user details",user)
                   value={filter}
                   onChange={(e) => {
                     setFilter(e.target.value as "" | "PUBLIC" | "PRIVATE");
-                    setCurrentPage(1); // Reset to first page on filter change
+                    setCurrentPage(1); 
                   }}
                 >
                   <option value="" className='!text-black'>All Types</option>
@@ -285,7 +282,6 @@ console.log("user details",user)
             </div>
           </div>
 
-          {/* Room Grid */}
           <div className="room-grid">
             {rooms.map((room, index) => (
               <motion.div
@@ -340,9 +336,8 @@ console.log("user details",user)
                   </motion.button>
                   <div className="flex items-center">
                     <span className="user-count ">{room.limit}</span>
-                    {/* No users field from backend */}
+                  
                     <div className="avatars">
-                      {/* Placeholder for future users */}
                     </div>
                   </div>
                 </div>

@@ -16,7 +16,6 @@ export class PostRepository implements IPostRepository{
   }
 
   async findById(postId: string): Promise<IPost | null> {
-    // return Post.findOne({_id:postId,isDeleted:false}).exec()
     const postDoc = await Post.findOne({ _id: postId, isDeleted: false }).populate('userId','username profileImage').exec();
     if (!postDoc) {
       return null;

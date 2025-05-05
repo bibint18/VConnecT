@@ -169,7 +169,6 @@ const PricingPlans = () => {
               } hover:scale-105 transition-transform duration-300`}
             >
               <div className="relative p-6 sm:p-8 flex flex-col h-full">
-                {/* Plan name and description */}
                 <div className="mb-4">
                   <h2 className="text-xl sm:text-2xl font-bold text-gray-200">
                     {plan.name}
@@ -177,7 +176,6 @@ const PricingPlans = () => {
                   <p className="text-sm text-gray-400">{plan.description}</p>
                 </div>
 
-                {/* Price */}
                 <div className="my-4 sm:my-6">
                   <p className="text-3xl sm:text-4xl font-bold text-gray-200">
                     ${plan.discountAmount}
@@ -192,7 +190,6 @@ const PricingPlans = () => {
                   )}
                 </div>
 
-                {/* Radio button */}
                 <div className="mb-4">
                   <button
                     onClick={() => setSelectedPlan(plan._id)}
@@ -213,7 +210,6 @@ const PricingPlans = () => {
                   </button>
                 </div>
 
-                {/* Select button */}
                 <button
                   onClick={() => handleSelectPlan(plan._id)}
                   className="w-full py-2 sm:py-3 rounded-full bg-gradient-to-r from-pink-400 to-purple-400 text-white font-semibold hover:brightness-110 transition-all duration-300 mb-6 sm:mb-8"
@@ -221,10 +217,8 @@ const PricingPlans = () => {
                   {paymentLoading ? "Processing..." : "Select Plan"}
                 </button>
 
-                {/* Divider */}
                 <div className="w-full h-px bg-gray-700 mb-4 sm:mb-6" />
 
-                {/* Benefits */}
                 <div>
                   <p className="font-medium text-gray-200 mb-3 sm:mb-4">
                     What you will get

@@ -8,9 +8,9 @@ import { useAppSelector } from "@/redux/store";
 import { Paperclip } from "react-feather";
 import axiosInstance from "@/utils/axiosInterceptor";
 import { io,Socket } from "socket.io-client";
-// import {v4 as uuidv4} from "uuid"
 import { useNavigate } from "react-router-dom";
 import {Check,CheckCheck} from "lucide-react"
+import {v4 as uuidv4} from 'uuid'
 interface CloudinaryChatUploadResult {
   secure_url: string;
   resource_type: "image" | "video";
@@ -84,7 +84,6 @@ const ChatBox: React.FC<ChatBoxProps> = ({ friendId }) => {
     socketRef.current.on("reconnect", () => {
       console.log("Direct Call socket reconnected");
       toast.success("Reconnected to call server");
-      // CHANGE: Rejoin userId room on reconnect
       socketRef.current?.emit("join-user", { userId });
       console.log(`Rejoined user room: ${userId}`);
     });
@@ -172,7 +171,6 @@ const ChatBox: React.FC<ChatBoxProps> = ({ friendId }) => {
       toast.error(message);
       setCallState("idle");
     });
-    //direct call icoming
 
    
     socketRef.current.on("directCall:incoming", ({ callId, callerId }: { callId: string; callerId: string }) => {
@@ -188,7 +186,6 @@ const ChatBox: React.FC<ChatBoxProps> = ({ friendId }) => {
                   console.log("Accepting call:", callId);
                   socketRef.current?.emit("directCall:accept", { callId });
                   toast.dismiss(t.id);
-                  // CHANGE: Navigate to call page instead of opening new tab
                   navigate(`/call/${callId}`);
                 }}
               >
@@ -296,7 +293,7 @@ socketRef.current.on("directCall:ended", ({ callId }) => {
         const history = await chatServiceRef.current.fetchChatHistory(friendId);
         console.log("Chat history:", history);
 
-        //changed now
+
         await chatServiceRef.current.markMessageAsRead(userId,friendId)
         const socket = chatServiceRef.current['socket']
         const lastMessage = history.length > 0 ? history[history.length -1] : null
@@ -369,7 +366,6 @@ socketRef.current.on("directCall:ended", ({ callId }) => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // --- New: Update video refs when streams change ---
   useEffect(() => {
     if (localVideoRef.current && localStream) {
       console.log("Binding local stream to video element:", localStream);
@@ -419,38 +415,28 @@ socketRef.current.on("directCall:ended", ({ callId }) => {
 
     try {
       setIsUploading(true);
-
-      // Validate file size
       const maxSize = file.type.startsWith("image/") ? 5 * 1024 * 1024 : 100 * 1024 * 1024;
       if (file.size > maxSize) {
         toast.error(`File too large. Max size: ${maxSize / (1024 * 1024)}MB`);
         return;
       }
 
-      // Fetch signature
       const { data } = await axiosInstance.get("/chat/signature");
       const { signature, timestamp } = data;
 
-      // Log FormData parameters for debugging
       console.log("Uploading with parameters:", {
         file: file.name,
-        // api_key: import.meta.env.VITE_CLOUDINARY_API_KEY,
         timestamp,
         signature,
         folder: "chat_media",
-        // resource_type: "auto",
       });
 
-      // Prepare FormData for Cloudinary upload
       const formData = new FormData();
       formData.append("file", file);
       formData.append("api_key", import.meta.env.VITE_CLOUDINARY_API_KEY as string);
       formData.append("timestamp", timestamp.toString());
       formData.append("signature", signature);
       formData.append("folder", "chat_media");
-      // formData.append("resource_type", "auto");
-
-      // Upload to Cloudinary
       const response = await fetch(
         `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}/auto/upload`,
         {
@@ -469,7 +455,6 @@ socketRef.current.on("directCall:ended", ({ callId }) => {
       const mediaUrl = result.secure_url;
       const mediaType = result.resource_type as "image" | "video";
 
-      // Send media message
       const tempMessage: IMessage = {
         id: Date.now().toString(),
         senderId: String(userId),
@@ -495,27 +480,27 @@ socketRef.current.on("directCall:ended", ({ callId }) => {
     } finally {
       setIsUploading(false);
       if (fileInputRef.current) {
-        fileInputRef.current.value = ""; // Reset file input
+        fileInputRef.current.value = ""; 
       }
     }
   };
 
   // --- New: Handle call button click ---
-  // const handleCallButton = () => {
-  //   if (!socketRef.current || !isConnected) {
-  //     console.log("Call button clicked but socket not connected");
-  //     toast.error("Not connected to server");
-  //     return;
-  //   }
-  //   const callId = uuidv4();
-  //   console.log("Initiating call:", { callId, callerId: userId, receiverId: friendId });
-  //   socketRef.current.emit("directCall:initiate", {
-  //     callerId: userId,
-  //     receiverId: friendId,
-  //     callId,
-  //   });
-  //   navigate(`/call/${callId}`);
-  // };
+  const handleCallButton = () => {
+    if (!socketRef.current || !isConnected) {
+      console.log("Call button clicked but socket not connected");
+      toast.error("Not connected to server");
+      return;
+    }
+    const callId = uuidv4();
+    console.log("Initiating call:", { callId, callerId: userId, receiverId: friendId });
+    socketRef.current.emit("directCall:initiate", {
+      callerId: userId,
+      receiverId: friendId,
+      callId,
+    });
+    navigate(`/call/${callId}`);
+  };
 
 
   // --- New: Toggle audio/video ---
@@ -537,13 +522,13 @@ socketRef.current.on("directCall:ended", ({ callId }) => {
               <h3 className="font-medium">{friend?.name || "Loading..."}</h3>
             </div>
           </div>
-          {/* <button
+          <button
             onClick={handleCallButton}
             disabled={!isConnected}
-            className={`px-3 py-1 rounded-lg text-white bg-green-500 hover:bg-green-600 ${!isConnected && "opacity-50 cursor-not-allowed"}`}
+            className={` !bg-white px-3 py-1 rounded-lg text-white bg-green-500 hover:bg-green-600 ${!isConnected && "opacity-50 cursor-not-allowed"}`}
           >
             {isConnected ? "Call" : "Connecting..."}
-          </button> */}
+          </button>
         </div>
   
         <div className="flex-1 p-4 overflow-y-auto">
