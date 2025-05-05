@@ -89,12 +89,8 @@ export class CallService {
             startTime: new Date(),
           });
           await call.save();
-
-          // Emit direct:incoming to receiver regardless of online status
           this.io.to(receiverId).emit("directCall:incoming", { callId, callerId });
           console.log(`Emitted direct:incoming to ${receiverId}`);
-
-          // Check receiver's socket status with a timeout
           setTimeout(async () => {
             const updatedCall = await Call.findOne({ callId });
             if (updatedCall && updatedCall.status === "INITIATED") {
@@ -106,7 +102,7 @@ export class CallService {
                 this.io.to(callerId).emit("direct:missed", { callId });
               }
             }
-          }, 30000); // 30 seconds timeout
+          }, 30000); 
         } catch (error) {
           console.error("Error initiating call:", error);
           this.io.to(callerId).emit("direct:error", { callId, error: "Failed to initiate call" });
@@ -122,7 +118,6 @@ export class CallService {
             throw new AppError("Call not found", 404);
           }
           socket.join(callId);
-          // CHANGE: Use socketMap to notify the other user
           const otherUserId = call.callerId.toString() === userId ? call.receiverId.toString() : call.callerId.toString();
           const otherSocketId = this.socketMap.get(otherUserId);
           if (otherSocketId) {

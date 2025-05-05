@@ -325,10 +325,10 @@ socketRef.current.on("directCall:ended", ({ callId }) => {
         socketRef.current.off("directCall:missed");
         socketRef.current.off("directCall:ended");
         socketRef.current.off("connect");
-        socketRef.current.off("disconnect");
+        // socketRef.current.off("disconnect");
         socketRef.current.off("reconnect");
         socketRef.current.off("reconnect_failed");
-        socketRef.current.disconnect();
+        // socketRef.current.disconnect();
       }
       socket.off("friend-call-incoming");
       socket.off("friend-call-error");

@@ -38,7 +38,7 @@ export class DirectCallManager {
 
     this.socket.on("connect", () => {
       console.log("Connected to signaling server");
-      this.socket.emit("join-call", { roomId: this.callId, userId: this.userId, username: this.username });
+      // this.socket.emit("join-call", { roomId: this.callId, userId: this.userId, username: this.username });
       this.socket.emit("directCall:join", { callId: this.callId, userId: this.userId });
       console.log(`Joined call room: ${this.callId}`);
     });
@@ -85,7 +85,7 @@ export class DirectCallManager {
         this.socket.emit("directCall:ice-candidate", {
           callId: this.callId,
           candidate: event.candidate,
-          to: this.userId === this.callDetails.callerId ? this.callDetails.receiverId : this.callDetails.callerId, // CHANGE: Use this.callDetails
+          to: this.userId === this.callDetails.callerId ? this.callDetails.receiverId : this.callDetails.callerId, 
         });
       }
     };
@@ -107,16 +107,6 @@ export class DirectCallManager {
   }
 
   private setupSocketListeners() {
-    // this.socket.on("directCall:offer", async ({ offer, from }) => {
-    //   if (!this.peerConnection) {
-    //     await this.setupPeerConnection();
-    //   }
-    //   console.log("Received offer from:", from);
-    //   await this.peerConnection!.setRemoteDescription(new RTCSessionDescription(offer));
-    //   const answer = await this.peerConnection!.createAnswer();
-    //   await this.peerConnection!.setLocalDescription(answer);
-    //   this.socket.emit("directCall:answer", { callId: this.callId, answer, to: from });
-    // });
 
     this.socket.on("directCall:offer", async ({ offer, from }) => {
       console.log("Received offer:", { offer, from });
@@ -186,7 +176,7 @@ export class DirectCallManager {
       this.socket.emit("directCall:offer", {
         callId: this.callId,
         offer,
-        to: this.userId === this.callDetails.callerId ? this.callDetails.receiverId : this.callDetails.callerId, // CHANGE: Use this.callDetails
+        to: this.userId === this.callDetails.callerId ? this.callDetails.receiverId : this.callDetails.callerId, 
       });
     } catch (error) {
       console.error("Error starting call:", error);

@@ -133,8 +133,9 @@ export const ProfileContent = () => {
   const handleResetPassword = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/;
 
-    // Validate inputs
+
     if (!passwordForm.currentPassword || !passwordForm.newPassword || !passwordForm.confirmPassword) {
       toast.error("All password fields are required");
       return;
@@ -145,6 +146,10 @@ export const ProfileContent = () => {
     }
     if (passwordForm.newPassword.length < 8) {
       toast.error("New password must be at least 8 characters long");
+      return;
+    }
+    if (!passwordRegex.test(passwordForm.newPassword)) {
+      toast.error("New password must be at least 8 characters long, and contain at least one uppercase letter, one lowercase letter, and one symbol");
       return;
     }
 

@@ -1,6 +1,5 @@
-
 import React, { useState, useEffect } from "react";
-import { format } from "date-fns";
+import { format, isAfter, isBefore, isEqual } from "date-fns";
 import { toast } from "react-hot-toast";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -64,9 +63,8 @@ const AdminDashboardd: React.FC = () => {
         params,
       });
       setData(response.data);
-    } catch (error:unknown) {
-      // toast.error("Failed to load dashboard data");
-      toast.error(error instanceof Error ? error.message : "Failed to ;load dashbpoard data");
+    } catch (error: unknown) {
+      toast.error(error instanceof Error ? error.message : "Failed to load dashboard data");
     } finally {
       setLoading(false);
     }
@@ -77,7 +75,6 @@ const AdminDashboardd: React.FC = () => {
     doc.text("Admin Dashboard", 20, 20);
     doc.text(`Date Range: ${startDate ? format(startDate, "PPP") : "All"} - ${endDate ? format(endDate, "PPP") : "All"}`, 20, 30);
 
-    // Metrics
     if (data) {
       doc.text(`Total Users: ${data.totalUsers}`, 20, 50);
       doc.text(`Premium Users: ${data.premiumUsers}`, 20, 60);
@@ -87,7 +84,6 @@ const AdminDashboardd: React.FC = () => {
       doc.text(`Private Rooms: ${data.roomTypes.find(r => r.type === "PRIVATE")?.count || 0}`, 20, 100);
     }
 
-    // Capture charts
     const chart1 = document.getElementById("user-chart");
     const chart2 = document.getElementById("income-chart");
     if (chart1 && chart2) {
@@ -108,7 +104,6 @@ const AdminDashboardd: React.FC = () => {
 
     const wb = XLSX.utils.book_new();
     
-    // Summary Sheet
     const summaryData = [
       ["Metric", "Value"],
       ["Total Users", data.totalUsers],
@@ -119,21 +114,74 @@ const AdminDashboardd: React.FC = () => {
       ["Private Rooms", data.roomTypes.find(r => r.type === "PRIVATE")?.count || 0],
     ];
     const ws1 = XLSX.utils.aoa_to_sheet(summaryData);
+    ws1['!cols'] = [
+      { wch: 20 },
+      { wch: 15 }, 
+    ];
     XLSX.utils.book_append_sheet(wb, ws1, "Summary");
 
-    // Popular Plans Sheet
     const plansData = [["Plan Name", "Count", "Discount Amount"], ...data.popularPlans.map(p => [p.planName, p.count, p.discountAmount])];
     const ws2 = XLSX.utils.aoa_to_sheet(plansData);
+    ws2['!cols'] = [
+      { wch: 25 }, 
+      { wch: 15 }, 
+      { wch: 20 }, 
+    ];
     XLSX.utils.book_append_sheet(wb, ws2, "Popular Plans");
 
-    // Income Over Time Sheet
+   
     const incomeData = [["Year", "Month", "Total"], ...data.incomeOverTime.map(i => [i.year, i.month, i.total])];
     const ws3 = XLSX.utils.aoa_to_sheet(incomeData);
+    ws3['!cols'] = [
+      { wch: 15 }, 
+      { wch: 15 },
+      { wch: 15 }, 
+    ];
     XLSX.utils.book_append_sheet(wb, ws3, "Income Over Time");
 
     const wbout = XLSX.write(wb, { bookType: "xlsx", type: "array" });
     saveAs(new Blob([wbout], { type: "application/octet-stream" }), `dashboard-${new Date().toISOString().slice(0, 10)}.xlsx`);
     toast.success("Excel downloaded");
+  };
+
+  const today = new Date();
+
+  const handleStartDateSelect = (date: Date | undefined) => {
+    if (!date) {
+      setStartDate(undefined);
+      return;
+    }
+
+    if (isAfter(date, today)) {
+      toast.error("Start date cannot be in the future");
+      return;
+    }
+
+    setStartDate(date);
+
+    if (endDate && (isBefore(endDate, date) || isEqual(endDate, date))) {
+      setEndDate(undefined);
+      toast.error("End date has been reset because it was earlier than or equal to the new start date");
+    }
+  };
+
+  const handleEndDateSelect = (date: Date | undefined) => {
+    if (!date) {
+      setEndDate(undefined);
+      return;
+    }
+
+    if (isAfter(date, today)) {
+      toast.error("End date cannot be in the future");
+      return;
+    }
+
+    if (startDate && (isBefore(date, startDate) || isEqual(date, startDate))) {
+      toast.error("End date must be after the start date");
+      return;
+    }
+
+    setEndDate(date);
   };
 
   if (loading) return <div className="text-center mt-10">Loading...</div>;
@@ -143,7 +191,7 @@ const AdminDashboardd: React.FC = () => {
     <div className="container !bg-pink-50 mx-auto p-6 !text-black">
       <h1 className="text-3xl font-bold mb-6">Admin Dashboard</h1>
 
-      {/* Date Range Filter */}
+      
       <div className="mb-6 flex gap-4">
         <Popover>
           <PopoverTrigger asChild>
@@ -156,8 +204,12 @@ const AdminDashboardd: React.FC = () => {
             <Calendar
               mode="single"
               selected={startDate}
-              onSelect={setStartDate}
+              onSelect={handleStartDateSelect}
               initialFocus
+              disabled={(date) => isAfter(date, today)}
+              classNames={{
+                day_disabled: "!text-gray-400 !cursor-not-allowed",
+              }}
             />
           </PopoverContent>
         </Popover>
@@ -172,8 +224,15 @@ const AdminDashboardd: React.FC = () => {
             <Calendar
               mode="single"
               selected={endDate}
-              onSelect={setEndDate}
+              onSelect={handleEndDateSelect}
               initialFocus
+              disabled={(date) =>
+                (startDate && (isBefore(date, startDate) || isEqual(date, startDate))) ||
+                isAfter(date, today)
+              }
+              classNames={{
+                day_disabled: "!text-gray-400 !cursor-not-allowed",
+              }}
             />
           </PopoverContent>
         </Popover>
@@ -182,7 +241,7 @@ const AdminDashboardd: React.FC = () => {
         </Button>
       </div>
 
-      {/* Charts */}
+     
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
         <Card>
           <CardHeader>
@@ -226,7 +285,7 @@ const AdminDashboardd: React.FC = () => {
         </Card>
       </div>
 
-      {/* Metric Grids */}
+      
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
         <Card>
           <CardHeader>
@@ -270,7 +329,6 @@ const AdminDashboardd: React.FC = () => {
         </Card>
       </div>
 
-      {/* Popular Plans Table */}
       <Card>
         <CardHeader>
           <CardTitle>Most Purchased Plans</CardTitle>
@@ -297,7 +355,7 @@ const AdminDashboardd: React.FC = () => {
         </CardContent>
       </Card>
 
-      {/* Download Buttons */}
+      
       <div className="mt-6 flex gap-4">
         <Button onClick={downloadPDF}>Download PDF</Button>
         <Button onClick={downloadExcel}>Download Excel</Button>
