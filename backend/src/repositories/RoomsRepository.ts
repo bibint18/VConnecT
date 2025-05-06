@@ -57,7 +57,7 @@ export class RoomRepository implements IRoomRepository{
     query.isBlocked = false;
     const skip = (page -1) * limit;
 
-    const rooms = await Room.find(query).skip(skip).limit(limit).exec()
+    const rooms = await Room.find(query).sort({createdAt:-1}).skip(skip).limit(limit).exec()
     console.log("rooms from service ",rooms)
     const total = await Room.countDocuments(query)
     return {rooms,user,total}
