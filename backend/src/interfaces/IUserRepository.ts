@@ -14,4 +14,5 @@ export interface IUserRepository{
   updatePoints(userId: string, points: number): Promise<IUser | null>;
   updateStreak(userId: string, streak: number, lastUpdate: Date): Promise<IUser | null>;
   updateUserPlans(userId:string,planData:{planId:Types.ObjectId;planName:string;status:"active" | "expired" | 'cancelled';startDate:Date;endDate?:Date;transactionId?:string},roomBenefit?:number):Promise<IUser>
+  Homedata():Promise<{roomCount:number; userCount:number}>
 }

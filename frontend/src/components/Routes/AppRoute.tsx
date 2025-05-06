@@ -26,7 +26,7 @@ import ProfilePage from "../User/Profile/Page";
 import AddRoomPage from "../User/Room/AddRoomPage";
 import RoomPage from "../User/Room/RoomPage";
 import RoomCall from "../User/Room/Calls/RoomCall";
-import FriendRequests from "../User/Friends/FriendRequest";
+// import FriendRequests from "../User/Friends/FriendRequest";
 import AdminRoom from "@/pages/AdminRoom";
 // import UserTrivia from "../User/Trivia/UserTrivia";
 import TriviaPage from "../User/Trivia/TriviaPage";
@@ -47,9 +47,11 @@ import DirectCallPage from "../User/Chat/DirectCallPage";
 import DashboardPageAdmin from "@/pages/DashboardPage";
 import CreatePost from "../User/Post/CreatePost";
 // import MyPosts from "../User/Post/MyPost";
-import PostFeed from "../User/Post/PostFeed";
+// import PostFeed from "../User/Post/PostFeed";
 import MyPostPage from "../User/Post/MyPostPage";
 import PostView from "../User/Post/PostView";
+import FeedPage from "../User/Post/FeedPage";
+import FriendRequestPage from "../User/Friends/FriendRequestPage";
 
 function AppRoute() {
   return (
@@ -64,7 +66,7 @@ function AppRoute() {
 
       {/* User Protected Routes */}
   <Route element={<UserProtectedRoute/>}>
-      <Route path="/friends/request" element={<FriendRequests />} />
+      <Route path="/friends/request" element={<FriendRequestPage />} />
       <Route path="/room/:roomId/call" element={<RoomCall />} />
       <Route path="/profile" element={<ProfilePage />} />
       <Route path="/addRoom" element={<AddRoomPage />} />
@@ -78,7 +80,7 @@ function AppRoute() {
       <Route path="/call/:callId" element={<DirectCallPage />} />
       <Route path="/createPost" element={<CreatePost />} />
       <Route path="/myPost" element={<MyPostPage />} />
-      <Route path="/feed" element={<PostFeed />} />
+      <Route path="/feed" element={<FeedPage />} />
       <Route path="/post/:postId" element={<PostView />} />
 
   </Route>

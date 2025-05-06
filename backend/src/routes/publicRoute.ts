@@ -10,7 +10,8 @@ import
   adminLogout,
   userLogout,
   getAbout,
-  googleLogin
+  googleLogin,
+  HomeData
 } 
 from '../controllers/AuthController'
 
@@ -24,4 +25,5 @@ router.post("/adminLogin",LoginAdmin)
 router.post('/adminLogout',adminLogout)
 router.post('logout',userLogout)
 router.post('/google-login',googleLogin)
+router.get('/HomeData',HomeData)
 export default router

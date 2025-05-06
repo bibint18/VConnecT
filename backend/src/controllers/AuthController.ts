@@ -159,3 +159,12 @@ export const googleLogin = async (req:Request,res:Response,next:NextFunction) =>
     next(error)
   }
 }
+
+export const HomeData = async (req:Request,res:Response,next:NextFunction) => {
+  try {
+    const result = await authService.HomeData()
+    res.status(200).json(result)
+  } catch (error) {
+    next(error)
+  }
+}

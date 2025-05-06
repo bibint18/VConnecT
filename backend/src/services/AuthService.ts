@@ -200,4 +200,8 @@ async generateUniqueUsername (base:string): Promise<string> {
   return username!
 }
 
+async HomeData():Promise<{ roomCount: number; userCount: number; }>{
+  return await this.userRepository.Homedata()
+}
+  
 }

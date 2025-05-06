@@ -2,6 +2,7 @@ import { IUserRepository } from "../interfaces/IUserRepository";
 import { IUser,User } from "../models/User";
 import { OtpVerification } from "../models/OtpModel";
 import { Types } from "mongoose";
+import { Room } from "../models/RoomModel";
 
 export class UserRepository implements IUserRepository{
   async createUser(data: Partial<IUser>): Promise<IUser |null> {
@@ -91,5 +92,11 @@ export class UserRepository implements IUserRepository{
         user.availableRoomLimit = (user.availableRoomLimit || 0) + roomBenefit
       }
       return await user.save()
+  }
+
+  async Homedata(): Promise<{ roomCount: number; userCount: number; }> {
+    const roomCount = await Room.countDocuments();
+    const userCount = await User.countDocuments();
+    return {roomCount,userCount}
   }
 }
