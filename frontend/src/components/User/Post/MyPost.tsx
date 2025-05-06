@@ -126,13 +126,12 @@ const MyPosts: React.FC = () => {
   };
 
   return (
-    <div className="!p-6">
-      {error && <div className="!text-red-500 !text-center !mb-4 !text-lg !font-medium">{error}</div>}
+    <div className="!p-4 sm:!p-6">
+      {error && <div className="!text-red-500 !text-center !mb-4 !text-base sm:!text-lg !font-medium">{error}</div>}
       {user ? (
         <>
-          {/* Changes: Removed !mx-auto, adjusted alignment */}
           <motion.div
-            className="!bg-white !rounded-2xl !shadow-lg !p-6 !text-center !max-w-sm !w-full !mb-10"
+            className="!bg-white !rounded-2xl !shadow-lg !p-4 sm:!p-6 !text-center !max-w-xs sm:!max-w-sm !w-full !mb-6 sm:!mb-10"
             initial={{ opacity: 0, scale: 0.8, y: 50 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ duration: 0.6, ease: 'easeOut' }}
@@ -141,14 +140,14 @@ const MyPosts: React.FC = () => {
             <img
               src={user.profileImage || 'https://via.placeholder.com/160'}
               alt="Profile"
-              className="!w-36 !h-36 !rounded-full !object-cover !mx-auto !mb-4 !border-4 !border-blue-500 !shadow-md"
+              className="!w-28 !h-28 sm:!w-36 sm:!h-36 !rounded-full !object-cover !mx-auto !mb-4 !border-4 !border-blue-500 !shadow-md"
             />
-            <h2 className="!text-xl !font-bold !text-gray-900 !mb-2">{user.username || user.name}</h2>
-            <p className="!text-base !text-gray-600 !mb-3">{user.name}</p>
-            <p className="!text-sm !text-blue-500 !font-medium !mb-4">{user.friends?.length || 0} Friends</p>
-            <p className="!text-sm !text-blue-500 !font-medium !mb-4">{postCount || 0} Posts</p>
+            <h2 className="!text-lg sm:!text-xl !font-bold !text-gray-900 !mb-2">{user.username || user.name}</h2>
+            <p className="!text-sm sm:!text-base !text-gray-600 !mb-3">{user.name}</p>
+            <p className="!text-xs sm:!text-sm !text-blue-500 !font-medium !mb-4">{user.friends?.length || 0} Friends</p>
+            <p className="!text-xs sm:!text-sm !text-blue-500 !font-medium !mb-4">{postCount || 0} Posts</p>
             <motion.button
-              className="!bg-blue-500 !text-white !px-5 !py-2 !rounded-lg !font-medium !hover:bg-blue-600 !transition-colors"
+              className="!bg-blue-500 !text-white !px-4 sm:!px-5 !py-2 !rounded-lg !font-medium !hover:bg-blue-600 !transition-colors !text-sm sm:!text-base"
               onClick={openModal}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -157,15 +156,14 @@ const MyPosts: React.FC = () => {
             </motion.button>
           </motion.div>
 
-          {/* Changes: Removed centering, adjusted grid for better alignment and spacing */}
-          <div className="!flex !flex-col !gap-6">
-            <h3 className="!text-2xl !font-semibold !text-white !mb-4">MY POSTS</h3>
+          <div className="!flex !flex-col !gap-4 sm:!gap-6">
+            <h3 className="!text-xl sm:!text-2xl !font-semibold !text-white !mb-4">MY POSTS</h3>
             {posts.length > 0 ? (
-              <div className="!grid !grid-cols-1 sm:!grid-cols-2 lg:!grid-cols-3 !gap-8 !w-full">
+              <div className="!grid !grid-cols-1 sm:!grid-cols-2 lg:!grid-cols-3 !gap-4 sm:!gap-8 !w-full">
                 {posts.map((post, index) => (
                   <motion.div
                     key={post._id ?? ''}
-                    className="!bg-white !rounded-xl !shadow-md !w-[350px] !h-[450px] !overflow-hidden !flex !flex-col"
+                    className="!bg-white !rounded-xl !shadow-md !w-full !max-w-[300px] sm:!max-w-[350px] !h-[400px] sm:!h-[450px] !mx-auto !overflow-hidden !flex !flex-col"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: index * 0.1 }}
@@ -175,12 +173,12 @@ const MyPosts: React.FC = () => {
                         <textarea
                           value={newContent}
                           onChange={(e) => setNewContent(e.target.value)}
-                          className="!w-full !min-h-[120px] !p-3 !border !border-gray-200 !rounded-lg !text-base !bg-gray-50 !resize-y !focus:outline-none !focus:ring-2 !focus:ring-blue-500"
+                          className="!w-full !min-h-[100px] sm:!min-h-[120px] !p-3 !border !border-gray-200 !rounded-lg !text-sm sm:!text-base !bg-gray-50 !resize-y !focus:outline-none !focus:ring-2 !focus:ring-blue-500"
                           placeholder="Edit your post..."
                         />
                         <div className="!flex !gap-3">
                           <motion.button
-                            className="!bg-blue-500 !text-white !px-4 !py-2 !rounded-lg !font-medium !hover:bg-blue-600"
+                            className="!bg-blue-500 !text-white !px-3 sm:!px-4 !py-2 !rounded-lg !font-medium !hover:bg-blue-600 !text-sm sm:!text-base"
                             onClick={() => handleSaveEdit(post._id)}
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
@@ -188,7 +186,7 @@ const MyPosts: React.FC = () => {
                             Save
                           </motion.button>
                           <motion.button
-                            className="!bg-gray-300 !text-gray-800 !px-4 !py-2 !rounded-lg !font-medium !hover:bg-gray-400"
+                            className="!bg-gray-300 !text-gray-800 !px-3 sm:!px-4 !py-2 !rounded-lg !font-medium !hover:bg-gray-400 !text-sm sm:!text-base"
                             onClick={handleCancelEdit}
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
@@ -200,7 +198,7 @@ const MyPosts: React.FC = () => {
                     ) : (
                       <div className="!flex !flex-col !flex-1">
                         {post.mediaUrl && (post.mediaType === 'image' || post.mediaType === 'video') && (
-                          <div className="!w-full !h-[200px]">
+                          <div className="!w-full !h-[180px] sm:!h-[200px]">
                             {post.mediaType === 'image' ? (
                               <img src={post.mediaUrl} alt="Post media" className="!w-full !h-full !object-cover !rounded-t-xl" />
                             ) : (
@@ -209,18 +207,18 @@ const MyPosts: React.FC = () => {
                           </div>
                         )}
                         <div className="!p-4 !flex !flex-col !flex-1">
-                          <p className="!text-base !text-gray-900 !mb-3 !flex-1 !overflow-y-auto">{post.content || 'No content'}</p>
-                          <div className="!flex !gap-4 !text-sm !text-gray-600 !mb-3">
+                          <p className="!text-sm sm:!text-base !text-gray-900 !mb-3 !flex-1 !overflow-y-auto">{post.content || 'No content'}</p>
+                          <div className="!flex !gap-4 !text-xs sm:!text-sm !text-gray-600 !mb-3">
                             <span className="!flex !items-center !gap-1">
-                              <Heart size={16} className="!text-blue-500" /> {post.likeCount}
+                              <Heart size={14} className="!text-blue-500 sm:!h-5 sm:!w-5" /> {post.likeCount}
                             </span>
                             <span className="!flex !items-center !gap-1">
-                              <MessageSquare size={16} className="!text-blue-500" /> {post.commentCount}
+                              <MessageSquare size={14} className="!text-blue-500 sm:!h-5 sm:!w-5" /> {post.commentCount}
                             </span>
                           </div>
                           <div className="!flex !gap-3">
                             <motion.button
-                              className="!bg-blue-500 !text-white !px-4 !py-2 !rounded-lg !font-medium !hover:bg-blue-600"
+                              className="!bg-blue-500 !text-white !px-3 sm:!px-4 !py-2 !rounded-lg !font-medium !hover:bg-blue-600 !text-sm sm:!text-base"
                               onClick={() => handleEdit(post._id, post.content)}
                               whileHover={{ scale: 1.05 }}
                               whileTap={{ scale: 0.95 }}
@@ -228,7 +226,7 @@ const MyPosts: React.FC = () => {
                               Edit
                             </motion.button>
                             <motion.button
-                              className="!bg-red-500 !text-white !px-4 !py-2 !rounded-lg !font-medium !hover:bg-red-600"
+                              className="!bg-red-500 !text-white !px-3 sm:!px-4 !py-2 !rounded-lg !font-medium !hover:bg-red-600 !text-sm sm:!text-base"
                               onClick={() => handleDeletePrompt(post._id)}
                               whileHover={{ scale: 1.05 }}
                               whileTap={{ scale: 0.95 }}
@@ -244,14 +242,14 @@ const MyPosts: React.FC = () => {
               </div>
             ) : (
               <motion.div
-                className="!bg-white !rounded-xl !shadow-md !p-6 !text-center !max-w-md !w-full"
+                className="!bg-white !rounded-xl !shadow-md !p-6 !text-center !max-w-md !w-full !mx-auto"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.5 }}
               >
-                <p className="!text-lg !text-gray-600 !mb-4">No Posts. Create a new post to get started!</p>
+                <p className="!text-base sm:!text-lg !text-gray-600 !mb-4">No Posts. Create a new post to get started!</p>
                 <motion.button
-                  className="!bg-blue-500 !text-white !px-6 !py-2 !rounded-lg !font-medium !hover:bg-blue-600"
+                  className="!bg-blue-500 !text-white !px-4 sm:!px-6 !py-2 !rounded-lg !font-medium !hover:bg-blue-600 !text-sm sm:!text-base"
                   onClick={openModal}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
@@ -263,7 +261,7 @@ const MyPosts: React.FC = () => {
           </div>
         </>
       ) : (
-        <div className="!text-center !text-lg !text-blue-500 !py-8">Loading user data...</div>
+        <div className="!text-center !text-base sm:!text-lg !text-blue-500 !py-8">Loading user data...</div>
       )}
 
       <AnimatePresence>
@@ -276,17 +274,17 @@ const MyPosts: React.FC = () => {
             transition={{ duration: 0.3 }}
           >
             <motion.div
-              className="!bg-white !rounded-xl !p-6 !max-w-sm !w-full !text-center !shadow-xl"
+              className="!bg-white !rounded-xl !p-4 sm:!p-6 !max-w-sm !w-[90%] sm:!w-full !text-center !shadow-xl"
               initial={{ y: '-50%', opacity: 0 }}
               animate={{ y: '0%', opacity: 1 }}
               exit={{ y: '-50%', opacity: 0 }}
               transition={{ duration: 0.3 }}
             >
-              <h3 className="!text-xl !font-semibold !text-gray-900 !mb-3">Confirm Delete</h3>
-              <p className="!text-base !text-gray-600 !mb-4">Are you sure you want to delete this post?</p>
+              <h3 className="!text-lg sm:!text-xl !font-semibold !text-gray-900 !mb-3">Confirm Delete</h3>
+              <p className="!text-sm sm:!text-base !text-gray-600 !mb-4">Are you sure you want to delete this post?</p>
               <div className="!flex !gap-3 !justify-center">
                 <motion.button
-                  className="!bg-red-500 !text-white !px-4 !py-2 !rounded-lg !font-medium !hover:bg-red-600"
+                  className="!bg-red-500 !text-white !px-3 sm:!px-4 !py-2 !rounded-lg !font-medium !hover:bg-red-600 !text-sm sm:!text-base"
                   onClick={() => handleDelete(showDeleteConfirm)}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
@@ -294,7 +292,7 @@ const MyPosts: React.FC = () => {
                   Yes, Delete
                 </motion.button>
                 <motion.button
-                  className="!bg-gray-300 !text-gray-800 !px-4 !py-2 !rounded-lg !font-medium !hover:bg-gray-400"
+                  className="!bg-gray-300 !text-gray-800 !px-3 sm:!px-4 !py-2 !rounded-lg !font-medium !hover:bg-gray-400 !text-sm sm:!text-base"
                   onClick={handleCancelDelete}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
@@ -318,7 +316,7 @@ const MyPosts: React.FC = () => {
             onClick={closeModal}
           >
             <motion.div
-              className="!bg-white !rounded-xl !p-6 !max-w-lg !w-full !shadow-xl"
+              className="!bg-white !rounded-xl !p-4 sm:!p-6 !max-w-md sm:!max-w-lg !w-[90%] sm:!w-full !shadow-xl"
               initial={{ y: '-50%', opacity: 0 }}
               animate={{ y: '0%', opacity: 1 }}
               exit={{ y: '-50%', opacity: 0 }}
@@ -326,14 +324,14 @@ const MyPosts: React.FC = () => {
               onClick={e => e.stopPropagation()}
             >
               <motion.button
-                className="!absolute !top-4 !right-4 !text-gray-600 !hover:text-blue-500"
+                className="!absolute !top-3 sm:!top-4 !right-3 sm:!right-4 !text-gray-600 !hover:text-blue-500"
                 onClick={closeModal}
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
               >
-                <X size={24} />
+                <X size={20} className="sm:!h-6 sm:!w-6" />
               </motion.button>
-              <Suspense fallback={<div className="!text-center !text-blue-500">Loading...</div>}>
+              <Suspense fallback={<div className="!text-center !text-blue-500 !text-sm sm:!text-base">Loading...</div>}>
                 <CreatePost onPostCreated={handlePostCreated} />
               </Suspense>
             </motion.div>

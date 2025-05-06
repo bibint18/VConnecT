@@ -28,7 +28,7 @@ const navItems: NavItem[] = [
   { name: 'Premium', icon: Star ,path:'/user/plans'},
   // { name: 'Setting', icon: Settings ,path:"/settings"},
 ];
-import { logoutTheUser } from '@/redux/userSlice';
+import { logoutTheUser } from '@/redux/userSlice.js';
 import { useAppDispatch } from '@/redux/store';
 export const Sidebar = () => {
 const dispatch = useAppDispatch()

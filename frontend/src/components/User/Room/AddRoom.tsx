@@ -79,7 +79,7 @@ const AddRoom: React.FC = () => {
   };
 
   return (
-    <div className="add-room-container">
+    <div className="add-room-container !pl-23">
       <motion.div
         className="form-card"
         variants={formVariants}
