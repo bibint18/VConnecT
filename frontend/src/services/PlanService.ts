@@ -63,6 +63,11 @@ export class PlanService{
     }
   }
 
+  async reverseName(name:string){
+    const response = await axiosInstance.post(`/reverse/${name}`)
+    return response.data
+  }
+
   async createPayment(userId:string,planId:string,amount:number):Promise<{approvalUrl:string; paymentId:string}>{
     try {
       const response = await axiosInstance.post('/payments/create',{userId,planId,amount})

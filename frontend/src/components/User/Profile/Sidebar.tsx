@@ -7,7 +7,7 @@ import {
   FileText, 
   Users, 
   Star, 
-  Settings, 
+  // Settings, 
   LogOut,
   MessageSquare
 } from 'react-feather';
@@ -26,10 +26,15 @@ const navItems: NavItem[] = [
   { name: 'Rooms', icon: MessageSquare,path:'/rooms' },
   { name: 'Friends', icon: Users ,path:'/friends/request'},
   { name: 'Premium', icon: Star ,path:'/user/plans'},
-  { name: 'Setting', icon: Settings ,path:"/settings"},
+  // { name: 'Setting', icon: Settings ,path:"/settings"},
 ];
-
+import { logoutTheUser } from '@/redux/userSlice';
+import { useAppDispatch } from '@/redux/store';
 export const Sidebar = () => {
+const dispatch = useAppDispatch()
+const logout = () => {
+  dispatch(logoutTheUser())
+}
   return (
     <div className="fixed left-0 top-16 h-[calc(100vh-4rem)] w-20 md:w-64 bg-black text-white flex flex-col border-r border-gray-800">
       <div className="flex-1 py-6">
@@ -53,7 +58,7 @@ export const Sidebar = () => {
       </div>
       
       <div className="p-4">
-        <button className="flex items-center space-x-3 w-full px-4 py-3 text-pink-300 hover:bg-gray-800 rounded-lg transition-colors">
+        <button onClick={logout} className="flex items-center space-x-3 w-full px-4 py-3 text-pink-300 hover:bg-gray-800 rounded-lg transition-colors">
           <LogOut className="w-6 h-6" />
           <span className="hidden md:block">Logout</span>
         </button>

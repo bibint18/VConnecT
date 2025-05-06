@@ -95,7 +95,6 @@ const plansController = new UserPlanController(plansService)
 router.get('/plans',authenticateToken,plansController.getPlans.bind(plansController))
 router.get('/user-plan',authenticateToken,plansController.getUserPlan.bind(plansController))
 
-
 //payment
 const paymentService = new PaymentService(plansRepository)
 const paymentController = new PaymentController(paymentService,plansService)

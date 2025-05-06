@@ -75,7 +75,7 @@ const MainContent: React.FC = () => {
         <p className="text-gray-300 mb-8 max-w-lg">
           Elevate your virtual presence with a sleek, customizable space. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
         </p>
-        <button className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-gradient-to-r hover:from-purple-700 hover:to-indigo-700 transition-all duration-300 transform hover:scale-105">
+        <button onClick={() => navigate('/addRoom')} className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-gradient-to-r hover:from-purple-700 hover:to-indigo-700 transition-all duration-300 transform hover:scale-105">
           Create Room
         </button>
       </div>

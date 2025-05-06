@@ -12,7 +12,7 @@ const PricingPlans = () => {
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [paymentLoading, setPaymentLoading] = useState(false);
-  const [userPlanLoading,setUserPlanLoading] = useState(true)
+  const [userPlanLoading,setUserPlanLoading] = useState(true);
   const planService = new PlanService();
   const userId = useAppSelector((state) => state.user.userId);
   const navigate = useNavigate();
@@ -46,7 +46,6 @@ const PricingPlans = () => {
         setUserPlanLoading(false);
       }
     };
-
     fetchPlans();
     fetchUserPlan();
   }, [userId]);
