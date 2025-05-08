@@ -22,7 +22,7 @@ const app = express()
 const httpServer = createServer(app)
 const io = new Server(httpServer,{
   cors:{
-    origin:'http://localhost:5173',
+    origin:process.env.FRONTEND_URL,
     methods:["GET","POST"],
     credentials:true
   }
@@ -42,7 +42,7 @@ export const chatIo:Namespace = io.of('/chat')
 console.log("Chat IO initialized:", chatIo.name);
 // console.log("from app.ts chatIo initialized in app.ts:", chatIo ? "present" : "undefined");
 app.use(cors({
-  origin: "http://localhost:5173", 
+  origin: process.env.FRONTEND_URL, 
   credentials: true, 
 }));
 

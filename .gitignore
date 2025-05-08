@@ -3,8 +3,8 @@ Frontend/node_modules/
 Backend/node_modules/
 
 # Ignore .env files in both frontend and backend
-frontend/.env
-backend/.env
+Frontend/.env
+Backend/.env
 
 # Ignore dist folders in both frontend and backend
 Frontend/dist/
