@@ -1,46 +1,54 @@
 
-interface User{
-  _id:string;
-  name:string,
-  email:string,
-  password:string,
-  otp?:string,
-  otpExpiry?:Date,
-  isVerified:boolean
-  isAdmin:boolean
-  failedLoginAttempts: number;
-  lockUntil: Date | null;
-  plan?: {
-    planId: string;
-    planName: string;
-    status: "active" | "expired" | "cancelled";
-    startDate: Date;
-    endDate?: Date;
-    transactionId?: string;
-  }[];
-  isDeleted:boolean;
-  isBlocked:boolean
-}
+// interface User{
+//   _id:string;
+//   name:string,
+//   email:string,
+//   password:string,
+//   otp?:string,
+//   otpExpiry?:Date,
+//   isVerified:boolean
+//   isAdmin:boolean
+//   failedLoginAttempts: number;
+//   lockUntil: Date | null;
+//   plan?: {
+//     planId: string;
+//     planName: string;
+//     status: "active" | "expired" | "cancelled";
+//     startDate: Date;
+//     endDate?: Date;
+//     transactionId?: string;
+//   }[];
+//   isDeleted:boolean;
+//   isBlocked:boolean
+// }
 
 interface UsersResponse {
-  users: User[];
+  users: IUser[];
   totalUsers: number;
 }
 
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchUsers, blockUser, unblockUser, deleteUser } from "../api/adminAuth";
+import { IUser } from "@/components/admin/dashboard/CustomerDashboard";
 
-export const useUsers = (page: number, limit: number,searchTerm:string,sortOption:string) => {
-  return useQuery<UsersResponse,Error>({
-    queryKey: ["users", page, limit,searchTerm,sortOption],
-    queryFn: async ():Promise<UsersResponse> => {
+export const useUsers = (
+  page: number,
+  limit: number,
+  searchTerm: string,
+  sortOption: string
+) => {
+  return useQuery<UsersResponse, Error>(
+    ["users", page, limit, searchTerm, sortOption],
+    async (): Promise<UsersResponse> => {
       const response = await fetchUsers(page, limit, searchTerm, sortOption);
-      console.log('hook data ',response)
-      return response; 
+      console.log("hook data", response);
+      return response;
     },
-    placeholderData: (previousData) => previousData ?? { users: [], totalUsers: 0 },
-  });
+    {
+      placeholderData: () => ({ users: [], totalUsers: 0 }),
+    }
+  );
 };
 
 

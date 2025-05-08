@@ -31,7 +31,7 @@ const AddPlan: React.FC = () => {
     roomBenefit:0
   });
 
-  const { mutate, isPending } = useAddPlan();
+  const { mutate, isLoading } = useAddPlan();
 
   
 
@@ -229,9 +229,9 @@ const AddPlan: React.FC = () => {
           <button 
             type="submit" 
             className="form-button" 
-            disabled={isPending}
+            disabled={isLoading}
           >
-            {isPending ? "Adding..." : "Add Plan"}
+            {isLoading ? "Adding..." : "Add Plan"}
           </button>
         </form>
       </div>

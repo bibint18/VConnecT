@@ -58,8 +58,8 @@ const ChatBox: React.FC<ChatBoxProps> = ({ friendId }) => {
       toast.error("Please log in to view friends");
       return;
     }
-
-    socketRef.current = io("http://localhost:3000", {
+      const socketUrl = import.meta.env.VITE_WEB_SOCKET_URL;
+    socketRef.current = io(socketUrl, {
       withCredentials: true,
       reconnection: true,
       reconnectionAttempts: 5,

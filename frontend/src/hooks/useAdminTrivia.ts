@@ -1,5 +1,5 @@
 import { addTriviaQuestion, deleteTriviaQuestion, fetchTriviaQuestionById, fetchTriviaQuestions, ITrivia, ITriviaResponse, TriviaData, updateTriviaQuestion } from '@/api/adminAuth'
-import {keepPreviousData, useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 import { AxiosError } from 'axios'
 import toast from 'react-hot-toast'
 export const useAddTriviaQuestion = () => {
@@ -24,7 +24,7 @@ export const useTriviaQuestion = (page:number,limit:number,searchTerm:string) =>
     queryKey:['triviaQuestions',page,limit,searchTerm],
     queryFn: () => fetchTriviaQuestions(page,limit,searchTerm) ,
     // keepPreviousData:true,
-    placeholderData:keepPreviousData,
+    placeholderData:{questions:[],total:0},
   })
 }
 
@@ -41,8 +41,8 @@ export const useUpdateTriviaQuestion = () => {
   return useMutation({
     mutationFn: ({ id, data }: { id: string; data: TriviaData }) => updateTriviaQuestion(id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries(["triviaQuestions"]);
-      queryClient.invalidateQueries(["triviaQuestion"]);
+      queryClient.invalidateQueries({ queryKey: ["triviaQuestions"] });
+      queryClient.invalidateQueries({ queryKey: ["triviaQuestion"] });
       console.log("Trivia question updated");
     },
     onError: (error:unknown) =>{
@@ -62,7 +62,7 @@ export const useDeleteTriviaQuestion = () => {
   return useMutation({
     mutationFn: deleteTriviaQuestion,
     onSuccess: () => {
-      queryClient.invalidateQueries(["triviaQuestions"]);
+      queryClient.invalidateQueries({ queryKey: ["triviaQuestions"] });
       console.log("Trivia question deleted");
     },
     onError: (error: unknown) =>{

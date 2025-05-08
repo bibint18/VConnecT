@@ -14,7 +14,8 @@ export class ChatService {
   constructor(userId:string,onMessageReceived:(message:IMessage) => void){
     this.userId=userId;
     this.onMessageReceived=onMessageReceived;
-    this.socket = io("http://localhost:3000/chat", { 
+    const socketUrl = import.meta.env.VITE_WEB_SOCKET_URL
+    this.socket = io(`${socketUrl}/chat`, { 
       withCredentials: true,
       reconnection: true,
       reconnectionAttempts: 5,

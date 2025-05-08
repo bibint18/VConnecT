@@ -1,4 +1,4 @@
-import { promises } from "dns";
+
 import { IRoomRepository } from "../interfaces/IRoomRepository";
 import { IRoom } from "../models/RoomModel";
 import { v4 as uuidv4 } from 'uuid';

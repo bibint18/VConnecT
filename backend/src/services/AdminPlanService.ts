@@ -1,4 +1,4 @@
-import { IPlan,Plan } from "../models/PlansModel";
+import { IPlan } from "../models/PlansModel";
 import { IPlanRepository } from "../interfaces/IAdminPlanRepository";
 
 export class PlanService{

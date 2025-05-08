@@ -1,13 +1,13 @@
 import { IPostService } from '../../../interfaces/user/Community/IPostService';
 import { IComment, IPost, IPostRepository } from '../../../interfaces/user/Community/IPostRepository';
-import { ICloudinaryService } from '../../../interfaces/user/Community/ICloudinaryService';
+// import { ICloudinaryService } from '../../../interfaces/user/Community/ICloudinaryService';
 import { AppError } from '../../../utils/AppError';
 import { IUser } from '../../../models/User';
 
 export class PostService implements IPostService {
   constructor(
     private postRepository: IPostRepository,
-    private cloudinaryService: ICloudinaryService
+    // private cloudinaryService: ICloudinaryService
   ) {}
 
   async createPost(

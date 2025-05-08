@@ -1,5 +1,5 @@
 import { IMessage } from "../../../models/MessageModel";
-import { Namespace, Socket } from "socket.io";
+import {  Socket } from "socket.io";
 
 export interface IChatService{
   sendMessage(senderId:string,recieverId:string,content?:string,mediaUrl?:string,mediaType?: 'text' | 'image' | 'video'):Promise<void>;

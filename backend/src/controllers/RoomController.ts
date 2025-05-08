@@ -1,5 +1,5 @@
 import { Request,Response,NextFunction } from "express";
-import { IRoom, Room } from "../models/RoomModel";
+import { IRoom} from "../models/RoomModel";
 import { RoomService } from "../services/RoomService";
 import { RoomRepository } from "../repositories/RoomsRepository";
 

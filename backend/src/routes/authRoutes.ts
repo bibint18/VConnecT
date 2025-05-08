@@ -3,12 +3,11 @@ import AdminUsersController from '../controllers/AdminUsersController'
 import AdminPlansController from '../controllers/AdminPlansController'
 import { authenticateToken,restrictToAdmin} from '../middlewares/authMiddleware'
 import AdminRoomController from '../controllers/AdminRoomController'
-import { auth } from 'google-auth-library'
 import { AdminDailyTriviaController } from '../controllers/AdminDailyTriviaController'
 import { AdminDailyTriviaReposiroy } from '../repositories/AdminDailyTriviaRepository'
 import { AdminDailyTriviaService } from '../services/AdminDailyTriviaService'
 import { RewardRepository } from '../repositories/Admin/Reward/RewardRepository'
-import { UserRewardRepository } from '../repositories/User/Reward/UserRewardRepository'
+// import { UserRewardRepository } from '../repositories/User/Reward/UserRewardRepository'
 import { AdminRewardService } from '../services/Admin/Reward/RewardService'
 import { AdminRewardController } from '../controllers/Admin/Reward/RewardController'
 import { DashboardRepository } from '../repositories/Admin/Dashboard/DashboardRepository'
@@ -52,7 +51,7 @@ router.get("/admin/trivia/:id", authenticateToken, restrictToAdmin, dailyTriviaC
 //reward
 
 const adminRewardRepository = new RewardRepository()
-const userRewardRepository = new UserRewardRepository()
+// const userRewardRepository = new UserRewardRepository()
 // const userRewardService = new UserReward     user service needed to be written 
 const adminRewardService = new AdminRewardService(adminRewardRepository)
 const adminRewardController = new AdminRewardController(adminRewardService)

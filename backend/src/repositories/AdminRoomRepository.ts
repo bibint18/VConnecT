@@ -1,8 +1,7 @@
-import { title } from "process";
+
 import { IAdminRoomRepository } from "../interfaces/IAdminRoomRepository";
 import { IRoom, Room } from "../models/RoomModel";
 import { AppError } from "../utils/AppError";
-import { IUser } from "../models/User";
 
 export class AdminRoomRepository implements IAdminRoomRepository{
   async getAllRooms(page: number, limit: number, searchTerm: string, sortOption: string): Promise<IRoom[]> {

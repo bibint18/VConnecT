@@ -21,8 +21,8 @@ const EditPlan: React.FC = () => {
   const navigate = useNavigate()
   const {id} = useParams<{id:string}>()
   console.log("edit plan id: ",id)
-  const {data:user,isLoading} = useGetPlanById(id || '')
-  const {mutate,isPending} = useUpdatePlan()
+  const {data:user} = useGetPlanById(id || '')
+  const {mutate,isLoading} = useUpdatePlan()
   const [formData, setFormData] = useState<PlanFormData>({
     name: "",
     type: "paid",
@@ -250,9 +250,9 @@ const EditPlan: React.FC = () => {
           <button 
             type="submit" 
             className="form-button" 
-            disabled={isPending}
+            disabled={isLoading}
           >
-            {isPending ? "Editing..." : "Edit Plan"}
+            {isLoading ? "Editing..." : "Edit Plan"}
           </button>
         </form>
       </div>

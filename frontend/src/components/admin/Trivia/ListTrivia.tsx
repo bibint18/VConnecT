@@ -20,7 +20,7 @@ export default function ListTrivia() {
   const [page, setPage] = useState(1);
   const limit = 4;
 
-  const { data = { questions: [], total: 0 }, isPending, isError } = useTriviaQuestion(
+  const { data = { questions: [], total: 0 }, isLoading, isError } = useTriviaQuestion(
     page,
     limit,
     searchTerm
@@ -46,7 +46,7 @@ export default function ListTrivia() {
     });
   };
 
-  if (isPending) return <div className="text-center py-12">Loading trivia questions...</div>;
+  if (isLoading) return <div className="text-center py-12">Loading trivia questions...</div>;
   if (isError) return <div className="text-center py-12 text-red-500">Failed to load trivia questions.</div>;
 
   return (

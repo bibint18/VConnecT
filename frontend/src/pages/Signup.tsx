@@ -12,7 +12,7 @@ const Signup = () => {
     setFormData({...formData,[e.target.name]:e.target.value})
   }
 
-  const {mutate:signupMutation,isPending} = useSignup(setIsEmailVerified)
+  const {mutate:signupMutation,isLoading} = useSignup(setIsEmailVerified)
   const validateForm = () => {
     const { name, email, password, confirmpsw } = formData;
 
@@ -123,10 +123,10 @@ const Signup = () => {
               </div>
               <button
                 type="submit"
-                disabled={isPending}
+                disabled={isLoading}
                 className="w-full bg-gradient-to-r from-purple-600 to-purple-800 text-white py-2 px-4 rounded-md hover:from-purple-700 hover:to-purple-900 transition-all duration-300"
               >
-                {isPending ? "Signing up..." : "Sign Up"}
+                {isLoading ? "Signing up..." : "Sign Up"}
               </button>
             </form>
             <p className="mt-6 text-center text-gray-400">

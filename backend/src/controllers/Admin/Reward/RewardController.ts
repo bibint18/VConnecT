@@ -1,5 +1,5 @@
 import { IRewardController } from "../../../interfaces/Admin/Reward/IRewardController";
-import { IUserRewardService } from "../../../interfaces/user/Reward/IUserRewardService";
+// import { IUserRewardService } from "../../../interfaces/user/Reward/IUserRewardService";
 import { IRewardService } from "../../../interfaces/Admin/Reward/IRewardService";
 import { Response,Request,NextFunction } from "express";
 

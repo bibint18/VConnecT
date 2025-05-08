@@ -1,6 +1,5 @@
 import { IRewardService } from "../../../interfaces/Admin/Reward/IRewardService";
 import { IRewardRepository } from "../../../interfaces/Admin/Reward/IRewardRepository";
-import { IUserRepository } from "../../../interfaces/IUserRepository";
 import { IReward } from "../../../models/RewardModel";
 
 

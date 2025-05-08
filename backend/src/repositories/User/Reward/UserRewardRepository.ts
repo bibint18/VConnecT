@@ -1,6 +1,5 @@
 import { IUserRewardRepo} from "../../../interfaces/user/Reward/IUserRepository";
 import { IReward, Reward } from "../../../models/RewardModel";
-import { IUser,User } from "../../../models/User";
 export class UserRewardRepository implements IUserRewardRepo {
   async findRewardById(rewardId: string): Promise<IReward | null> {
     return await Reward.findOne({ rewardId, isDeleted: false, isActive: true });

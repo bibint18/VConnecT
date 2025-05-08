@@ -30,7 +30,7 @@ export default function SubscriptionPlans() {
   const [sortOption,setSortOption] = useState('A-Z')
   const [page,setPage] = useState(1)
   const limit =4
-  const {data={ plans: [], total: 0 },isPending,isError} = usePlans(page,limit,searchTerm,sortOption)
+  const {data={ plans: [], total: 0 },isLoading,isError} = usePlans(page,limit,searchTerm,sortOption)
   console.log(data)
   const totalPages=Math.ceil(data.total/limit)
   const {mutate} = useDeletePlan() 
@@ -52,7 +52,7 @@ export default function SubscriptionPlans() {
     });
   };
   
-  if (isPending) return <div className="text-center py-12">Loading plans...</div>;
+  if (isLoading) return <div className="text-center py-12">Loading plans...</div>;
   if (isError) return <div className="text-center py-12 text-red-500">Failed to load plans.</div>;
   return (
     <div className="subscription-plans flex-1">

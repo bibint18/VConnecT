@@ -3,14 +3,18 @@ import { addNewPlan } from "../api/adminAuth";
 import {toast} from 'react-toastify'
 import { AxiosError } from "axios";
 interface PlanFormData {
-  name: string;
-  type: string;
+  _id?:string
+  name:string;
+  type:"paid" | "free";
   description: string;
   regularAmount: number;
   discountAmount: number;
   benefits: string[];
   isListed: boolean;
-  duration: string;
+  duration: '1 month' | '3 months' | '6 months' | '9 months' | '12 months';
+  createdAt?: Date;
+  isDeleted?:boolean;
+  roomBenefit:number;
 }
 
 export const useAddPlan = () => {

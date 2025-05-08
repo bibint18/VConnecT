@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import Signup from "../../pages/Signup";
-import VerifyOTP from "../../pages/VerifyOTP";
+// import VerifyOTP from "../../pages/VerifyOTP";
 import Login from "../Login";
 import AdminLogin from "../AdminLogin";
 // import Dashboard from "./components/Dashboard";
@@ -45,7 +45,7 @@ import UserProtectedRoute from "../User/UserProtectedRoute";
 import DirectCallPage from "../User/Chat/DirectCallPage";
 // import AdminDashboardd from "../admin/Dashboardd/AdminDashboard";
 import DashboardPageAdmin from "@/pages/DashboardPage";
-import CreatePost from "../User/Post/CreatePost";
+// import CreatePost from "../User/Post/CreatePost";
 // import MyPosts from "../User/Post/MyPost";
 // import PostFeed from "../User/Post/PostFeed";
 import MyPostPage from "../User/Post/MyPostPage";
@@ -58,7 +58,7 @@ function AppRoute() {
     <Routes>
       <Route path="/signup" element={<Signup />} />
       <Route path="/landing" element={<LandingPage />} />
-      <Route path="/verify-otp" element={<VerifyOTP />} />
+      {/* <Route path="/verify-otp" element={<VerifyOTP />} /> */}
       <Route path="/login" element={<Login />} />
       <Route path="/adminLogin" element={<AdminLogin />} />
       <Route path="/" element={<HomePage />} />
@@ -78,7 +78,7 @@ function AppRoute() {
       <Route path="/user/plans" element={<PlansPage />} />
       <Route path="/pricing/success" element={<PricingSuccess />} />
       <Route path="/call/:callId" element={<DirectCallPage />} />
-      <Route path="/createPost" element={<CreatePost />} />
+      {/* <Route path="/createPost" element={<CreatePost />} /> */}
       <Route path="/myPost" element={<MyPostPage />} />
       <Route path="/feed" element={<FeedPage />} />
       <Route path="/post/:postId" element={<PostView />} />

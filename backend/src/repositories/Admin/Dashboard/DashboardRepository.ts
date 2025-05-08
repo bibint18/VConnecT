@@ -1,6 +1,5 @@
 import { IDashboardRepository,DashboardData } from "../../../interfaces/Admin/Dashboard/IDashboardRepo";
-import { User,IUser } from "../../../models/User";
-import { Plan } from "../../../models/PlansModel";
+import { User } from "../../../models/User";
 
 import { Room } from "../../../models/RoomModel";
 import { AppError } from "../../../utils/AppError";

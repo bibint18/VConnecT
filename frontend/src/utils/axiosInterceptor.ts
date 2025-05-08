@@ -4,8 +4,9 @@ import { store } from '../redux/store';
 import { login, logout } from '../redux/authSlice';
 import { loginTheUser, logoutTheUser } from '../redux/userSlice';
 import toast from 'react-hot-toast';
+const BaseUrl = import.meta.env.VITE_API_URL
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:3000/api/auth',
+  baseURL: BaseUrl,
   withCredentials: true, 
 });
 

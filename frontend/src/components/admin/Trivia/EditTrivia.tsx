@@ -7,11 +7,11 @@ import toast from "react-hot-toast";
 const AdminTriviaEdit: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { data: trivia, isPending: isFetching } = useTriviaQuestionById(id || "");
+  const { data: trivia, isLoading: isFetching } = useTriviaQuestionById(id || "");
   const [question, setQuestion] = useState("");
   const [options, setOptions] = useState(["", "", "", ""]);
   const [correctAnswer, setCorrectAnswer] = useState("");
-  const { mutate: updateTrivia, isPending: isUpdating } = useUpdateTriviaQuestion();
+  const { mutate: updateTrivia, isLoading: isUpdating } = useUpdateTriviaQuestion();
 
   // Pre-fill form when data loads
   React.useEffect(() => {

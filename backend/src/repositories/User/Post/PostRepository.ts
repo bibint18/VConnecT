@@ -3,13 +3,13 @@ import { IPostRepository,IPost, IComment } from "../../../interfaces/user/Commun
 import { Post } from "../../../models/PostModel";
 import { AppError } from "../../../utils/AppError";
 import { IUser, User } from "../../../models/User";
-import { Comment, ICommentDocument } from "../../../models/CommentModel";
+import { Comment} from "../../../models/CommentModel";
 export class PostRepository implements IPostRepository{
   async create(post: IPost): Promise<string> {
     
-    const postData = {
-      ...post,userId:new mongoose.Types.ObjectId(post.userId._id)
-    }
+    // const postData = {
+    //   ...post,userId:new mongoose.Types.ObjectId(post.userId._id)
+    // }
     const newPost = new Post(post)
     await newPost.save()
     return newPost._id.toString()

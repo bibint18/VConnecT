@@ -1,5 +1,4 @@
 import { IUserRewardService } from "../../../interfaces/user/Reward/IUserRewardService";
-import { IRewardRepository } from "../../../interfaces/Admin/Reward/IRewardRepository";
 import { IUserRepository } from "../../../interfaces/IUserRepository";
 import { IReward } from "../../../models/RewardModel";
 import { IUser } from "../../../models/User";

@@ -59,8 +59,8 @@ app.use('/api/auth',publicRoutes)
 
 const directCallRepository=new DirectCallRepository()
 const directCallController = new DirectCallController(directCallRepository)
-const callService = new CallService(new CallRepository(),directCallRepository,io)
-const friendService = new FriendService(new FriendRepository(),io)
+export const callService = new CallService(new CallRepository(),directCallRepository,io)
+export const friendService = new FriendService(new FriendRepository(),io)
 app.use("/api/auth",createUserRoutes(chatIo,directCallController))
 app.use(errorHandler)
 

@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { createRoom } from '@/services/roomService';
 import './AddRoom.css';
 
-interface FormData {
+export interface RoomFormData {
   title: string;
   limit: number;
   premium: string;
@@ -15,7 +15,7 @@ interface FormData {
 
 const AddRoom: React.FC = () => {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState<RoomFormData>({
     title: '',
     limit: 0,
     premium: 'No',

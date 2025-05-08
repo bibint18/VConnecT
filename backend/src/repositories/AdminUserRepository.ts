@@ -1,4 +1,4 @@
-import { IUser,User } from "../models/User";
+import {User } from "../models/User";
 import { IAdminUserRepository } from "../interfaces/IAdminUserRepository";
 export class AdminUserRepository implements IAdminUserRepository{
   async getAllUsers(page:number,limit:number,searchTerm:string,sortOption:string){

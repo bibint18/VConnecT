@@ -30,7 +30,7 @@ export interface IUser{
 }
 
 import { useState } from "react"
-import { Search, ChevronDown, BarChart2, Trash2, ChevronRight, ChevronLeft } from "lucide-react"
+import { Search, BarChart2, Trash2, ChevronRight, ChevronLeft } from "lucide-react"
 import './customerDashboard.css'
 import { useUsers,useBlockUser,useDeleteUser,useUnblockUser } from "../../../hooks/useUsers"
 import Swal from "sweetalert2";

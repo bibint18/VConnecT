@@ -3,9 +3,7 @@ import { AuthService } from '../services/AuthService'
 import { UserRepository } from '../repositories/userRepository'
 import  {generateAccessToken} from '../utils/generateToken'
 import jwt from 'jsonwebtoken'
-import { access } from 'fs'
-import { IUser, User } from '../models/User'
-import bcrypt from 'bcryptjs'
+import {  User } from '../models/User'
 const authService = new AuthService(new UserRepository())
 
 export const login =async (req:Request,res:Response,next:NextFunction): Promise<void> => {
@@ -126,7 +124,7 @@ export const ResendOtp =async (req:Request,res:Response,next:NextFunction) => {
   try {
     const {email} = req.body
     const response = await authService.resendOTP(email)
-    console.log("data passed from controller")
+    console.log("data passed from controller",response)
   } catch (error:any) {
    next(error)
   }

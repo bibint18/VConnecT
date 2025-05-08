@@ -5,8 +5,21 @@
     { "path": "./tsconfig.node.json" }
   ],
   "compilerOptions": {
-    "composite": true,
-    "noEmit": false,
+    "target": "ES2020",
+    "module": "ESNext",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "jsx": "react-jsx",
+    "strict": true,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    // "allowSyntheticDefaultImports": true,
+    // "composite": true,
+    // "noEmit": false,
+    "forceConsistentCasingInFileNames": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
@@ -14,6 +27,7 @@
   },
   "include": [
     "src/**/*",
-    "src/types/**/*" // Add this if cloudinary.d.ts is in src/types/
-  ]
+    "src/types/**/*", // Add this if cloudinary.d.ts is in src/types/
+  ],
+  "exclude": ["node_modules"]
 }

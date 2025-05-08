@@ -1,7 +1,7 @@
+import { RoomFormData } from "@/components/User/Room/AddRoom";
 import axiosInstance from "@/utils/axiosInterceptor";
 import { AxiosError } from "axios";
-import { FormData } from "@/components/User/Room/AddRoom";
-
+// import FormData  from "@/components/User/Room/AddRoom";
 // interface RoomData{
 //   title:string;
 //   limit:number;
@@ -10,7 +10,7 @@ import { FormData } from "@/components/User/Room/AddRoom";
 //   description:string
 // }
 
-export const createRoom = async (RoomData:FormData) => {
+export const createRoom = async (RoomData:RoomFormData) => {
   try {
     const response = await axiosInstance.post('/user/room/create',RoomData)
     return response.data

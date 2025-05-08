@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { IDirectCallRepository } from "../../../interfaces/user/Call/IDirectCallRepository";
-import { nextTick } from "process";
 
 export class DirectCallController {
   private directCallRepository: IDirectCallRepository;

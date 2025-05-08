@@ -1,8 +1,8 @@
-import { DefaultEventsMap, Namespace, RemoteSocket, Server,Socket } from "socket.io";
+import {  Namespace, Socket } from "socket.io";
 import { IChatRepository } from "../../../interfaces/user/Chat/IChatRepository";
 import { IChatService } from "../../../interfaces/user/Chat/IChatService";
 import { IMessage, IMessageInput } from "../../../models/MessageModel";
-import mongoose, { mongo } from "mongoose";
+import mongoose  from "mongoose";
 import { IFriendCallRepository } from "../../../interfaces/user/Call/IFriendCallRepository";
 import { ICallInput } from "../../../models/CallModel";
 

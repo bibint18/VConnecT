@@ -1,5 +1,4 @@
-import { Types } from "mongoose";
-import mongoose from "mongoose";
+
 import { IParticipant } from "../models/RoomModel";
 export interface ICallRepository{
   joinCall(roomId:string,userId:string):Promise<void>;

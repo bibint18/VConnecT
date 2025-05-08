@@ -1,0 +1,43 @@
+runtime: nodejs18
+instance_class: F1
+
+handlers:
+  # Serve JavaScript files
+  - url: /assets/(.*\.js)
+    static_files: dist/assets/\1
+    upload: dist/assets/(.*\.js)
+    secure: always
+    mime_type: application/javascript
+
+  # Serve CSS files
+  - url: /assets/(.*\.css)
+    static_files: dist/assets/\1
+    upload: dist/assets/(.*\.css)
+    secure: always
+    mime_type: text/css
+
+  # Serve images
+  - url: /assets/(.*\.(png|jpg|jpeg|svg))
+    static_files: dist/assets/\1
+    upload: dist/assets/(.*\.(png|jpg|jpeg|svg))
+    secure: always
+    mime_type: image/\2
+
+  # Serve static files in dist/ (e.g., vite.svg)
+  - url: /(.*\.(svg|png|jpg|jpeg))
+    static_files: dist/\1
+    upload: dist/(.*\.(svg|png|jpg|jpeg))
+    secure: always
+    mime_type: image/\2
+
+  # Serve index.html for SPA routing
+  - url: /.*
+    static_files: dist/index.html
+    upload: dist/index.html
+    secure: always
+    mime_type: text/html
+
+env_variables:
+  # Temporary placeholders (update after backend deployment)
+  VITE_API_URL: "http://localhost:5173"
+  VITE_WEB_SOCKET_URL: "ws://localhost:3000"

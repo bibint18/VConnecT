@@ -28,8 +28,9 @@ export class DirectCallManager {
     this.username = userId; // TODO: Replace with actual username if available
     this.callDetails = callDetails; // CHANGE: Store callDetails
     this.streamCallback = streamCallback;
-
-    this.socket = io("http://localhost:3000", {
+    const socketUrl = import.meta.env.VITE_WEB_SOCKET_URL
+    console.log("socket url",socketUrl)
+    this.socket = io(socketUrl, {
       withCredentials: true,
       reconnection: true,
       reconnectionAttempts: 5,

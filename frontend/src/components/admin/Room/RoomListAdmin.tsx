@@ -1,20 +1,5 @@
 
 "use client"
-// interface User{
-//   _id:string;
-//   name:string,
-//   email:string,
-//   password:string,
-//   otp?:string,
-//   otpExpiry?:Date,
-//   isVerified:boolean
-//   isAdmin:boolean
-//   failedLoginAttempts: number;
-//   lockUntil: Date | null;
-//   plan:string;
-//   isDeleted:boolean;
-//   isBlocked:boolean
-// }
 
 import { useState } from "react"
 import { Search, ChevronDown, BarChart2,ScanSearch, ChevronRight, ChevronLeft } from "lucide-react"

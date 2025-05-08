@@ -1,6 +1,3 @@
-import { IUser } from "../../../models/User";
-import { IPlan } from "../../../models/PlansModel";
-import { IRoom } from "../../../models/RoomModel";
 
 
 export interface DashboardData {

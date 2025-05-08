@@ -1,0 +1,20 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const recaptchaMiddleware_1 = __importDefault(require("../middlewares/recaptchaMiddleware"));
+const AuthController_1 = require("../controllers/AuthController");
+const router = express_1.default.Router();
+router.post("/signup", AuthController_1.signup);
+router.post("/verify-otp", AuthController_1.verifyOTP);
+router.post('/resend-otp', AuthController_1.ResendOtp);
+router.post('/login', recaptchaMiddleware_1.default, AuthController_1.login);
+router.post('/refresh', AuthController_1.refresh);
+router.post("/adminLogin", AuthController_1.LoginAdmin);
+router.post('/adminLogout', AuthController_1.adminLogout);
+router.post('logout', AuthController_1.userLogout);
+router.post('/google-login', AuthController_1.googleLogin);
+router.get('/HomeData', AuthController_1.HomeData);
+exports.default = router;

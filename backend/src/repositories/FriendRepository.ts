@@ -4,12 +4,12 @@ import { IUser,User} from "../models/User";
 import { AppError } from "../utils/AppError";
 
 
-interface IPopulatedUser {
-  _id: string;
-  name: string;
-  username: string;
-  profileImage?: string;
-}
+// interface IPopulatedUser {
+//   _id: string;
+//   name: string;
+//   username: string;
+//   profileImage?: string;
+// }
 
 export class FriendRepository implements IFriendRepository{
   async sendFriendRequest(from: string, to: string): Promise<void> {

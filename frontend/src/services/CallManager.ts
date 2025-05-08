@@ -14,7 +14,7 @@ interface PeerConnection {
 export class CallManager {
   private socket: Socket;
   private localStream: MediaStream | null = null;
-  private peerConnections: Map<string, PeerConnection> = new Map(); // Key: socketId
+  private peerConnections: Map<string, PeerConnection> = new Map(); 
   private roomId: string;
   private userId: string;
   private username:string;
@@ -25,7 +25,8 @@ export class CallManager {
     this.userId = userId;
     this.username=username
     this.onStreamUpdate = onStreamUpdate;
-    this.socket = io('http://localhost:3000', { withCredentials: true, 
+    const socketUrl = import.meta.env.VITE_WEB_SOCKET_URL
+    this.socket = io(socketUrl, { withCredentials: true, 
      reconnection:true,
      reconnectionAttempts:Infinity,
      reconnectionDelay:1000, 
@@ -213,7 +214,7 @@ export class CallManager {
 
     this.socket.on('disconnect', (reason) => {
       console.log('Socket disconnected:', reason);
-      toast.warn('Disconnected from server, attempting to reconnect...');
+      // toast.warn('Disconnected from server, attempting to reconnect...');
     });
   }
 
@@ -275,7 +276,8 @@ export class CallManager {
     } else if (pc.connectionState === 'failed') {
       console.error('Peer connection failed for:', socketId);
       this.removePeerConnection(socketId);
-      toast.error('A peer connection failed');
+      console.log("Peer connection failed")
+      // toast.error('A peer connection failed');
     } else if (pc.connectionState === 'disconnected') {
       console.warn('Peer temporarily disconnected for:', socketId);
       // Don’t remove immediately; wait for persistent failure

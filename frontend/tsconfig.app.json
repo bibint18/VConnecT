@@ -50,10 +50,11 @@
 
     /* Bundler mode */
     "moduleResolution": "node", // Changed from "bundler" to "node"
-    "allowImportingTsExtensions": true,
+    "allowImportingTsExtensions": false,
+    "composite": true,
     "isolatedModules": true,
     "moduleDetection": "force",
-    "noEmit": true,
+    "noEmit": false,
     "jsx": "react-jsx",
     "esModuleInterop": true, // Added for module interoperability
     "allowSyntheticDefaultImports": true, // Added for default imports

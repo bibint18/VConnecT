@@ -7,7 +7,6 @@ import { FriendRepository } from '../repositories/FriendRepository'
 import { DailyTriviaRepository } from '../repositories/DailyTriviaRepository'
 import { DailyTriviaService } from '../services/DailyTriviaService'
 import { DailyTriviaController } from '../controllers/DailyTriviaController'
-import { auth } from 'google-auth-library'
 import { UserFriendRespository } from '../repositories/UserFriendRepository'
 import { UserFriendService } from '../services/UserFriendService'
 import { UserFriendController } from '../controllers/UserFriendController'
@@ -110,7 +109,7 @@ router.get("/call/details", authenticateToken,directCallController.getCallDetail
 //post
 const postRepository = new PostRepository()
 const cloudinaryService = new CloudinaryService()
-const postService = new PostService(postRepository,cloudinaryService)
+const postService = new PostService(postRepository)
 const postController = new PostController(postService,cloudinaryService)
 router.post('/posts',authenticateToken,[
   body('content').optional().isString().trim().isLength({ max: 1000 }),

@@ -1,13 +1,11 @@
 import { IUserRepository } from "../interfaces/IUserRepository";
 import nodemailer from 'nodemailer'
-import crypto, { hash } from 'crypto'
-import { IUser, User } from "../models/User";
+import crypto from 'crypto'
 import bcrypt from 'bcryptjs'
 import { OtpVerification } from "../models/OtpModel";
 import { generateAccessToken,generateRefreshToken } from "../utils/generateToken";
 import { OAuth2Client } from "google-auth-library";
 import { AppError } from "../utils/AppError";
-import { StringifyOptions } from "querystring";
 
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
 export class AuthService {

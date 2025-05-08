@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { format, isAfter, isBefore, isEqual } from "date-fns";
+import {format,isAfter, isBefore, isEqual } from "date-fns";
 import { toast } from "react-hot-toast";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -206,7 +206,7 @@ const AdminDashboardd: React.FC = () => {
               selected={startDate}
               onSelect={handleStartDateSelect}
               initialFocus
-              disabled={(date) => isAfter(date, today)}
+              disabled={(date:Date) => isAfter(date, today)}
               classNames={{
                 day_disabled: "!text-gray-400 !cursor-not-allowed",
               }}
@@ -226,7 +226,7 @@ const AdminDashboardd: React.FC = () => {
               selected={endDate}
               onSelect={handleEndDateSelect}
               initialFocus
-              disabled={(date) =>
+              disabled={(date:Date) =>
                 (startDate && (isBefore(date, startDate) || isEqual(date, startDate))) ||
                 isAfter(date, today)
               }

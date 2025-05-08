@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useResendOTP } from "../hooks/useResendOTP";
 import { AxiosError } from "axios";
 import "./VerifyOTP.css";
+import toast from "react-hot-toast";
 
 const VerifyOTP = ({ email,name,password }: { email: string;name:string;password:string }) => {
   const navigate = useNavigate();
@@ -28,7 +29,7 @@ useEffect(() => {
       { email, otp,name,password },
       {
         onSuccess: () => {
-          alert("OTP Verified! Redirecting to login.");
+          toast.success("OTP Verified! Redirecting to login.");
           navigate("/login");
         },
         onError: (error) => {
@@ -69,13 +70,13 @@ useEffect(() => {
         <h2>Verify OTP</h2>
         <form onSubmit={handleSubmit}>
           <input type="text" placeholder="Enter OTP" value={otp} onChange={(e) => setOtp(e.target.value)} required />
-          <button type="submit" disabled={verifyMutation.isPending}>
-            {verifyMutation.isPending ? "Verifying..." : "Verify OTP"}
+          <button type="submit" disabled={verifyMutation.isLoading}>
+            {verifyMutation.isLoading ? "Verifying..." : "Verify OTP"}
           </button>
         </form>
         <p>Resend OTP in {timer}s</p>
-        <button onClick={handleResendOTP} disabled={resendDisabled || resendMutation.isPending}>
-          {resendMutation.isPending ? "Resending..." : "Resend OTP"}
+        <button onClick={handleResendOTP} disabled={resendDisabled || resendMutation.isLoading}>
+          {resendMutation.isLoading ? "Resending..." : "Resend OTP"}
         </button>
       </div>
     </div>

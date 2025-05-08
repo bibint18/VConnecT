@@ -1,5 +1,4 @@
 import mongoose,{Schema, Types} from "mongoose";
-import { title } from "process";
 import { IUser } from "./User";
 
 export interface IParticipant {

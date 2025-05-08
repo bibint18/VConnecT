@@ -13,7 +13,7 @@ const AdminTriviaForm: React.FC = () => {
   const [options, setOptions] = useState(["", "", "", ""]);
   const [correctAnswer, setCorrectAnswer] = useState("");
   const [errors,setErrors] = useState<FormErrors>({})
-  const { mutate: addTrivia, isPending } = useAddTriviaQuestion();
+  const { mutate: addTrivia, isLoading } = useAddTriviaQuestion();
 
   const handleOptionChange = (index: number, value: string) => {
     const newOptions = [...options];
@@ -134,8 +134,8 @@ const AdminTriviaForm: React.FC = () => {
           </div>
 
           {/* Submit Button */}
-          <button type="submit" className="form-button" disabled={isPending}>
-            {isPending ? "Adding..." : "Add Trivia Question"}
+          <button type="submit" className="form-button" disabled={isLoading}>
+            {isLoading ? "Adding..." : "Add Trivia Question"}
           </button>
         </form>
       </div>

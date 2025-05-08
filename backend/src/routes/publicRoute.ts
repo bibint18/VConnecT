@@ -9,7 +9,6 @@ import
   LoginAdmin,
   adminLogout,
   userLogout,
-  getAbout,
   googleLogin,
   HomeData
 } 

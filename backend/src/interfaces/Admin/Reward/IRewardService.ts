@@ -1,5 +1,4 @@
 import { IReward } from "../../../models/RewardModel";
-import { IUser } from "../../../models/User";
 
 export interface IRewardService {
   createReward(rewardData: Partial<IReward>, adminId: string): Promise<IReward>;

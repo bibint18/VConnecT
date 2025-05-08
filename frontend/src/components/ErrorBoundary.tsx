@@ -19,7 +19,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
     console.error('ErrorBoundary caught:', error, errorInfo);
   }
 
-  render() {
+  render():React.ReactNode {
     if (this.state.hasError) {
       return <h1>PAGE NOT FOUND</h1>;
     }

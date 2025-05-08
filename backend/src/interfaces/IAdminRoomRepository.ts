@@ -1,5 +1,4 @@
-import { IRoom, Room } from "../models/RoomModel";
-import { IUser } from "../models/User";
+import { IRoom} from "../models/RoomModel";
 
 export interface IAdminRoomRepository{
   getAllRooms(page:number,limit:number,searchTerm:string,sortOption:string):Promise<IRoom[]>
