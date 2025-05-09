@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { IDirectCallRepository } from "../../../interfaces/user/Call/IDirectCallRepository";
+import { IDirectCallRepository } from "../../../interfaces/user/Call/IDirectCallRepository.js";
 
 export class DirectCallController {
   private directCallRepository: IDirectCallRepository;

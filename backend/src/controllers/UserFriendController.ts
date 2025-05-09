@@ -1,7 +1,7 @@
 import { Request,Response,NextFunction } from "express";
-import { IUserFriendController } from "../interfaces/IUserFriendController";
-import { IUserFriendService } from "../interfaces/IUserFriendService";
-import { AppError } from "../utils/AppError";
+import { IUserFriendController } from "../interfaces/IUserFriendController.js";
+import { IUserFriendService } from "../interfaces/IUserFriendService.js";
+import { AppError } from "../utils/AppError.js";
 
 export class UserFriendController implements IUserFriendController{
   private userFriendService: IUserFriendService;

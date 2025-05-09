@@ -1,7 +1,7 @@
-import { IUserFriendRepository } from "../interfaces/IUserFriendRepository";
-import { Message } from "../models/MessageModel";
-import { User } from "../models/User";
-import { AppError } from "../utils/AppError";
+import { IUserFriendRepository } from "../interfaces/IUserFriendRepository.js";
+import { Message } from "../models/MessageModel.js";
+import { User } from "../models/User.js";
+import { AppError } from "../utils/AppError.js";
 
 export class UserFriendRespository implements IUserFriendRepository{
   async getUserFriends(userId: string): Promise<{ id: string; name: string; avatar: string; lastMessage: string; timestamp: string; isOnline: boolean; unreadCount:number;fullTimestamp: Date; }[]> {

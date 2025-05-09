@@ -1,4 +1,4 @@
-import { IDailyTrivia } from "../models/DailyTriviaModel";
+import { IDailyTrivia } from "../models/DailyTriviaModel.js";
 
 export interface IDailyTriviaService{
   getDailyTriviaQuestions(limit: number): Promise<IDailyTrivia[]>

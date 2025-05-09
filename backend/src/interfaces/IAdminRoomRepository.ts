@@ -1,4 +1,4 @@
-import { IRoom} from "../models/RoomModel";
+import { IRoom} from "../models/RoomModel.js";
 
 export interface IAdminRoomRepository{
   getAllRooms(page:number,limit:number,searchTerm:string,sortOption:string):Promise<IRoom[]>

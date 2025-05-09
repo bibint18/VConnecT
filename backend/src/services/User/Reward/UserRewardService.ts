@@ -1,8 +1,8 @@
-import { IUserRewardService } from "../../../interfaces/user/Reward/IUserRewardService";
-import { IUserRepository } from "../../../interfaces/IUserRepository";
-import { IReward } from "../../../models/RewardModel";
-import { IUser } from "../../../models/User";
-import { IUserRewardRepo } from "../../../interfaces/user/Reward/IUserRepository";
+import { IUserRewardService } from "../../../interfaces/user/Reward/IUserRewardService.js";
+import { IUserRepository } from "../../../interfaces/IUserRepository.js";
+import { IReward } from "../../../models/RewardModel.js";
+import { IUser } from "../../../models/User.js";
+import { IUserRewardRepo } from "../../../interfaces/user/Reward/IUserRepository.js";
 
 export class UserRewardService implements IUserRewardService {
   constructor(

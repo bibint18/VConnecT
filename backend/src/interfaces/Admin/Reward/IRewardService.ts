@@ -1,4 +1,4 @@
-import { IReward } from "../../../models/RewardModel";
+import { IReward } from "../../../models/RewardModel.js";
 
 export interface IRewardService {
   createReward(rewardData: Partial<IReward>, adminId: string): Promise<IReward>;

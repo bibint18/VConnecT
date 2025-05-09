@@ -1,4 +1,4 @@
-import { ICall, ICallInput } from "../../../models/CallModel"; 
+import { ICall, ICallInput } from "../../../models/CallModel.js"; 
 export interface IFriendCallRepository{
   createCall(call:ICallInput):Promise<ICall>;
   findCallById(callId:string):Promise<ICall | null>;

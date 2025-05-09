@@ -1,5 +1,5 @@
-import {User } from "../models/User";
-import { IAdminUserRepository } from "../interfaces/IAdminUserRepository";
+import {User } from "../models/User.js";
+import { IAdminUserRepository } from "../interfaces/IAdminUserRepository.js";
 export class AdminUserRepository implements IAdminUserRepository{
   async getAllUsers(page:number,limit:number,searchTerm:string,sortOption:string){
     const query: any = {isAdmin:false,isDeleted:false}

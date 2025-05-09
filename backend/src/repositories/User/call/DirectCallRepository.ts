@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
-import { ICall,ICallInput,Call } from "../../../models/CallModel";
-import { AppError } from "../../../utils/AppError";
-import { IDirectCallRepository } from "../../../interfaces/user/Call/IDirectCallRepository";
+import { ICall,ICallInput,Call } from "../../../models/CallModel.js";
+import { AppError } from "../../../utils/AppError.js";
+import { IDirectCallRepository } from "../../../interfaces/user/Call/IDirectCallRepository.js";
 
 export class DirectCallRepository implements IDirectCallRepository {
   async createCall(input: ICallInput): Promise<ICall> {

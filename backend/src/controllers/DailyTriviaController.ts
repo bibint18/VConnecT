@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
-import { IDailyTriviaController } from "../interfaces/DailyTriviaController";
-import { IDailyTriviaService } from "../interfaces/DailyTriviaService";
-import { User } from "../models/User";
+import { IDailyTriviaController } from "../interfaces/DailyTriviaController.js";
+import { IDailyTriviaService } from "../interfaces/DailyTriviaService.js";
+import { User } from "../models/User.js";
 
 export class DailyTriviaController implements IDailyTriviaController{
   private triviaService:IDailyTriviaService

@@ -1,6 +1,6 @@
 import { Request,Response,NextFunction } from "express";
-import { IDashboardController } from "../../../interfaces/Admin/Dashboard/IDashboardController";
-import { IDashboardService } from "../../../interfaces/Admin/Dashboard/IDashboardService";
+import { IDashboardController } from "../../../interfaces/Admin/Dashboard/IDashboardController.js";
+import { IDashboardService } from "../../../interfaces/Admin/Dashboard/IDashboardService.js";
 
 export class DashboardController implements IDashboardController{
   private adminService:IDashboardService

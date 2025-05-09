@@ -1,9 +1,9 @@
 import mongoose from "mongoose";
-import { IPostRepository,IPost, IComment } from "../../../interfaces/user/Community/IPostRepository";
-import { Post } from "../../../models/PostModel";
-import { AppError } from "../../../utils/AppError";
-import { IUser, User } from "../../../models/User";
-import { Comment} from "../../../models/CommentModel";
+import { IPostRepository,IPost, IComment } from "../../../interfaces/user/Community/IPostRepository.js";
+import { Post } from "../../../models/PostModel.js";
+import { AppError } from "../../../utils/AppError.js";
+import { IUser, User } from "../../../models/User.js";
+import { Comment} from "../../../models/CommentModel.js";
 export class PostRepository implements IPostRepository{
   async create(post: IPost): Promise<string> {
     

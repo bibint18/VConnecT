@@ -1,5 +1,5 @@
-import { IRoom } from "../models/RoomModel";
-import { IUser } from "../models/User";
+import { IRoom } from "../models/RoomModel.js";
+import { IUser } from "../models/User.js";
 
 export interface IRoomRepository{
   createRoom(roomData:IRoom):Promise<IRoom | null>

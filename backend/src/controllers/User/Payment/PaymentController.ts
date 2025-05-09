@@ -1,7 +1,7 @@
 import { Request,Response,NextFunction } from "express";
-import { IPaymentService } from "../../../interfaces/user/Payment/IPaymentService";
-import { UserIPlanService } from "../../../interfaces/user/Plans/UserIplansService";
-import { IpaymentController } from "../../../interfaces/user/Payment/IPaymentController";
+import { IPaymentService } from "../../../interfaces/user/Payment/IPaymentService.js";
+import { UserIPlanService } from "../../../interfaces/user/Plans/UserIplansService.js";
+import { IpaymentController } from "../../../interfaces/user/Payment/IPaymentController.js";
 
 export class PaymentController implements IpaymentController{
   private paymentService:IPaymentService;

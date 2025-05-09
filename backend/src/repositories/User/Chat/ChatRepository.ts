@@ -1,6 +1,6 @@
 
-import { IChatRepository } from "../../../interfaces/user/Chat/IChatRepository";
-import { IMessage, IMessageInput, Message } from "../../../models/MessageModel";
+import { IChatRepository } from "../../../interfaces/user/Chat/IChatRepository.js";
+import { IMessage, IMessageInput, Message } from "../../../models/MessageModel.js";
 import mongoose from "mongoose";
 
 export class ChatRepository implements IChatRepository{

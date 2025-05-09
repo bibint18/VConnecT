@@ -1,7 +1,7 @@
-import { IFriendRepository } from "../interfaces/IFriendRepository";
-import { FriendRequest } from "../models/FriendRequestModel";
-import { IUser,User} from "../models/User";
-import { AppError } from "../utils/AppError";
+import { IFriendRepository } from "../interfaces/IFriendRepository.js";
+import { FriendRequest } from "../models/FriendRequestModel.js";
+import { IUser,User} from "../models/User.js";
+import { AppError } from "../utils/AppError.js";
 
 
 // interface IPopulatedUser {

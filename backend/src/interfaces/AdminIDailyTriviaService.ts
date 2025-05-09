@@ -1,4 +1,4 @@
-import { IDailyTrivia } from "../models/DailyTriviaModel";
+import { IDailyTrivia } from "../models/DailyTriviaModel.js";
 
 export interface IAdminDailyTriviaService{
   addTriviaQuestion(question: string,options: string[],correctAnswer: string):Promise<IDailyTrivia>;

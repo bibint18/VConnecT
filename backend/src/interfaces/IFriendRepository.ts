@@ -1,5 +1,5 @@
 
-import { IUser } from "../models/User";
+import { IUser } from "../models/User.js";
 
 export interface IFriendRepository{
   sendFriendRequest(from: string, to: string): Promise<void>;

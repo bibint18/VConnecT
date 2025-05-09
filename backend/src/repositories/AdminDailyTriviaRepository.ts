@@ -1,6 +1,6 @@
-import { IAdminDailyTriviaRepository } from "../interfaces/AdminIDailyTriviaReposiroy";
-import { DailyTrivia, IDailyTrivia } from "../models/DailyTriviaModel";
-import { AppError } from "../utils/AppError";
+import { IAdminDailyTriviaRepository } from "../interfaces/AdminIDailyTriviaReposiroy.js";
+import { DailyTrivia, IDailyTrivia } from "../models/DailyTriviaModel.js";
+import { AppError } from "../utils/AppError.js";
 
 export class AdminDailyTriviaReposiroy implements IAdminDailyTriviaRepository{
   async addTriviaQuestion(question: string, options: string[], correctAnswer: string): Promise<IDailyTrivia> {

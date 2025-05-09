@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
-import { IFriendRepository } from "../interfaces/IFriendRepository";
-import { AppError } from "../utils/AppError";
-import { User } from "../models/User";
+import { IFriendRepository } from "../interfaces/IFriendRepository.js";
+import { AppError } from "../utils/AppError.js";
+import { User } from "../models/User.js";
 
 export class FriendController {
   private friendRepository: IFriendRepository;

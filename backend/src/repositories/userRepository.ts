@@ -1,8 +1,8 @@
-import { IUserRepository } from "../interfaces/IUserRepository";
-import { IUser,User } from "../models/User";
-import { OtpVerification } from "../models/OtpModel";
+import { IUserRepository } from "../interfaces/IUserRepository.js";
+import { IUser,User } from "../models/User.js";
+import { OtpVerification } from "../models/OtpModel.js";
 import { Types } from "mongoose";
-import { Room } from "../models/RoomModel";
+import { Room } from "../models/RoomModel.js";
 
 export class UserRepository implements IUserRepository{
   async createUser(data: Partial<IUser>): Promise<IUser |null> {

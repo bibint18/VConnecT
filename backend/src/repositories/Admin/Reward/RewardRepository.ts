@@ -1,7 +1,7 @@
 
-import { IRewardRepository } from "../../../interfaces/Admin/Reward/IRewardRepository";
-import { IReward } from "../../../models/RewardModel";
-import { Reward } from "../../../models/RewardModel";
+import { IRewardRepository } from "../../../interfaces/Admin/Reward/IRewardRepository.js";
+import { IReward } from "../../../models/RewardModel.js";
+import { Reward } from "../../../models/RewardModel.js";
 
 export class RewardRepository implements IRewardRepository{
   async createReward(reward: Partial<IReward>): Promise<IReward> {

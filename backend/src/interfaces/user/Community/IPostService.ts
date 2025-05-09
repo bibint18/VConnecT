@@ -1,5 +1,5 @@
-import { IUser } from "../../../models/User";
-import { IComment, IPost } from "./IPostRepository";
+import { IUser } from "../../../models/User.js";
+import { IComment, IPost } from "./IPostRepository.js";
 
 export interface IPostService {
   createPost(userId: string, content?: string, mediaUrl?: string, mediaType?: 'text' | 'image' | 'video'):Promise<string>;

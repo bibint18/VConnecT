@@ -1,5 +1,5 @@
-import { IFriendCallRepository } from "../../../interfaces/user/Call/IFriendCallRepository";
-import { Call,ICall, ICallInput } from "../../../models/CallModel";
+import { IFriendCallRepository } from "../../../interfaces/user/Call/IFriendCallRepository.js";
+import { Call,ICall, ICallInput } from "../../../models/CallModel.js";
 import mongoose from "mongoose";
 
 export class FriendCallRepository implements IFriendCallRepository{

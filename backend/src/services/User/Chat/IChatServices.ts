@@ -1,10 +1,10 @@
 import {  Namespace, Socket } from "socket.io";
-import { IChatRepository } from "../../../interfaces/user/Chat/IChatRepository";
-import { IChatService } from "../../../interfaces/user/Chat/IChatService";
-import { IMessage, IMessageInput } from "../../../models/MessageModel";
+import { IChatRepository } from "../../../interfaces/user/Chat/IChatRepository.js";
+import { IChatService } from "../../../interfaces/user/Chat/IChatService.js";
+import { IMessage, IMessageInput } from "../../../models/MessageModel.js";
 import mongoose  from "mongoose";
-import { IFriendCallRepository } from "../../../interfaces/user/Call/IFriendCallRepository";
-import { ICallInput } from "../../../models/CallModel";
+import { IFriendCallRepository } from "../../../interfaces/user/Call/IFriendCallRepository.js";
+import { ICallInput } from "../../../models/CallModel.js";
 
 export class ChatService implements IChatService{
   private activeCallRequests = new Set<string>();

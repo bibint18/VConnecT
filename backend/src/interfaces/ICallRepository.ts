@@ -1,5 +1,5 @@
 
-import { IParticipant } from "../models/RoomModel";
+import { IParticipant } from "../models/RoomModel.js";
 export interface ICallRepository{
   joinCall(roomId:string,userId:string):Promise<void>;
   leaveCall(roomId:string,userId:string):Promise<void>

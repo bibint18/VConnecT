@@ -1,8 +1,8 @@
-import { Room ,IRoom} from "../models/RoomModel";
-import { IRoomRepository } from "../interfaces/IRoomRepository";
+import { Room ,IRoom} from "../models/RoomModel.js";
+import { IRoomRepository } from "../interfaces/IRoomRepository.js";
 import mongoose from "mongoose";
-import { AppError } from "../utils/AppError";
-import { User ,IUser} from "../models/User";
+import { AppError } from "../utils/AppError.js";
+import { User ,IUser} from "../models/User.js";
 
 export class RoomRepository implements IRoomRepository{
   async createRoom(roomData:IRoom):Promise<IRoom | null>{

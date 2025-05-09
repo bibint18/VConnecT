@@ -1,8 +1,8 @@
-import { IDashboardRepository,DashboardData } from "../../../interfaces/Admin/Dashboard/IDashboardRepo";
-import { User } from "../../../models/User";
+import { IDashboardRepository,DashboardData } from "../../../interfaces/Admin/Dashboard/IDashboardRepo.js";
+import { User } from "../../../models/User.js";
 
-import { Room } from "../../../models/RoomModel";
-import { AppError } from "../../../utils/AppError";
+import { Room } from "../../../models/RoomModel.js";
+import { AppError } from "../../../utils/AppError.js";
 
 export class DashboardRepository implements IDashboardRepository{
   async getDashboardData(startDate?: Date, endDate?: Date): Promise<DashboardData> {

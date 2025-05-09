@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken'
-import { IUser } from "../models/User";
+import { IUser } from "../models/User.js";
 
 interface TokenUser {
   _id: string;

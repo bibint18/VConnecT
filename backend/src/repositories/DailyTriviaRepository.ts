@@ -1,8 +1,8 @@
-import { IDailyTriviaRepository } from "../interfaces/DailyTriviaRepository";
-import { DailyTrivia, IDailyTrivia } from "../models/DailyTriviaModel";
-import { TriviaSubmission } from "../models/TriviaSubmissionModel";
-import { User } from "../models/User";
-import { AppError } from "../utils/AppError";
+import { IDailyTriviaRepository } from "../interfaces/DailyTriviaRepository.js";
+import { DailyTrivia, IDailyTrivia } from "../models/DailyTriviaModel.js";
+import { TriviaSubmission } from "../models/TriviaSubmissionModel.js";
+import { User } from "../models/User.js";
+import { AppError } from "../utils/AppError.js";
 
 export class DailyTriviaRepository implements IDailyTriviaRepository{
   async getDailyTriviaQuestions(limit: number): Promise<IDailyTrivia[]> {

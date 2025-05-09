@@ -1,8 +1,8 @@
 
-import { IRoomRepository } from "../interfaces/IRoomRepository";
-import { IRoom } from "../models/RoomModel";
+import { IRoomRepository } from "../interfaces/IRoomRepository.js";
+import { IRoom } from "../models/RoomModel.js";
 import { v4 as uuidv4 } from 'uuid';
-import { IUser } from "../models/User";
+import { IUser } from "../models/User.js";
 export class RoomService {
   private roomRepository:IRoomRepository
   constructor(RoomRepo:IRoomRepository){

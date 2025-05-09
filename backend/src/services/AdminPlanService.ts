@@ -1,5 +1,5 @@
-import { IPlan } from "../models/PlansModel";
-import { IPlanRepository } from "../interfaces/IAdminPlanRepository";
+import { IPlan } from "../models/PlansModel.js";
+import { IPlanRepository } from "../interfaces/IAdminPlanRepository.js";
 
 export class PlanService{
   private planRepository :IPlanRepository;

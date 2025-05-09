@@ -1,6 +1,6 @@
-import { IRewardController } from "../../../interfaces/Admin/Reward/IRewardController";
-// import { IUserRewardService } from "../../../interfaces/user/Reward/IUserRewardService";
-import { IRewardService } from "../../../interfaces/Admin/Reward/IRewardService";
+import { IRewardController } from "../../../interfaces/Admin/Reward/IRewardController.js";
+// import { IUserRewardService } from "../../../interfaces/user/Reward/IUserRewardService.js";
+import { IRewardService } from "../../../interfaces/Admin/Reward/IRewardService.js";
 import { Response,Request,NextFunction } from "express";
 
 export class AdminRewardController implements IRewardController{

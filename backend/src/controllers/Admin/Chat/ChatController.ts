@@ -1,8 +1,8 @@
 import { Request,Response,NextFunction } from "express";
-import { IChatController } from "../../../interfaces/user/Chat/IChatController";
-import { IChatService } from "../../../interfaces/user/Chat/IChatService";
-import { AppError } from "../../../utils/AppError";
-import { chatIo } from "../../../app";
+import { IChatController } from "../../../interfaces/user/Chat/IChatController.js";
+import { IChatService } from "../../../interfaces/user/Chat/IChatService.js";
+import { AppError } from "../../../utils/AppError.js";
+import { chatIo } from "../../../app.js";
 export class ChatController implements IChatController{
   private chatService:IChatService;
   constructor(chatService:IChatService){

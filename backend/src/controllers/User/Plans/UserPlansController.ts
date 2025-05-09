@@ -1,6 +1,6 @@
-import { IUserPlanController } from "../../../interfaces/user/Plans/IUserPlansController";
+import { IUserPlanController } from "../../../interfaces/user/Plans/IUserPlansController.js";
 import { Request,Response,NextFunction } from "express";
-import { UserIPlanService } from "../../../interfaces/user/Plans/UserIplansService";
+import { UserIPlanService } from "../../../interfaces/user/Plans/UserIplansService.js";
 
 export class UserPlanController implements IUserPlanController{
   private planService:UserIPlanService

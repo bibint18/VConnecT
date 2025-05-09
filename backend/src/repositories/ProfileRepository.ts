@@ -1,6 +1,6 @@
-import { IProfileRepository } from "../interfaces/IProfileRepository";
-import { IUser } from "../models/User";
-import { User } from "../models/User";
+import { IProfileRepository } from "../interfaces/IProfileRepository.js";
+import { IUser } from "../models/User.js";
+import { User } from "../models/User.js";
 
 export class ProfileRepository implements IProfileRepository{
   async findById(id: string): Promise<IUser | null> {

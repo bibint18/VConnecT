@@ -1,4 +1,4 @@
-import { IPlan } from "../../../models/PlansModel";
+import { IPlan } from "../../../models/PlansModel.js";
 export interface IUserPlanRepository{
   findActivePlans():Promise<IPlan[]>
 }

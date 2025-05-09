@@ -1,5 +1,5 @@
-import { IPlan } from "../../../models/PlansModel";
-import { IUser } from "../../../models/User";
+import { IPlan } from "../../../models/PlansModel.js";
+import { IUser } from "../../../models/User.js";
 
 export interface UserIPlanService{
   getActivePlans():Promise<IPlan[]>

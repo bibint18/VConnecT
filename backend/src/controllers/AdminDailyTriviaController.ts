@@ -1,6 +1,6 @@
 import { Request,Response,NextFunction } from "express";
-import { IAdminDailyTriviaService } from "../interfaces/AdminIDailyTriviaService";
-import { AdminIDailyTriviaController } from "../interfaces/AdminIDailyTriviaController";
+import { IAdminDailyTriviaService } from "../interfaces/AdminIDailyTriviaService.js";
+import { AdminIDailyTriviaController } from "../interfaces/AdminIDailyTriviaController.js";
 
 export class AdminDailyTriviaController implements AdminIDailyTriviaController{
   private triviaService:IAdminDailyTriviaService

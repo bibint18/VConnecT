@@ -1,4 +1,4 @@
-import { IReward } from "../../../models/RewardModel";
+import { IReward } from "../../../models/RewardModel.js";
 
 export interface IUserRewardRepo {
   findRewardById(rewardId: string): Promise<IReward | null>;

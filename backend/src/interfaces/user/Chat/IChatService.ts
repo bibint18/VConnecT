@@ -1,4 +1,4 @@
-import { IMessage } from "../../../models/MessageModel";
+import { IMessage } from "../../../models/MessageModel.js";
 import {  Socket } from "socket.io";
 
 export interface IChatService{

@@ -1,5 +1,5 @@
 import { Types } from "mongoose";
-import { IUser } from "../models/User";
+import { IUser } from "../models/User.js";
 
 export interface IUserRepository{
   createUser(data: Partial<IUser>): Promise<IUser |null>;

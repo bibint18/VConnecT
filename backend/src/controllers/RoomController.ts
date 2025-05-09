@@ -1,7 +1,7 @@
 import { Request,Response,NextFunction } from "express";
-import { IRoom} from "../models/RoomModel";
-import { RoomService } from "../services/RoomService";
-import { RoomRepository } from "../repositories/RoomsRepository";
+import { IRoom} from "../models/RoomModel.js";
+import { RoomService } from "../services/RoomService.js";
+import { RoomRepository } from "../repositories/RoomsRepository.js";
 
 export class RoomController {
   private roomService:RoomService

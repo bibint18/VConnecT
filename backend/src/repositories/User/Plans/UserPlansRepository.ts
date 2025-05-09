@@ -1,5 +1,5 @@
-import { IUserPlanRepository } from "../../../interfaces/user/Plans/UserIPlanRepository";
-import { Plan,IPlan } from "../../../models/PlansModel";
+import { IUserPlanRepository } from "../../../interfaces/user/Plans/UserIPlanRepository.js";
+import { Plan,IPlan } from "../../../models/PlansModel.js";
 
 export class UserPlanRepository implements IUserPlanRepository{
   async findActivePlans(): Promise<IPlan[]> {

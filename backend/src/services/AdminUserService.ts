@@ -1,4 +1,4 @@
-import { IAdminUserRepository } from "../interfaces/IAdminUserRepository";
+import { IAdminUserRepository } from "../interfaces/IAdminUserRepository.js";
 
 export class AdminUserService{
   public AdminUserRepository:IAdminUserRepository

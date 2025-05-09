@@ -1,4 +1,4 @@
-import { ICall,ICallInput } from "../../../models/CallModel";
+import { ICall,ICallInput } from "../../../models/CallModel.js";
 
 export interface IDirectCallRepository {
   createCall(input: ICallInput): Promise<ICall>;

@@ -1,5 +1,5 @@
-import { IReward } from "../../../models/RewardModel";
-import { IUser } from "../../../models/User";
+import { IReward } from "../../../models/RewardModel.js";
+import { IUser } from "../../../models/User.js";
 
 export interface IUserRewardService{
   getUserRewards(userId: string): Promise<IReward[]>;

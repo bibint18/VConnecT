@@ -1,4 +1,4 @@
-import { IMessage,IMessageInput } from "../../../models/MessageModel";
+import { IMessage,IMessageInput } from "../../../models/MessageModel.js";
 
 export interface IChatRepository{
   saveMessage(message:IMessageInput):Promise<void>;

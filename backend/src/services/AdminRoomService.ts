@@ -1,5 +1,5 @@
-import { IAdminRoomRepository } from "../interfaces/IAdminRoomRepository";
-import { IRoom } from "../models/RoomModel";
+import { IAdminRoomRepository } from "../interfaces/IAdminRoomRepository.js";
+import { IRoom } from "../models/RoomModel.js";
 
 export class AdminRoomService {
   private roomRepository: IAdminRoomRepository;

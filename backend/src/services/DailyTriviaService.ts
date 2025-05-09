@@ -1,6 +1,6 @@
-import { IDailyTriviaRepository } from "../interfaces/DailyTriviaRepository";
-import { IDailyTriviaService } from "../interfaces/DailyTriviaService";
-import { IDailyTrivia } from "../models/DailyTriviaModel";
+import { IDailyTriviaRepository } from "../interfaces/DailyTriviaRepository.js";
+import { IDailyTriviaService } from "../interfaces/DailyTriviaService.js";
+import { IDailyTrivia } from "../models/DailyTriviaModel.js";
 
 export class DailyTriviaService implements IDailyTriviaService{
   private triviaRepository:IDailyTriviaRepository

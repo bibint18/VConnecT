@@ -1,5 +1,5 @@
 import mongoose,{Schema, Types} from "mongoose";
-import { IUser } from "./User";
+import { IUser } from "./User.js";
 
 export interface IParticipant {
   userId: Types.ObjectId;

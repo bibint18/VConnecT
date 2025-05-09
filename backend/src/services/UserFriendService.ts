@@ -1,5 +1,5 @@
-import { IUserFriendService } from "../interfaces/IUserFriendService";
-import { IUserFriendRepository } from "../interfaces/IUserFriendRepository";
+import { IUserFriendService } from "../interfaces/IUserFriendService.js";
+import { IUserFriendRepository } from "../interfaces/IUserFriendRepository.js";
 
 export class UserFriendService implements IUserFriendService{
   private userFriendRepository:IUserFriendRepository;

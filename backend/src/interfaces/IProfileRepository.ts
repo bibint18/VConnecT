@@ -1,4 +1,4 @@
-import { IUser } from "../models/User";
+import { IUser } from "../models/User.js";
 
 export interface IProfileRepository{
   findById(id:string):Promise<IUser | null> 

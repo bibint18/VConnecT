@@ -1,10 +1,10 @@
 
 // backend/src/services/CallService.ts
 import { Server, Socket } from 'socket.io';
-import { ICallRepository } from '../interfaces/ICallRepository';
-import { AppError } from '../utils/AppError';
-import { IDirectCallRepository } from '../interfaces/user/Call/IDirectCallRepository';
-import { Call } from '../models/CallModel';
+import { ICallRepository } from '../interfaces/ICallRepository.js';
+import { AppError } from '../utils/AppError.js';
+import { IDirectCallRepository } from '../interfaces/user/Call/IDirectCallRepository.js';
+import { Call } from '../models/CallModel.js';
 
 export class CallService {
   private io: Server;

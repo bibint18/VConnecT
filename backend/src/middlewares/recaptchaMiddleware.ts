@@ -1,4 +1,4 @@
-const axios = require("axios");
+import axios from "axios";
 import { NextFunction, Request,Response ,} from "express";
 
 const verifyRecaptcha = async (req:Request, res:Response, next:NextFunction):Promise<void> => {

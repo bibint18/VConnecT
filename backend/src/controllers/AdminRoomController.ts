@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import { AdminRoomService } from "../services/AdminRoomService";
-import { AdminRoomRepository } from "../repositories/AdminRoomRepository";
+import { AdminRoomService } from "../services/AdminRoomService.js";
+import { AdminRoomRepository } from "../repositories/AdminRoomRepository.js";
 
 const roomService = new AdminRoomService(new AdminRoomRepository());
 export class AdminRoomController{

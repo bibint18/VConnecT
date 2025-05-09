@@ -1,10 +1,10 @@
 
 import { Request, Response, NextFunction } from 'express';
-import { IPostController } from '../../../interfaces/user/Community/IPostController';
-import { IPostService } from '../../../interfaces/user/Community/IPostService';
-import { ICloudinaryService } from '../../../interfaces/user/Community/ICloudinaryService';
+import { IPostController } from '../../../interfaces/user/Community/IPostController.js';
+import { IPostService } from '../../../interfaces/user/Community/IPostService.js';
+import { ICloudinaryService } from '../../../interfaces/user/Community/ICloudinaryService.js';
 import { validationResult } from 'express-validator';
-import { AppError } from '../../../utils/AppError';
+import { AppError } from '../../../utils/AppError.js';
 
 export class PostController implements IPostController {
   constructor(

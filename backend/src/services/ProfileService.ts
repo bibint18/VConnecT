@@ -1,7 +1,7 @@
 
-import { IProfileRepository } from "../interfaces/IProfileRepository";
-import { IUser } from "../models/User";
-import { AppError } from "../utils/AppError";
+import { IProfileRepository } from "../interfaces/IProfileRepository.js";
+import { IUser } from "../models/User.js";
+import { AppError } from "../utils/AppError.js";
 import bcrypt from 'bcryptjs'
 
 export class ProfileService {

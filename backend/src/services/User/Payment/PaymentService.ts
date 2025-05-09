@@ -1,7 +1,7 @@
-import { IPaymentService } from "../../../interfaces/user/Payment/IPaymentService";
+import { IPaymentService } from "../../../interfaces/user/Payment/IPaymentService.js";
 import paypal from '@paypal/checkout-server-sdk'
 
-import { IUserPlanRepository } from "../../../interfaces/user/Plans/UserIPlanRepository";
+import { IUserPlanRepository } from "../../../interfaces/user/Plans/UserIPlanRepository.js";
 
 const clientId = process.env.PAYPAL_CLIENT_ID!;
 const clientSecret = process.env.PAYPAL_CLIENT_SECRET!;

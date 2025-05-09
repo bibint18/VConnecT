@@ -1,7 +1,7 @@
 
 import { v2 as cloudinary } from 'cloudinary';
-import { CloudinarySignature,ICloudinaryService } from '../../../interfaces/user/Community/ICloudinaryService';
-import { AppError } from '../../../utils/AppError';
+import { CloudinarySignature,ICloudinaryService } from '../../../interfaces/user/Community/ICloudinaryService.js';
+import { AppError } from '../../../utils/AppError.js';
 
 export class CloudinaryService implements ICloudinaryService {
   constructor() {

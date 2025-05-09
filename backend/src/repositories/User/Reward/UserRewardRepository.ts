@@ -1,5 +1,5 @@
-import { IUserRewardRepo} from "../../../interfaces/user/Reward/IUserRepository";
-import { IReward, Reward } from "../../../models/RewardModel";
+import { IUserRewardRepo} from "../../../interfaces/user/Reward/IUserRepository.js";
+import { IReward, Reward } from "../../../models/RewardModel.js";
 export class UserRewardRepository implements IUserRewardRepo {
   async findRewardById(rewardId: string): Promise<IReward | null> {
     return await Reward.findOne({ rewardId, isDeleted: false, isActive: true });

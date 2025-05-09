@@ -1,5 +1,5 @@
 import express from 'express'
-import verifyRecaptcha from '../middlewares/recaptchaMiddleware'
+import verifyRecaptcha from '../middlewares/recaptchaMiddleware.js'
 import 
 { signup,
   verifyOTP ,
@@ -12,7 +12,7 @@ import
   googleLogin,
   HomeData
 } 
-from '../controllers/AuthController'
+from '../controllers/AuthController.js'
 
 const router = express.Router()
 router.post("/signup",signup)

@@ -1,7 +1,7 @@
 import { Server, Socket } from "socket.io";
-import { IFriendRepository } from "../interfaces/IFriendRepository";
-import { AppError } from "../utils/AppError";
-import { FriendRequest } from "../models/FriendRequestModel";
+import { IFriendRepository } from "../interfaces/IFriendRepository.js";
+import { AppError } from "../utils/AppError.js";
+import { FriendRequest } from "../models/FriendRequestModel.js";
 export class FriendService {
   private io: Server;
   private friendRepository: IFriendRepository;

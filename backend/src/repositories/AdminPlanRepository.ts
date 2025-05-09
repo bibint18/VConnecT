@@ -1,5 +1,5 @@
-import { IPlanRepository } from "../interfaces/IAdminPlanRepository";
-import { IPlan,Plan } from "../models/PlansModel";
+import { IPlanRepository } from "../interfaces/IAdminPlanRepository.js";
+import { IPlan,Plan } from "../models/PlansModel.js";
 
 export class PlansRepository implements IPlanRepository{
   async createPlan(planData: Partial<IPlan>): Promise<IPlan | null> {

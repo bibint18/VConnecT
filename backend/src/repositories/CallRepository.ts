@@ -1,6 +1,6 @@
-import { ICallRepository } from "../interfaces/ICallRepository";
-import { IParticipant, Room } from "../models/RoomModel";
-import { AppError } from "../utils/AppError";
+import { ICallRepository } from "../interfaces/ICallRepository.js";
+import { IParticipant, Room } from "../models/RoomModel.js";
+import { AppError } from "../utils/AppError.js";
 import mongoose from "mongoose";
 export class CallRepository implements ICallRepository{
   async joinCall(roomId: string, userId: string): Promise<void> {

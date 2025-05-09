@@ -1,6 +1,6 @@
-import { IDashboardService } from "../../../interfaces/Admin/Dashboard/IDashboardService";
-import { IDashboardRepository,DashboardData } from "../../../interfaces/Admin/Dashboard/IDashboardRepo";
-import { AppError } from "../../../utils/AppError";
+import { IDashboardService } from "../../../interfaces/Admin/Dashboard/IDashboardService.js";
+import { IDashboardRepository,DashboardData } from "../../../interfaces/Admin/Dashboard/IDashboardRepo.js";
+import { AppError } from "../../../utils/AppError.js";
 
 export class DashboardService implements IDashboardService{
   private adminRepository:IDashboardRepository

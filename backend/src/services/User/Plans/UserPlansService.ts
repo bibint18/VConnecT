@@ -1,8 +1,8 @@
-import { UserIPlanService } from "../../../interfaces/user/Plans/UserIplansService";
-import { IUserPlanRepository } from "../../../interfaces/user/Plans/UserIPlanRepository";
-import { IPlan } from "../../../models/PlansModel";
-import { IUserRepository } from "../../../interfaces/IUserRepository";
-import { IUser } from "../../../models/User";
+import { UserIPlanService } from "../../../interfaces/user/Plans/UserIplansService.js";
+import { IUserPlanRepository } from "../../../interfaces/user/Plans/UserIPlanRepository.js";
+import { IPlan } from "../../../models/PlansModel.js";
+import { IUserRepository } from "../../../interfaces/IUserRepository.js";
+import { IUser } from "../../../models/User.js";
 import { Types } from "mongoose";
 
 export class UserPlanService implements UserIPlanService{

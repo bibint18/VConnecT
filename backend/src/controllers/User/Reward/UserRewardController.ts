@@ -1,7 +1,7 @@
 
-import { IUserRewardService } from "../../../interfaces/user/Reward/IUserRewardService";
+import { IUserRewardService } from "../../../interfaces/user/Reward/IUserRewardService.js";
 import { Response,Request,NextFunction } from "express";
-import { IUserRewardController } from "../../../interfaces/user/Reward/IUserRewardController";
+import { IUserRewardController } from "../../../interfaces/user/Reward/IUserRewardController.js";
 
 export class UserRewardController implements IUserRewardController{
   constructor(
