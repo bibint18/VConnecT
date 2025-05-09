@@ -54,6 +54,11 @@ chatIo.on("connection", (socket) => {
 });
 app.use(express.json())
 app.use(cookieParser())
+
+app.get('/', (req, res) => {
+  res.json({message:'vconnect backend running...'});
+});
+
 app.use("/api/auth",authRoutes)
 app.use('/api/auth',publicRoutes)
 
