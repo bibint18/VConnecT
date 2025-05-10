@@ -24,8 +24,8 @@ const verifyRecaptcha = async (req:Request, res:Response, next:NextFunction):Pro
           response: recaptchaToken,
         },
       }
-    );
-    console.log("response",response)
+    )
+    console.log("response",response.data)
 
     if (!response.data.success) {
        res.status(400).json({ message: "reCAPTCHA verification failed" });
