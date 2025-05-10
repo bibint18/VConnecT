@@ -9,6 +9,7 @@ const verifyRecaptcha = async (req:Request, res:Response, next:NextFunction):Pro
 
   try {
     const secretKey = process.env.RECAPTCHA_SECRET_KEY;
+    console.log('secret key ',secretKey)
     if (!secretKey) {
       res.status(500).json({ message: "Missing reCAPTCHA secret key" });
     }
