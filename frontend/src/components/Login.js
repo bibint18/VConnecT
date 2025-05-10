@@ -17,6 +17,7 @@ const Login = () => {
     const [error, setError] = useState(null);
     const { isAuthenticated } = useAppSelector((state) => state.user);
     const sitekey = import.meta.env.RECAPTCHA_SITE_KEY;
+    console.log("sitekey", sitekey);
     // const [error, setError] = useState("");
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
