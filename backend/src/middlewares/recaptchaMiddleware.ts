@@ -5,6 +5,7 @@ const verifyRecaptcha = async (req:Request, res:Response, next:NextFunction):Pro
   const { recaptchaToken } = req.body;
   if (!recaptchaToken) {
     res.status(400).json({ message: "reCAPTCHA token is required" });
+    return
   }
 
   try {
@@ -12,6 +13,7 @@ const verifyRecaptcha = async (req:Request, res:Response, next:NextFunction):Pro
     console.log('secret key ',secretKey)
     if (!secretKey) {
       res.status(500).json({ message: "Missing reCAPTCHA secret key" });
+      return
     }
     const response = await axios.post(
       `https://www.google.com/recaptcha/api/siteverify`,
@@ -23,6 +25,7 @@ const verifyRecaptcha = async (req:Request, res:Response, next:NextFunction):Pro
         },
       }
     );
+    console.log("response",response)
 
     if (!response.data.success) {
        res.status(400).json({ message: "reCAPTCHA verification failed" });
