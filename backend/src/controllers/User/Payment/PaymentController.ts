@@ -34,7 +34,7 @@ export class PaymentController implements IpaymentController{
       const {transactionId} = await this.paymentService.executePayment(paymentId as string,payerId as string)
       console.log("transactionid",transactionId)
       await this.userPlanService.updateUserPlan(userId as string,planId as string,transactionId)
-      res.redirect("http://localhost:5173/pricing/success")
+      res.redirect(`${process.env.FRONTEND_URL}/pricing/success`)
     } catch (error) {
       next(error)
     }

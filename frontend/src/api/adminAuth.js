@@ -1,5 +1,4 @@
 import axiosInstance from "../utils/axiosInterceptor";
-const API_URL = "http://localhost:3000/api/auth";
 //USERS API
 export const fetchUsers = async (page, limit, searchTerm, sortOption) => {
     const response = await axiosInstance.get(`/admin/users`, {
@@ -23,25 +22,25 @@ export const deleteUser = async (id) => {
     return response.data;
 };
 export const addNewPlan = async (PlanData) => {
-    const response = await axiosInstance.post(`${API_URL}/admin/plans/add`, PlanData);
+    const response = await axiosInstance.post(`/admin/plans/add`, PlanData);
     return response.data;
 };
 export const fetchPlans = async (page = 1, limit = 4, search = '', sort = 'A-Z') => {
-    const response = await axiosInstance.get(`${API_URL}/admin/plans`, { params: { page, limit, search, sort } });
+    const response = await axiosInstance.get(`/admin/plans`, { params: { page, limit, search, sort } });
     console.log("fetching plans response api ", response.data);
     return response.data;
 };
 export const findPlanById = async (id) => {
-    const response = await axiosInstance.get(`${API_URL}/admin/plans/${id}`);
+    const response = await axiosInstance.get(`/admin/plans/${id}`);
     return response.data;
 };
 export const updatePlan = async (id, planData) => {
     console.log("update api ", id, planData);
-    const response = await axiosInstance.put(`${API_URL}/admin/plans/edit/${id}`, planData);
+    const response = await axiosInstance.put(`/admin/plans/edit/${id}`, planData);
     return response.data;
 };
 export const deletePlan = async (id) => {
-    const response = await axiosInstance.post(`${API_URL}/admin/plans/delete/${id}`);
+    const response = await axiosInstance.post(`/admin/plans/delete/${id}`);
     return response.data;
 };
 export const fetchRooms = async (page, limit, searchTerm, sortOption) => {

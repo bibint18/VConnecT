@@ -15,6 +15,8 @@ const Login: React.FC = () => {
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const [error,setError] = useState<string | null>(null)
   const {isAuthenticated} = useAppSelector((state) => state.user)
+  const sitekey = import.meta.env.RECAPTCHA_SITE_KEY
+  console.log("sitekey",sitekey)
   // const [error, setError] = useState("");
   const navigate = useNavigate();
   const dispatch = useAppDispatch()
@@ -104,7 +106,7 @@ const Login: React.FC = () => {
           </div>
           <div className="flex justify-center">
             <ReCAPTCHA
-              sitekey="6LeVJOoqAAAAAAsZ76PPRouIZJ_fmV3Ag31sD3xi"
+              sitekey={sitekey}
               onChange={setCaptchaToken}
               theme="dark"
             />

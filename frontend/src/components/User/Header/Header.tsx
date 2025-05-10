@@ -3,7 +3,6 @@ import logo from '../../../assets/logovct1.png';
 import { useAppDispatch, useAppSelector } from '../../../redux/store';
 import { logoutTheUser } from '../../../redux/userSlice';
 import { useNavigate } from 'react-router-dom';
-import axiosInstance from '../../../utils/axiosInterceptor';
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
@@ -17,10 +16,7 @@ const Header: React.FC = () => {
     setIsMenuOpen(false);
   };
 
-  const fetchAbout = async () => {
-    const response = await axiosInstance.get('http://localhost:3000/api/auth/user/about', { withCredentials: true });
-    console.log(response.data);
-  };
+ 
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -35,7 +31,7 @@ const Header: React.FC = () => {
       {/* Desktop Navigation */}
       <nav className="hidden md:flex space-x-6">
         <a href="/" className="hover:text-purple-500">Home</a>
-        <a href="#" className="hover:text-purple-500" onClick={fetchAbout}>About</a>
+        {/* <a href="#" className="hover:text-purple-500" onClick={fetchAbout}>About</a> */}
         <a href="/friends" className="hover:text-purple-500">Friends</a>
         <a href="/profile" className="hover:text-purple-500">Profile</a>
         <a href="/dailyTrivia" className="hover:text-purple-500">Daily Trivia</a>
@@ -103,7 +99,6 @@ const Header: React.FC = () => {
               className="!text-black !font-medium hover:!text-purple-500 !py-2 !px-3 !rounded-md hover:!bg-gray-100"
               onClick={(e) => {
                 e.preventDefault();
-                fetchAbout();
                 setIsMenuOpen(false);
               }}
             >

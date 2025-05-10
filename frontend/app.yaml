@@ -37,7 +37,3 @@ handlers:
     secure: always
     mime_type: text/html
 
-env_variables:
-  # Temporary placeholders (update after backend deployment)
-  VITE_API_URL: "http://localhost:5173"
-  VITE_WEB_SOCKET_URL: "ws://localhost:3000"
