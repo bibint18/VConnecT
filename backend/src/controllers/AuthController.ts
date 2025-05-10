@@ -32,7 +32,8 @@ export const login = async (
       path: "/",
     });
     console.log("Cookie added");
-    res.json({ message: "Login successful", accessToken, user });
+   res.json({ message: "Login successful", accessToken, user });
+   return
   } catch (error) {
     // res.status(400).json({ message: error.message });
     next(error);
