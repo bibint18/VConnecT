@@ -238,14 +238,40 @@ export class CallManager {
   }
 
   private createPeerConnection(userId: string, socketId: string,username:string): PeerConnection {
+
     const pc = new RTCPeerConnection({
-      iceServers: [
-        { urls: 'stun:stun.l.google.com:19302' },
-        { urls: 'stun:stun1.l.google.com:19302' },
-      ],
-      iceTransportPolicy: 'all', 
-      bundlePolicy: 'max-bundle',
-    });
+  iceServers: [
+    { urls: 'stun:stun.l.google.com:19302' },
+    { urls: 'stun:stun1.l.google.com:19302' },
+    {
+      urls: 'turn:vconnect.app.bibin.online:3478?transport=udp',
+      username: 'bibin',
+      credential: 'strongpassword123'
+    },
+    {
+      urls: 'turn:vconnect.app.bibin.online:5349?transport=tcp',
+      username: 'bibin',
+      credential: 'strongpassword123'
+    }
+  ],
+  iceTransportPolicy: 'all',
+  bundlePolicy: 'max-bundle'
+});
+
+  //   const pc = new RTCPeerConnection({
+  //      iceServers: [
+  //   {
+  //     urls: ["stun:stun.l.google.com:19302"]  
+  //   },
+  //   {
+  //     urls: ["turn:vconnect.app.bibin.online:3478"],  
+  //     username: 'bibin',  
+  //     credential: 'strongpassword123'  
+  //   }
+  // ],
+  //     iceTransportPolicy: 'all', 
+  //     bundlePolicy: 'max-bundle',
+  //   });
 
     this.localStream!.getTracks().forEach((track) => {
       pc.addTrack(track, this.localStream!);

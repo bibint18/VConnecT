@@ -253,8 +253,14 @@ export class CallManager {
     createPeerConnection(userId, socketId, username) {
         const pc = new RTCPeerConnection({
             iceServers: [
-                { urls: 'stun:stun.l.google.com:19302' },
-                { urls: 'stun:stun1.l.google.com:19302' },
+                {
+                    urls: ["stun:stun.l.google.com:19302"]
+                },
+                {
+                    urls: ["turn:vconnect.app.bibin.online:3478"],
+                    username: 'bibin',
+                    credential: 'strongpassword123'
+                }
             ],
             iceTransportPolicy: 'all',
             bundlePolicy: 'max-bundle',
