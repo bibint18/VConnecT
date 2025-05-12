@@ -1,4 +1,4 @@
-// import axios from "axios";
+
 import axiosInstance from "@/utils/axiosInterceptor";
 
 export const signup=async (data: { name: string; email: string; password: string }) => {

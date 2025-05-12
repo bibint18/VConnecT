@@ -75,7 +75,7 @@ const Login: React.FC = () => {
   return (
     <div className="min-h-screen bg-black flex items-center justify-center p-4">
       <div className="bg-gray-900 rounded-lg shadow-2xl p-8 max-w-md w-full border border-purple-500">
-        <h2 className="text-3xl font-bold text-purple-500 mb-6 text-center">User Login</h2>
+        <h2 className="text-3xl font-bold text-purple-500 mb-6 text-center">User Login Pageeeeeeeeeeeeeeee</h2>
         <form onSubmit={handleLogin} className="space-y-6">
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-300">

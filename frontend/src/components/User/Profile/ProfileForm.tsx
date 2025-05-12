@@ -12,6 +12,14 @@ interface VerifiedItemProps {
   timestamp: string;
   icon?: React.ReactNode;
 }
+
+interface CloudinaryUploadResult {
+  event: string;
+  info: {
+    secure_url: string;
+    [key: string]:string | number | boolean | undefined;
+  };
+}
 declare global {
   interface Window {
     cloudinary: {

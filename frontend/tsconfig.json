@@ -13,9 +13,10 @@
     "moduleResolution": "node",
     "esModuleInterop": true,
     "skipLibCheck": true,
+    "outDir": "./dist",
     // "allowSyntheticDefaultImports": true,
     // "composite": true,
-    // "noEmit": false,
+    "noEmit": false,
     "forceConsistentCasingInFileNames": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
@@ -25,9 +26,11 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": [
-    "src/**/*",
-    "src/types/**/*", // Add this if cloudinary.d.ts is in src/types/
-  ],
-  "exclude": ["node_modules"]
+  // "include": [
+  //   "src/**/*",
+  //   "src/types/**/*", // Add this if cloudinary.d.ts is in src/types/
+  // ],
+  // "exclude": ["node_modules","dist"]
 }
+
+

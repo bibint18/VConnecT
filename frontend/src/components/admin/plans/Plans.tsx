@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Search, Package, Edit, Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import './plans.css';
+import './plans.css'
 import { usePlans } from "../../../hooks/useAdminPlans";
 import { useDeletePlan } from "../../../hooks/useDeletePlan";
 import Swal from "sweetalert2";

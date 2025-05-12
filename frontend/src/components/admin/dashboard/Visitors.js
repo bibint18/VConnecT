@@ -1,5 +1,0 @@
-import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-const Visitors = () => {
-    return (_jsxs("div", { className: "bg-white rounded-lg p-6 shadow-sm", children: [_jsx("h2", { className: "text-lg font-semibold mb-4", children: "Visitors" }), _jsxs("div", { className: "flex rounded-lg overflow-hidden", children: [_jsxs("div", { className: "bg-purple-600 flex-[0.6] flex items-center justify-center text-white py-3", children: [_jsx("span", { className: "font-medium mr-1", children: "60%" }), _jsx("span", { className: "text-sm", children: "Desktop" })] }), _jsxs("div", { className: "bg-purple-400 flex-[0.38] flex items-center justify-center text-white py-3", children: [_jsx("span", { className: "font-medium mr-1", children: "38%" }), _jsx("span", { className: "text-sm", children: "Mobile" })] }), _jsxs("div", { className: "bg-purple-200 text-purple-800 flex-[0.02] flex items-center justify-center py-3", children: [_jsx("span", { className: "font-medium mr-1", children: "02%" }), _jsx("span", { className: "text-sm", children: "Others" })] })] })] }));
-};
-export default Visitors;
