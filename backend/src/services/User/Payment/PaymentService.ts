@@ -35,8 +35,8 @@ export class PaymentService implements IPaymentService{
         },
       ],
       application_context:{
-        return_url: `http://vconnect.bibin.online/api/auth/payments/execute?userId=${userId}&planId=${planId}`,
-        cancel_url: "http://vconnect.app.bibin.online/pricing",
+        return_url: `https://vconnect.bibin.online/api/auth/payments/execute?userId=${userId}&planId=${planId}`,
+        cancel_url: "https://vconnect.app.bibin.online/pricing",
       }
     })
     const response = await client.execute(request);
