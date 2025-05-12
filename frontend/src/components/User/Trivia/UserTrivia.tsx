@@ -105,7 +105,7 @@ const UserTrivia: React.FC = () => {
                 <div className="question-box">
                   <p>{trivia.question}</p>
                 </div>
-                <div className="options-grid">
+                <div className="options-grid !text-white">
                   {trivia.options.map((option, index) => {
                     const labels = ["A.", "B.", "C.", "D."];
                     const isSelected = attempt?.selectedAnswer === option;

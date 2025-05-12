@@ -220,7 +220,7 @@ const Login: React.FC = () => {
   };
 
   return (
-    <main className="!bg-black !text-white !min-h-screen !flex !items-center !justify-center !px-4 !py-16">
+    <div className="!bg-black !text-white !min-h-screen !flex !items-center !justify-center !px-4 !py-16">
       <div className="!bg-gray-800 !rounded-lg !shadow-md !p-8 !max-w-md !w-full !border !border-gray-700 !animate-fade-in">
         <h2 className="!text-4xl !font-bold !text-purple-500 !mb-8 !text-center">
           Login to VConnect
@@ -306,7 +306,7 @@ const Login: React.FC = () => {
           <p className="!mt-4 !text-center !text-red-500 !text-sm">{error}</p>
         )}
       </div>
-    </main>
+    </div>
   );
 };
 
