@@ -10,7 +10,7 @@ import axiosInstance from "@/utils/axiosInterceptor";
 import { io,Socket } from "socket.io-client";
 import { useNavigate } from "react-router-dom";
 import {Check,CheckCheck} from "lucide-react"
-import {v4 as uuidv4} from 'uuid'
+// import {v4 as uuidv4} from 'uuid'
 interface CloudinaryChatUploadResult {
   secure_url: string;
   resource_type: "image" | "video";
@@ -54,7 +54,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ friendId }) => {
   const socketRef = useRef<Socket | null>(null)
   useEffect(() => {
     if (!userId) {
-      console.error("User ID is null, cannot load friends");
+      
       toast.error("Please log in to view friends");
       return;
     }
@@ -67,14 +67,11 @@ const ChatBox: React.FC<ChatBoxProps> = ({ friendId }) => {
     });
 
     socketRef.current.on("connect", () => {
-      console.log("Direct Call socket connected:", socketRef.current?.id);
       setIsConnected(true);
       socketRef.current?.emit("join-user", { userId });
-      console.log(`Joined user room: ${userId}`);
     });
 
     socketRef.current.on("disconnect", (reason) => {
-      console.log("Direct Call socket disconnected:", reason);
       setIsConnected(false);
       if (reason !== "io client disconnect") {
         toast.error("Disconnected from call server, trying to reconnect...");
@@ -82,14 +79,11 @@ const ChatBox: React.FC<ChatBoxProps> = ({ friendId }) => {
     });
 
     socketRef.current.on("reconnect", () => {
-      console.log("Direct Call socket reconnected");
       toast.success("Reconnected to call server");
       socketRef.current?.emit("join-user", { userId });
-      console.log(`Rejoined user room: ${userId}`);
     });
 
     socketRef.current.on("reconnect_failed", () => {
-      console.log("Direct Call socket reconnection failed");
       toast.error("Failed to reconnect to call server");
     });
 
@@ -146,7 +140,6 @@ const ChatBox: React.FC<ChatBoxProps> = ({ friendId }) => {
     callManagerRef.current = new FriendCallManager(
       chatServiceRef.current,
       (local, remote) => {
-        console.log("Stream update - Local:", local, "Remote:", remote);
         setLocalStream(local);
         setRemoteStream(remote);
         setCallState(
@@ -162,19 +155,16 @@ const ChatBox: React.FC<ChatBoxProps> = ({ friendId }) => {
     })
 
     socket?.on("connect_error", (err) => {
-      console.error("Connection error:", err);
       toast.error("Connection failed: " + err.message);
     });
 
     socket?.on("friend-call-error", ({ message }) => {
-      console.error("Friend call error:", message);
       toast.error(message);
       setCallState("idle");
     });
 
    
     socketRef.current.on("directCall:incoming", ({ callId, callerId }: { callId: string; callerId: string }) => {
-      console.log("Incoming callllllllllllllllllllllllllllllllllllllllll:", { callId, callerId });
       toast.custom(
         (t:Toast) => (
           <div className="bg-white p-4 rounded-lg shadow-lg flex items-center space-x-4">
@@ -183,7 +173,6 @@ const ChatBox: React.FC<ChatBoxProps> = ({ friendId }) => {
               <button
                 className="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600"
                 onClick={() => {
-                  console.log("Accepting call:", callId);
                   socketRef.current?.emit("directCall:accept", { callId });
                   toast.dismiss(t.id);
                   navigate(`/call/${callId}`);
@@ -194,7 +183,6 @@ const ChatBox: React.FC<ChatBoxProps> = ({ friendId }) => {
               <button
                 className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
                 onClick={() => {
-                  console.log("Rejecting call:", callId);
                   socketRef.current?.emit("directCall:reject", { callId });
                   toast.dismiss(t.id);
                 }}
@@ -487,19 +475,17 @@ socketRef.current.on("directCall:ended", ({ callId }) => {
 
   // --- New: Handle call button click ---
   const handleCallButton = () => {
-    if (!socketRef.current || !isConnected) {
-      console.log("Call button clicked but socket not connected");
-      toast.error("Not connected to server");
-      return;
-    }
-    const callId = uuidv4();
-    console.log("Initiating call:", { callId, callerId: userId, receiverId: friendId });
-    socketRef.current.emit("directCall:initiate", {
-      callerId: userId,
-      receiverId: friendId,
-      callId,
-    });
-    navigate(`/call/${callId}`);
+    // if (!socketRef.current || !isConnected) {
+    //   toast.error("Not connected to server");
+    //   return;
+    // }
+    // const callId = uuidv4();
+    // socketRef.current.emit("directCall:initiate", {
+    //   callerId: userId,
+    //   receiverId: friendId,
+    //   callId,
+    // });
+    // navigate(`/call/${callId}`);
   };
 
 

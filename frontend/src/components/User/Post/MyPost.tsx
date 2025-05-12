@@ -24,17 +24,14 @@ const MyPosts: React.FC = () => {
         setUser(userData);
 
         const myPosts: IPost[] = await communityService.getMyPosts();
-        console.log("My posts fetched", myPosts);
         const validPosts = myPosts.filter(post => post._id !== undefined);
         const count = validPosts.length;
-        console.log("count", count);
         setPosts(validPosts);
         setPostCount(count);
         setError(null);
       } catch (err: unknown) {
         const errorMessage = err instanceof Error ? err.message : 'Failed to load data';
         setError(errorMessage);
-        console.error('Error fetching data:', err);
       }
     };
     fetchData();
@@ -72,7 +69,6 @@ const MyPosts: React.FC = () => {
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to update post';
       setError(errorMessage);
-      console.error('Error editing post:', err);
     }
   };
 
@@ -100,7 +96,6 @@ const MyPosts: React.FC = () => {
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to delete post';
       setError(errorMessage);
-      console.error('Error deleting post:', err);
     }
   };
 
@@ -121,7 +116,6 @@ const MyPosts: React.FC = () => {
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to refresh posts';
       setError(errorMessage);
-      console.error('Error refreshing posts:', err);
     }
   };
 

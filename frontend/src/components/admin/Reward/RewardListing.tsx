@@ -37,10 +37,8 @@ const AdminRewardsList: React.FC = () => {
     } catch (error: unknown) {
       if (error instanceof Error) {
         setIsError(true);
-        console.log('Caught error:', error.message);
       } else {
         setIsError(true);
-        console.log('Unknown error:', error);
       }
     } finally {
       setIsPending(false);
@@ -69,10 +67,8 @@ const AdminRewardsList: React.FC = () => {
         } catch (error: unknown) {
           if (error instanceof Error) {
             Swal.fire(error.message);
-            console.log('Caught error:', error.message);
           } else {
             Swal.fire("Error!", "Failed to delete reward.", "error");
-            console.log('Unknown error:', error);
           }
         }
       }

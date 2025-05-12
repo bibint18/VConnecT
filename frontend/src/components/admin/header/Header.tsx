@@ -1,31 +1,3 @@
-// import React from 'react';
-// import { Settings } from 'lucide-react';
-
-// const Header: React.FC = () => {
-//   return (
-//     <header className="w-full flex justify-between items-center px-6 py-4 bg-white border-b border-gray-200 shadow-sm">
-//       <div className="flex items-center gap-4">
-//         {/* Logo Image */}
-//         <div className="text-black">
-//           <img
-//             src="/logo.png" // Replace with your logo image path
-//             alt="VConnecT Logo"
-//             className="h-10 w-auto" // Adjust height and width as needed
-//           />
-//         </div>
-//       </div>
-//       <div className="flex items-center">
-//         <button className="flex items-center gap-2 text-gray-700 font-medium hover:text-gray-900 transition-colors">
-//           <Settings className="h-5 w-5" />
-//           <span>ADMIN</span>
-//         </button>
-//       </div>
-//     </header>
-//   );
-// };
-
-// export default Header;
-
 
 
 import React from 'react';

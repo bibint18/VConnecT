@@ -68,11 +68,6 @@ export class CallManager {
         this.localStream = await navigator.mediaDevices.getUserMedia(
           constarints
         );
-        console.log(
-          "local streams acquired with constraints",
-          constarints,
-          this.localStream
-        );
       }
       this.updateStreams();
       this.socket.emit("join-call", {
@@ -89,7 +84,6 @@ export class CallManager {
   public async getAudioDevices(): Promise<MediaDeviceInfo[]> {
     try {
       const devices = await navigator.mediaDevices.enumerateDevices();
-      console.log("devices ", devices);
       return devices.filter((device) => device.kind === "audioinput");
     } catch (error) {
       console.log("error enumurating devices", error);
@@ -107,7 +101,6 @@ export class CallManager {
       this.localStream!.getTracks().forEach((track) =>
         peer.pc.addTrack(track, this.localStream!)
       );
-      console.log("switched audio device to ", deviceId);
     });
   }
   public leaveCall() {
@@ -123,18 +116,12 @@ export class CallManager {
     }
     this.socket.disconnect();
     this.updateStreams();
-    console.log("Call left");
   }
 
   public toggleAudio(enabled: boolean) {
     if (this.localStream) {
       this.localStream.getAudioTracks().forEach((track) => {
         track.enabled = enabled;
-        console.log(
-          `Audio track ${enabled ? "enabled" : "disabled"} for user ${
-            this.userId
-          }`
-        );
       });
     }
   }
@@ -149,7 +136,6 @@ export class CallManager {
 
   private setupSocketEvents() {
     this.socket.on("connect", () => {
-      console.log("Connected to signaling server");
     });
     this.socket.on(
       "friend-request-received",
@@ -171,7 +157,6 @@ export class CallManager {
     });
 
     this.socket.on("reconnect", () => {
-      console.log("Reconnected to signaling server");
       if (this.localStream) {
         this.socket.emit("join-call", {
           roomId: this.roomId,
@@ -184,7 +169,6 @@ export class CallManager {
     this.socket.on(
       "user-joined",
       (data: { userId: string; socketId: string; username: string }) => {
-        console.log("User joined:", data);
         if (data.socketId !== this.socket.id) {
           this.addPeerConnection(data.userId, data.socketId, data.username);
         }
@@ -194,7 +178,6 @@ export class CallManager {
     this.socket.on(
       "user-left",
       (data: { userId: string; socketId: string }) => {
-        console.log("User left:", data);
         this.removePeerConnection(data.socketId);
       }
     );
@@ -206,7 +189,6 @@ export class CallManager {
         from: string;
         username: string;
       }) => {
-        console.log("Received offer from:", data.from, data.offer);
         const { offer, from, username } = data;
         let peer = this.peerConnections.get(from);
         if (!peer) {
@@ -226,7 +208,6 @@ export class CallManager {
             to: from,
             username: this.username,
           });
-          console.log("Sent answer to:", from, answer);
         } catch (err) {
           console.error("Error handling offer:", err);
         }
@@ -240,7 +221,6 @@ export class CallManager {
         from: string;
         username: string;
       }) => {
-        console.log("Received answer from:", data.from, data.answer);
         const { answer, from, username } = data;
         const peer = this.peerConnections.get(from);
         if (peer) {
@@ -264,7 +244,6 @@ export class CallManager {
     this.socket.on(
       "ice-candidate",
       async (data: { candidate: RTCIceCandidateInit; from: string }) => {
-        console.log("Received ICE candidate from:", data.from, data.candidate);
         const { candidate, from } = data;
         const peer = this.peerConnections.get(from);
         if (peer && peer.pc.remoteDescription) {
@@ -283,7 +262,6 @@ export class CallManager {
     );
 
     this.socket.on("error", (data: { message: string }) => {
-      console.error("Server error:", data.message);
       toast.error(data.message);
     });
 
@@ -319,7 +297,6 @@ export class CallManager {
         to: socketId,
         username: this.username,
       });
-      console.log("Sent offer to:", socketId, offer);
     } catch (err) {
       console.error("Offer creation error:", err);
     }
@@ -331,7 +308,6 @@ export class CallManager {
     username: string
   ): Promise<PeerConnection> {
     const turnServer = await createTurnConfig();
-    console.log("Turn server: ", turnServer)
     const pc = new RTCPeerConnection({
       iceServers: [
         { urls: "stun:stun.l.google.com:19302" },turnServer
@@ -352,18 +328,12 @@ export class CallManager {
 
     this.localStream!.getTracks().forEach((track) => {
       pc.addTrack(track, this.localStream!);
-      console.log("Added track to peer:", {
-        userId,
-        socketId,
-        track: track.kind,
-      });
     });
 
     pc.ontrack = (event) => {
       const peer = this.peerConnections.get(socketId);
       if (peer) {
         peer.stream = event.streams[0];
-        console.log("Remote stream received for:", socketId, peer.stream);
         this.updateStreams();
       }
     };
@@ -375,26 +345,16 @@ export class CallManager {
           candidate: event.candidate,
           to: socketId,
         });
-        console.log("Sent ICE candidate to:", socketId, event.candidate);
       }
     };
 
     pc.onconnectionstatechange = () => {
-      console.log(
-        "Peer connection state for",
-        socketId,
-        ":",
-        pc.connectionState
-      );
       if (pc.connectionState === "connected") {
         this.updateStreams();
       } else if (pc.connectionState === "failed") {
-        console.error("Peer connection failed for:", socketId);
         this.removePeerConnection(socketId);
-        console.log("Peer connection failed");
         // toast.error('A peer connection failed');
       } else if (pc.connectionState === "disconnected") {
-        console.warn("Peer temporarily disconnected for:", socketId);
         // Don’t remove immediately; wait for persistent failure
       }
     };
@@ -428,7 +388,6 @@ export class CallManager {
           username: peer.username,
         });
     });
-    console.log("Streams updated:", Array.from(streams.entries()));
     this.onStreamUpdate(streams);
   }
 

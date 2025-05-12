@@ -22,7 +22,6 @@ const AdminLogin: React.FC = () => {
 
     try {
       const response = await loginAdmin(email, password);
-      console.log("adminLogin: ",response.accessToken)
       dispatch(login({accessToken: response.accessToken}))
       navigate("/dashboard");
     } catch (error: unknown) {

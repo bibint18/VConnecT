@@ -21,14 +21,8 @@ const processQueue = (error: Error | null, token: string | null = null) => {
 axiosInstance.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     const state = store.getState();
-    console.log("state in the axiosInstance ",state)
     const isAdminRoute = config.url?.includes('admin');
     const accessToken = isAdminRoute ? state.auth.accessToken : state.user.accessToken;
-    console.log("accessToken added")
-    console.log('Redux state:', state);
-    console.log('isAdminRoute:', isAdminRoute);
-    console.log('accessToken:', accessToken);
-    console.log('Cookies: on request ', document.cookie);
     if (accessToken) {
       config.headers = config.headers || {};
       config.headers['Authorization'] = `Bearer ${accessToken}`;
@@ -41,12 +35,8 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
-    console.log("on response use")
     const originalRequest = error.config;
-    console.log("original request",originalRequest)
-    console.log('Cookies: on response', document.cookie);
     if (error.response?.status === 403 && error.response?.data?.message === 'User is blocked') {
-      console.log('User is blocked. Preventing logout.');
       toast.error('Your account is blocked. Please contact support.',{duration:3000});
       setTimeout(() => {
         store.dispatch(logoutTheUser())
@@ -72,15 +62,12 @@ axiosInstance.interceptors.response.use(
       const isAdminRoute = originalRequest.url.includes('admin');
       try {
         const state = store.getState();
-        console.log('state from axiosInstance ',state)
-        console.log('Cookies: posting to refresh', document.cookie);
         const refreshResponse = await axiosInstance.post(
           'refresh',
           {},
           { withCredentials: true }
         );
         const newAccessToken = refreshResponse.data.accessToken;
-        console.log("new access token from rerfrsh")
         
         if (isAdminRoute) {
           store.dispatch(login({ accessToken: newAccessToken }));

@@ -25,7 +25,6 @@ const PostFeed: React.FC = () => {
     handleComment,
     handleShare, // Add handleShare from the hook
   } = usePostFeed();
-  console.log('allPosts in PostFeed:', allPosts);
 
   const { ref, inView } = useInView({ threshold: 0 });
 

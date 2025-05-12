@@ -17,11 +17,9 @@ export default function RoomlistAdmin() {
   const [searchTerm,setSearchTerm] = useState('')
   const [sortOption,setSortOption] = useState<string>('all')
   const { data, isLoading, isError } = useRooms(page, limit, searchTerm, sortOption);
-  console.log("data from component ",data)
   const rooms: Room[] = data?.rooms ?? []; 
   const totalRooms: number = data?.totalRooms ?? 0; 
 const totalPages = Math.ceil(totalRooms/limit)
-  console.log("totalCount",totalPages)
   const handleBlock = (id: string) => {
     Swal.fire({
       title: "Are you sure?",

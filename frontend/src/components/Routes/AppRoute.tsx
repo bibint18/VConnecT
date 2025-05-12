@@ -62,7 +62,7 @@ function AppRoute() {
       <Route path="/login" element={<Login />} />
       <Route path="/adminLogin" element={<AdminLogin />} />
       <Route path="/" element={<HomePage />} />
-zz
+
 
       {/* User Protected Routes */}
   <Route element={<UserProtectedRoute/>}>

@@ -61,23 +61,6 @@ const MainContent: React.FC = () => {
         </div>
       </section>
 
-      {/* <section className="bg-white text-black py-16 px-4 flex flex-col md:flex-row items-center justify-center">
-        <div className="w-full md:w-1/2 mb-8 md:mb-0">
-          <div className="bg-gray-300 h-64 md:h-96 rounded-lg flex items-center justify-center">
-            <img src={image2} alt="" />
-          </div>
-        </div>
-        <div className="w-full md:w-1/2 md:pl-8 text-center md:text-left">
-          <h2 className="text-3xl md:text-5xl font-bold mb-4">Make your virtual space</h2>
-          <p className="text-gray-600 mb-6">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-          </p>
-          <button className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-full text-sm md:text-base hover:scale-105 transition-transform">
-            Create Room
-          </button>
-        </div>
-      </section> */}
-
 <section className="bg-black text-white py-16 px-4 flex flex-col md:flex-row items-center justify-center">
       <div className="w-full md:w-1/2 md:pr-8 text-left">
         <h2 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">

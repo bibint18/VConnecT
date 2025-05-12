@@ -42,7 +42,6 @@ export const useUsers = (
     ["users", page, limit, searchTerm, sortOption],
     async (): Promise<UsersResponse> => {
       const response = await fetchUsers(page, limit, searchTerm, sortOption);
-      console.log("hook data", response);
       return response;
     },
     {

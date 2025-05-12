@@ -10,7 +10,6 @@ export const useUpdatePlan = () => {
       queryClient.invalidateQueries({queryKey:["plans"]})
     },
     onError: (error: AxiosError<{ error?: string }>) => { 
-      console.log("error updating plan", error);
       if (error.response?.status === 400) {
         toast.error(error.response.data.error); 
       } else {

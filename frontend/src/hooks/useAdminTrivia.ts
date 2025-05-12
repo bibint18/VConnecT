@@ -10,7 +10,6 @@ export const useAddTriviaQuestion = () => {
     },
     onError:(error:unknown) => {
       if (error instanceof AxiosError && error.response?.data?.message) {
-              console.log(error)
               toast.error(error.response.data.message);
             } else {
               toast.error("add trivia failed");
@@ -43,11 +42,9 @@ export const useUpdateTriviaQuestion = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["triviaQuestions"] });
       queryClient.invalidateQueries({ queryKey: ["triviaQuestion"] });
-      console.log("Trivia question updated");
     },
     onError: (error:unknown) =>{
       if (error instanceof AxiosError && error.response?.data?.message) {
-        console.log(error)
         toast.error(error.response.data.message);
       } else {
         toast.error("add trivia failed");
@@ -63,11 +60,9 @@ export const useDeleteTriviaQuestion = () => {
     mutationFn: deleteTriviaQuestion,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["triviaQuestions"] });
-      console.log("Trivia question deleted");
     },
     onError: (error: unknown) =>{
       if (error instanceof AxiosError && error.response?.data?.message) {
-        console.log(error)
         toast.error(error.response.data.message);
       } else {
         toast.error("delete trivia failed");

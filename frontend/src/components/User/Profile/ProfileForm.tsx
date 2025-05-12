@@ -93,7 +93,6 @@ export const ProfileContent = () => {
     const fetchProfile = async () => {
       try {
         const userData = await getUserProfile()
-        console.log("userdta profilr",userData)
         const userProfile ={
           name: userData.name || '',
           email: userData.email || '',
@@ -183,10 +182,8 @@ export const ProfileContent = () => {
     if(!formData) return
     try {
       const updatedUser = await updateUserProfile(formData)
-      console.log("updatedUser ",updatedUser)
       setUser(updatedUser)
       setIsEditing(false)
-      console.log('updatedUser Name',updatedUser.user.name)
       dispatch(updateProfile({name:updatedUser.user.name}))
       window.location.reload()
     } catch (error) {
@@ -201,19 +198,13 @@ export const ProfileContent = () => {
   
 
 const handleImageUpload = async () => {
-  console.log('handleImageUpload triggered');
   try {
-    console.log('window.cloudinary:', window.cloudinary);
     if (!window.cloudinary) {
       setError('Cloudinary widget not loaded. Please try again later.');
-      console.log('Error: Cloudinary not loaded');
       return;
     }
 
-    console.log('Cloud Name:', import.meta.env.VITE_CLOUDINARY_CLOUD_NAME);
-    console.log('API Key:', import.meta.env.VITE_CLOUDINARY_API_KEY);
     const { data } = await axiosInstance.get('/user/profile/signature');
-    console.log('Signature Data:', data);
     const { signature, timestamp } = data;
 
     const cloudinaryWidget = window.cloudinary.createUploadWidget(
@@ -232,38 +223,29 @@ const handleImageUpload = async () => {
         sources: ['local'],
       },
       (error: Error | null, result) => {
-        console.log('Widget callback:', { error, result });
         if (!error && result && result.event === 'success') {
           const imageUrl = result.info.secure_url;
-          console.log('Upload success:', imageUrl);
           axiosInstance
             .post('/user/profile/image',{imageUrl})
             .then((response) => {
-              console.log("post reference ",response)
               setUser(response.data.user);
               setFormData(response.data.user);
             })
             .catch((err) => {
               setError(err.message || 'Failed to update image');
-              console.log('Post error:', err);
             });
         } else if (error) {
           setError(error.message || 'Image upload failed');
-          console.log('Upload error:', error);
         }
       }
     );
 
-    console.log('Widget created:', cloudinaryWidget);
     cloudinaryWidget.open();
-    console.log('Widget opened');
   } catch (error: unknown) {
     if (error instanceof Error) {
       setError(error.message);
-      console.log('Caught error:', error.message);
     } else {
       setError('Failed to initiate upload');
-      console.log('Unknown error:', error);
     }
   }
 };

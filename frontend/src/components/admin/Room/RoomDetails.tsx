@@ -16,7 +16,6 @@ export default function RoomDetails() {
       if (!id) return;
       try {
         const { room } = await getRoomDetails(id);
-        console.log("room details: ",room)
         setRoom(room);
       } catch (err) {
         setError(err instanceof Error ? err.message : "Failed to fetch room details");

@@ -12,7 +12,6 @@ export const useSignup = (setIsEmailVerified: (verified: boolean) => void) => {
     },
     onError: (error) => {
       if (error instanceof AxiosError && error.response?.data?.message) {
-        console.log(error)
         toast.error(error.response.data.message);
       } else {
         toast.error("Signup failed");

@@ -66,9 +66,7 @@ export class CommunityService {
   }
 
   async getMyPosts(): Promise<IPost[]> {
-    console.log('api my post call made')
     const response = await axiosInstance.get('/my-posts');
-    console.log("response my post",response)
     return response.data;
   }
 

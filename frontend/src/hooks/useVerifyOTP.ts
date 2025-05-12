@@ -6,13 +6,13 @@ export const useVerifyOTP = () => {
   return useMutation({
     mutationFn: (data: { email: string; otp: string,name:string,password:string }) => verifyOtp(data),
     onSuccess: () => {
-      console.log("OTP Verified Successfully");
     },
     onError: (error) => {
       if (error instanceof AxiosError && error.response?.data?.message) {
-        alert(error.response.data.message);
+        console.log(error.response.data.message);
       } else {
-        alert("OTP verification failed");
+        // alert("OTP verification failed");
+        console.log("Otp verificarion failed")
       }
     },
   });

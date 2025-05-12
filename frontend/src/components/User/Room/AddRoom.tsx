@@ -41,7 +41,6 @@ const AddRoom: React.FC = () => {
     try {
       const response = await createRoom(formData);
       const newRoom = response.room;
-      console.log('Room created:', newRoom);
       if (newRoom.type === 'PRIVATE' && newRoom.secretCode) {
         setSecretCode(newRoom.secretCode);
         setShowModal(true); 

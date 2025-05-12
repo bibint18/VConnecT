@@ -22,7 +22,6 @@ export const usePostView = (postId: string) => {
   useEffect(() => {
     if (queryError) {
       setError(queryError.message || 'Failed to load post');
-      console.error('Query error:', queryError);
     }
   }, [queryError]);
 
@@ -34,7 +33,6 @@ export const usePostView = (postId: string) => {
     },
     onError: (err: Error) => {
       setError(err.message || 'Failed to like post');
-      console.error('Like error:', err);
     },
   });
 
@@ -45,7 +43,6 @@ export const usePostView = (postId: string) => {
     },
     onError: (err: Error) => {
       setError(err.message || 'Failed to dislike post');
-      console.error('Dislike error:', err);
     },
   });
 
@@ -57,7 +54,6 @@ export const usePostView = (postId: string) => {
     },
     onError: (err: Error) => {
       setError(err.message || 'Failed to add comment');
-      console.error('Comment error:', err);
     },
   });
 
@@ -82,7 +78,6 @@ export const usePostView = (postId: string) => {
       const errorMessage = err instanceof Error ? err.message : 'Failed to share post';
       setError(errorMessage);
       toast.error(errorMessage);
-      console.error('Share error:', err);
     }
   };
 

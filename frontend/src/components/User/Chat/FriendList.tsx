@@ -30,7 +30,6 @@ const FriendsList: React.FC<FriendsListProps> = ({ activeChat, onSelectFriend })
   
   useEffect(() => {
     if (!userId) {
-      console.error("User ID is null, cannot load friends");
       toast.error("Please log in to view friends");
       setLoading(false);
       return;
@@ -42,7 +41,6 @@ const FriendsList: React.FC<FriendsListProps> = ({ activeChat, onSelectFriend })
 
     const socket  = chatService['socket'];
     socket.on('update-last-message', ({ friendId, lastMessage, unreadCount }) => {
-      console.log('update event data', friendId, lastMessage, unreadCount);
       setFriends((prevFriends) => {
         const updatedFriends = prevFriends.map((friend) =>
           friend.id === friendId
@@ -79,12 +77,10 @@ const FriendsList: React.FC<FriendsListProps> = ({ activeChat, onSelectFriend })
         const sortedFriendList = friendList.sort((a,b) => new Date(b.fullTimestamp).getTime() - new Date(a.fullTimestamp).getTime())
         // setFriends(friendList);
         setFriends(sortedFriendList)
-        console.log("friendList fetched",friendList)
         if (friendList.length > 0 && !activeChat) {
           onSelectFriend(friendList[0].id);
         }
       } catch (error) {
-        console.error("Error fetching friends:", error);
         toast.error((error as Error).message || "Failed to load friends list");
       } finally {
         setLoading(false);

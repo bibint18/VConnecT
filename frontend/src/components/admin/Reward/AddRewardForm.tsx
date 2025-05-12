@@ -5,7 +5,6 @@ import { fetchReward, saveReward } from "@/services/AdminRewardService";
 
 const AddReward: React.FC = () => {
   const { rewardId } = useParams();
-  console.log('rewardId',rewardId)
   const navigate = useNavigate();
   const [form, setForm] = useState({
     title: "",
@@ -21,12 +20,10 @@ const AddReward: React.FC = () => {
 
   useEffect(() => {
     if (rewardId) {
-      console.log('rewardId',rewardId)
       const fetchData = async () => {
 
         try {
           const reward = await fetchReward(rewardId);
-          console.log("reward",reward)
           setForm({
             title: reward.title,
             description: reward.description,
@@ -39,10 +36,8 @@ const AddReward: React.FC = () => {
         } catch (error) {
           if (error instanceof Error) {
             toast(error.message);
-            console.log("Caught error:", error.message);
           } else {
             toast("Error! failed to load rewards");
-            console.log("Unknown error:", error);
           }
         }
       };
@@ -90,10 +85,8 @@ const AddReward: React.FC = () => {
     } catch (error: unknown) {
       if (error instanceof Error) {
         toast(error.message);
-        console.log("Caught error:", error.message);
       } else {
         toast("Failed to save reward");
-        console.log("Unknown error:", error);
       }
     } finally {
       setLoading(false);

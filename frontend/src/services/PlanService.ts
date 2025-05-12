@@ -30,7 +30,6 @@ export class PlanService{
   async getPlans():Promise<IPlan[]>{
     try {
       const response = await axiosInstance.get('/plans')
-      console.log('plans from plans serrvice response ',response)
       const plans: IPlan[] = response.data.data
         .filter((plan: IPlan) => plan.isListed && !plan.isDeleted)
         .map((plan: IPlan, index: number, array: IPlan[]) => ({
@@ -53,7 +52,6 @@ export class PlanService{
   async getUserPlan(): Promise<IUserPlan | null> {
     try {
       const response = await axiosInstance.get('/user-plan');
-      console.log('user plan from plan service response ', response);
       return response.data.data || null;
     } catch (error: unknown) {
       if (error instanceof AxiosError && error.message) {

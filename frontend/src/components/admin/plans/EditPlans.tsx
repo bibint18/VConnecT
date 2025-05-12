@@ -20,7 +20,6 @@ interface PlanFormData {
 const EditPlan: React.FC = () => {
   const navigate = useNavigate()
   const {id} = useParams<{id:string}>()
-  console.log("edit plan id: ",id)
   const {data:user} = useGetPlanById(id || '')
   const {mutate,isLoading} = useUpdatePlan()
   const [formData, setFormData] = useState<PlanFormData>({

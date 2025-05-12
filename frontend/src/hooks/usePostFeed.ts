@@ -1,144 +1,4 @@
 
-// import { useEffect, useState } from 'react';
-// import { 
-//   useInfiniteQuery, 
-//   useMutation, 
-//   useQueryClient,
-// } from '@tanstack/react-query';
-// import { CommunityService, IPost } from '@/services/CommunityService';
-// import toast from 'react-hot-toast';
-// interface FeedResponse {
-//   posts: IPost[];
-//   total: number;
-// }
-
-// interface CommentInput {
-//   postId: string;
-//   content: string;
-// }
-
-// export const usePostFeed = () => {
-//   const [error, setError] = useState<string | null>(null);
-//   const queryClient = useQueryClient();
-//   const communityService = new CommunityService();
-
-//   // Infinite query for fetching the feed
-//   const {
-//     data,
-//     fetchNextPage,
-//     hasNextPage,
-//     isFetchingNextPage,
-//     isError,
-//     error: queryError,
-//   } = useInfiniteQuery<FeedResponse, Error>({
-//     queryKey: ['feed'],
-//     queryFn: ({ pageParam = 1 }) => communityService.getFeed(pageParam as number, 10),
-//     getNextPageParam: (lastPage, allPages) => {
-//       const totalPostsFetched = allPages.reduce((acc, page) => acc + page.posts.length, 0);
-//       console.log('Debug:', { lastPage, totalPostsFetched });
-//       return lastPage.total > totalPostsFetched ? Math.floor(totalPostsFetched / 10) + 1 : undefined;
-//     },
-//     initialPageParam: 1, 
-//   });
-
-//   useEffect(() => {
-//     if (queryError) {
-//       setError(queryError.message || 'Failed to load feed');
-//       console.error('Query error:', queryError);
-//     }
-//   }, [queryError]);
-
-//   // Mutation for liking a post
-//   const likeMutation = useMutation({
-//     mutationFn: (postId: string) => communityService.likePost(postId),
-//     onSuccess: () => {
-//       queryClient.invalidateQueries({ queryKey: ['feed'] });
-//     },
-//     onError: (err: Error) => {
-//       setError(err.message || 'Failed to like post');
-//       console.error('Like error:', err);
-//     },
-//   });
-
-//   // Mutation for disliking a post
-//   const dislikeMutation = useMutation({
-//     mutationFn: (postId: string) => communityService.dislikePost(postId),
-//     onSuccess: () => {
-//       queryClient.invalidateQueries({ queryKey: ['feed'] });
-//     },
-//     onError: (err: Error) => {
-//       setError(err.message || 'Failed to dislike post');
-//       console.error('Dislike error:', err);
-//     },
-//   });
-
-//   // Mutation for commenting on a post
-//   const commentMutation = useMutation({
-//     mutationFn: ({ postId, content }: CommentInput) => 
-//       communityService.commentOnPost(postId, content),
-//     onSuccess: () => {
-//       queryClient.invalidateQueries({ queryKey: ['feed'] });
-//     },
-//     onError: (err: Error) => {
-//       setError(err.message || 'Failed to add comment');
-//       console.error('Comment error:', err);
-//     },
-//   });
-
-//   //share 
-//   const handleShare = async (postId: string) => {
-//     try {
-//       const shareUrl = await communityService.getPostShareUrl(postId);
-//       const shareData = {
-//         title: 'Check out this post!',
-//         text: 'I found this post on the Community app!',
-//         url: shareUrl,
-//       };
-
-//       // Check if Web Share API is supported
-//       if (navigator.share) {
-//         await navigator.share(shareData);
-//         toast.success('Post shared successfully!');
-//       } else {
-//         // Fallback to copying the URL to clipboard
-//         await navigator.clipboard.writeText(shareUrl);
-//         toast.success('Link copied to clipboard!');
-//       }
-//     } catch (err: unknown) {
-//       const errorMessage = err instanceof Error ? err.message : 'Failed to share post';
-//       setError(errorMessage);
-//       toast.error(errorMessage);
-//       console.error('Share error:', err);
-//     }
-//   };
-
-//   const handleLike = (postId: string) => likeMutation.mutate(postId);
-//   const handleDislike = (postId: string) => dislikeMutation.mutate(postId);
-//   const handleComment = (postId: string, content: string) => {
-//     if (content.trim()) {
-//       commentMutation.mutate({ postId, content });
-//     }
-//   };
-
-//   const allPosts = data?.pages.flatMap((page: FeedResponse) => page.posts) ?? [];
-
-//   return {
-//     allPosts,
-//     fetchNextPage,
-//     hasNextPage,
-//     isFetchingNextPage,
-//     isError,
-//     error,
-//     setError,
-//     handleLike,
-//     handleDislike,
-//     handleComment,
-//     handleShare
-//   };
-// };
-
-
-
 
 import { useEffect, useState } from 'react';
 import { 
@@ -184,7 +44,6 @@ export const usePostFeed = () => {
   useEffect(() => {
     if (queryError) {
       setError(queryError.message || 'Failed to load feed');
-      console.error('Query error:', queryError);
     }
   }, [queryError]);
 
@@ -196,7 +55,6 @@ export const usePostFeed = () => {
     },
     onError: (err: Error) => {
       setError(err.message || 'Failed to like post');
-      console.error('Like error:', err);
     },
   });
 
@@ -208,7 +66,6 @@ export const usePostFeed = () => {
     },
     onError: (err: Error) => {
       setError(err.message || 'Failed to dislike post');
-      console.error('Dislike error:', err);
     },
   });
 
@@ -221,7 +78,6 @@ export const usePostFeed = () => {
     },
     onError: (err: Error) => {
       setError(err.message || 'Failed to add comment');
-      console.error('Comment error:', err);
     },
   });
 
@@ -246,7 +102,6 @@ export const usePostFeed = () => {
       const errorMessage = err instanceof Error ? err.message : 'Failed to share post';
       setError(errorMessage);
       toast.error(errorMessage);
-      console.error('Share error:', err);
     }
   };
 

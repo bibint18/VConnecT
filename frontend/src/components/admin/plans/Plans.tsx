@@ -31,10 +31,8 @@ export default function SubscriptionPlans() {
   const [page,setPage] = useState(1)
   const limit =4
   const {data={ plans: [], total: 0 },isLoading,isError} = usePlans(page,limit,searchTerm,sortOption)
-  console.log(data)
   const totalPages=Math.ceil(data.total/limit)
   const {mutate} = useDeletePlan() 
-  console.log("plans: ",data.plans)
   const handleDelete = (id: string) => {
     Swal.fire({
       title: "Are you sure?",

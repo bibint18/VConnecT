@@ -51,8 +51,6 @@ const ListRoom: React.FC = () => {
     fetchRooms();
   }, [search, filter, currentPage]);
 
-  console.log("user details", user);
-
   const handleJoinRoom = async (roomId: string, roomType: string) => {
     if (roomType === 'PRIVATE') {
       setSelectedRoomId(roomId);
@@ -85,7 +83,6 @@ const ListRoom: React.FC = () => {
 
   const handleCreateRoom = () => {
     navigate('/addRoom');
-    console.log('Creating a new room');
   };
 
   const handleJoinWithCode = () => {

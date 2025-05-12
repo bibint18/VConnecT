@@ -7,15 +7,11 @@ import { logout } from "../redux/authSlice";
 
 export const loginUser = async(email:string,password:string,recaptchaToken:string) => {
   try{
-  console.log("hereeeeeeeeeeeeeee")
-  console.log("datas: ",email,password,recaptchaToken)
-  console.log("password and length",password,password.length)
   const response = await axiosInstance.post("/login",{
     email,
     password,
     recaptchaToken
   })
-  console.log("passed from here")
   const {accessToken,user} = response.data
   console.log("service folder ",accessToken,user)
   // store.dispatch(loginTheUser({name:user.name,email:user.email,accessToken}))
@@ -47,8 +43,7 @@ export const loginAdmin = async (email:string,password:string) => {
     password,
   })
   // const {accessToken} = response.data
-  // store.dispatch(login({accessToken}))
-  console.log("response on frontend service folder admin",response.data) 
+  // store.dispatch(login({accessToken})) 
   return response.data
   
 }

@@ -20,7 +20,6 @@ export class RewardService {
   async getRewards(): Promise<IReward[]> {
     try {
       const response = await axiosInstance.get("/rewards");
-      console.log("response from fetching rewards",response.data.data)
       return response.data.data;
     } catch (error: unknown) {
       if(error instanceof AxiosError && error.message){
