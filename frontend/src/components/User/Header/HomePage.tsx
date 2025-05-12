@@ -1,7 +1,7 @@
 
 import Header from './Header'
 import MainContent from './MainContent'
-import EventCards from './Event-card'
+// import EventCards from './Event-card'
 import MainImage from './Event-cards'
 import SubscriptionSection from './Subscription-banner'
 import Footer from './Footer'
@@ -13,7 +13,7 @@ function HomePage() {
       <Header />
       <MainContent />
       <div className="bg-black min-h-screen">
-      <EventCards />
+      {/* <EventCards /> */}
       <div className="flex justify-center p-4">
         <button onClick={() => navigate('/rooms')} className="bg-purple-600 text-white font-semibold py-2 px-6 rounded-full">
           EXPLORE MORE

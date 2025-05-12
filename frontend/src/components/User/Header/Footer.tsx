@@ -36,7 +36,7 @@ const Footer = () => {
         <img className="w-46 h-8 bg-gray-500  mr-2" src={logo}></img>
         
       </div>
-      <p className="text-sm">© 2023 Company Name, Inc. ALL rights reserved.</p>
+      <p className="text-sm">© 2025 VconnecT, Inc. ALL rights reserved.</p>
       <div className="flex space-x-4 mt-4 md:mt-0">
         <a href="#" className="text-sm hover:underline">Terms</a>
         <a href="#" className="text-sm hover:underline">Privacy</a>
