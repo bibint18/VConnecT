@@ -284,5 +284,7 @@ export const createUserRoutes = (
     authenticateToken,
     postController.getPostById.bind(postController)
   );
+
+  router.get('/:postId/likers',authenticateToken,postController.getPostLikers.bind(postController))
   return router;
 };

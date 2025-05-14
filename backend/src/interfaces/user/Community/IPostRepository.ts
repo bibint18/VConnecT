@@ -44,5 +44,5 @@ export interface IPostRepository{
   removeLike(postId:string,userId:string):Promise<void>;
   addComment(postId:string,comment:IComment):Promise<string>
   getComments(postId:string):Promise<IComment[]>;
-
+  findUsersByIds(userIds: string[]): Promise<{ _id: string; username: string }[]>;
 }

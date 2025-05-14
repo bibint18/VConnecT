@@ -116,4 +116,9 @@ export class CommunityService {
     const response = await axiosInstance.get(`/posts/${postId}`);
     return response.data;
   }
+
+async getPostLikers(postId: string): Promise<{ _id: string; username: string }[]> {
+    const response = await axiosInstance.get(`/${postId}/likers`);
+    return response.data;
+  }
 }

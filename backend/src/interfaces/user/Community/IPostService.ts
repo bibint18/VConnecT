@@ -13,4 +13,5 @@ export interface IPostService {
   commentOnPost(postId: string, userId: string, content: string): Promise<string>;
   getPostComments(postId: string): Promise<IComment[]>;
   getPostById(postId: string): Promise<IPost>
+  getPostLikers(postId: string): Promise<{ _id: string; username: string }[]>;
 }

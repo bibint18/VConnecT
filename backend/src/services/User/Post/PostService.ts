@@ -125,4 +125,17 @@ export class PostService implements IPostService {
     }
     return post;
   }
+
+  async getPostLikers(postId: string): Promise<{ _id: string; username: string }[]> {
+    console.log("post id from service",postId)
+    const post = await this.getPostById(postId)
+    console.log('post from service',post)
+    if (!post) {
+      throw new AppError('Post not found', 404);
+    }
+    if (!post.likes.length) {
+      return [];
+    }
+    return await this.postRepository.findUsersByIds(post.likes);
+  }
 }

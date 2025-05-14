@@ -13,4 +13,5 @@ export interface IPostController{
   commentOnPost(req: Request, res: Response, next: NextFunction): Promise<void>;
   getPostComments(req: Request, res: Response, next: NextFunction): Promise<void>;
   getPostById(req: Request, res: Response, next: NextFunction): Promise<void>
+  getPostLikers(req: Request, res: Response, next: NextFunction): Promise<void>
 }

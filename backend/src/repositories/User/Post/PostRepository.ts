@@ -6,10 +6,6 @@ import { IUser, User } from "../../../models/User.js";
 import { Comment} from "../../../models/CommentModel.js";
 export class PostRepository implements IPostRepository{
   async create(post: IPost): Promise<string> {
-    
-    // const postData = {
-    //   ...post,userId:new mongoose.Types.ObjectId(post.userId._id)
-    // }
     const newPost = new Post(post)
     await newPost.save()
     return newPost._id.toString()
@@ -140,5 +136,19 @@ export class PostRepository implements IPostRepository{
       timestamp: commentDoc.timestamp,
       isDeleted: commentDoc.isDeleted,
     }))
+  }
+
+  async findUsersByIds(userIds: string[]): Promise<{ _id: string; username: string }[]> {
+    if (!userIds.length) {
+      return [];
+    }
+    const users = await User.find({ _id: { $in: userIds } })
+      .select('_id username')
+      .lean()
+      .exec();
+    return users.map(user => ({
+      _id: user._id.toString(),
+      username: user.username || 'Anonymous',
+    }));
   }
 }

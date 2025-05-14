@@ -165,4 +165,16 @@ export class PostController implements IPostController {
       next(error);
     }
   }
+
+  async getPostLikers(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      console.log('Reached getPostLikers controller');
+      const { postId } = req.params;
+      console.log("Post controller ",postId)
+      const likers = await this.postService.getPostLikers(postId);
+      res.status(200).json(likers);
+    } catch (error) {
+      next(error);
+    }
+  }
 }
