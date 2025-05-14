@@ -57,6 +57,7 @@ export class AdminRoomRepository implements IAdminRoomRepository{
   }
 
   async getRoomDetails(id: string): Promise<IRoom | null> {
+    console.log('reached here')
     const room = await Room.findById(id)
     .populate('createdBy','name email')
     .populate('participants.userId','name email')

@@ -52,7 +52,7 @@ import MyPostPage from "../User/Post/MyPostPage";
 import PostView from "../User/Post/PostView";
 import FeedPage from "../User/Post/FeedPage";
 import FriendRequestPage from "../User/Friends/FriendRequestPage";
-
+import DetailsPage from "../User/Room/DetailsPage";
 function AppRoute() {
   return (
     <Routes>
@@ -82,6 +82,7 @@ function AppRoute() {
       <Route path="/myPost" element={<MyPostPage />} />
       <Route path="/feed" element={<FeedPage />} />
       <Route path="/post/:postId" element={<PostView />} />
+      <Route path="/roomDetails/:roomId" element={<DetailsPage />} />
 
   </Route>
 

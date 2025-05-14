@@ -31,4 +31,8 @@ export class RoomService {
     console.log("room",room)
     return room
   }
+
+  async deleteRoom(roomId:string):Promise<void>{
+    return await this.roomRepository.deleteRoom(roomId)
+  }
 }

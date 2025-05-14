@@ -90,6 +90,8 @@ export const createUserRoutes = (
     RoomController.joinRoom.bind(RoomController)
   );
 
+  router.delete('/user/room/:roomId',authenticateToken,RoomController.deleteRoom.bind(RoomController))
+
   //friends
 
   const friendRepository = new FriendRepository();

@@ -104,7 +104,6 @@ router.post(
 router.get(
   "/admin/room/details/:id",
   authenticateToken,
-  restrictToAdmin,
   AdminRoomController.getRoomDetails.bind(AdminRoomController)
 );
 

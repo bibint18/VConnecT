@@ -106,4 +106,16 @@ export class RoomRepository implements IRoomRepository{
       throw error
     }
   }
+
+  async deleteRoom(roomId: string): Promise<void> {
+    try {
+      const room = await Room.findById(roomId)
+      if(!room){
+        throw new Error("No Room")
+      }
+      await Room.findByIdAndUpdate(roomId,{isDeleted:true})
+    } catch (error) {
+      
+    }
+  }
 }

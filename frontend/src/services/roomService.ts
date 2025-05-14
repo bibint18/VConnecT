@@ -72,3 +72,8 @@ export const getRoomDetails = async (roomId: string): Promise<{ room: IDetailRoo
   const response = await axiosInstance.get(`/admin/room/details/${roomId}`, { withCredentials: true });
   return response.data;
 };
+
+export const deleteRoom = async (roomId:string):Promise<void> => {
+  const response = await axiosInstance.delete(`/user/room/${roomId}`)
+  return response.data
+}

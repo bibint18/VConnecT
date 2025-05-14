@@ -9,4 +9,5 @@ export interface IRoomRepository{
     search?: string,
     type?: "PUBLIC" | "PRIVATE"):Promise<{ rooms: IRoom[]; user: IUser | null; total: number }>;
   joinRoom(RoomId:string,userId:string,secretCode:string):Promise<IRoom | null>
+  deleteRoom(roomId:string):Promise<void>
 }
