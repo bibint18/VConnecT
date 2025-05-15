@@ -30,6 +30,8 @@ import { PostService } from "../services/User/Post/PostService.js";
 import { CloudinaryService } from "../services/User/Post/CloudinaryService.js";
 import { PostController } from "../controllers/User/Post/PostController.js";
 import { body, query } from "express-validator";
+import { SubscriptionRepository } from "../repositories/User/SubscriptionRepository.js";
+import { SubscriptionController } from "../controllers/SubscriptionController.js";
 export const createUserRoutes = (
   chatIo: Namespace,
   directCallController: DirectCallController
@@ -90,7 +92,11 @@ export const createUserRoutes = (
     RoomController.joinRoom.bind(RoomController)
   );
 
-  router.delete('/user/room/:roomId',authenticateToken,RoomController.deleteRoom.bind(RoomController))
+  router.delete(
+    "/user/room/:roomId",
+    authenticateToken,
+    RoomController.deleteRoom.bind(RoomController)
+  );
 
   //friends
 
@@ -130,7 +136,16 @@ export const createUserRoutes = (
   //chat
   const chatRepository = new ChatRepository();
   const callRepository = new FriendCallRepository();
-  const chatService = new ChatService(chatRepository, chatIo, callRepository);
+  const subscriptionRepository = new SubscriptionRepository();
+  const subscriptionController = new SubscriptionController(
+    subscriptionRepository
+  );
+  const chatService = new ChatService(
+    chatRepository,
+    chatIo,
+    callRepository,
+    subscriptionRepository
+  );
   const chatController = new ChatController(chatService);
   router.post(
     "/chat/send",
@@ -285,6 +300,16 @@ export const createUserRoutes = (
     postController.getPostById.bind(postController)
   );
 
-  router.get('/:postId/likers',authenticateToken,postController.getPostLikers.bind(postController))
+  router.get(
+    "/:postId/likers",
+    authenticateToken,
+    postController.getPostLikers.bind(postController)
+  );
+
+  router.post(
+    "/subscriptions",
+    authenticateToken,
+    subscriptionController.saveSubscription.bind(subscriptionController)
+  );
   return router;
 };

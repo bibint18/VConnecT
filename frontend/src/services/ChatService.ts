@@ -52,7 +52,9 @@ export class ChatService {
     });
 
     this.socket.on('receive-message',(message:IMessage) => {
+      if(Notification.permission !== "granted"){
       toast.success("New Message")
+      }
       this.onMessageReceived(message)
     })
 
@@ -82,6 +84,18 @@ export class ChatService {
     this.socket.on("friend-call-ended", (data: { callId: string }) => {
       toast.success("Call ended", { id: data.callId });
     });
+  }
+
+  public async saveSubscription(subscription: PushSubscription): Promise<void> {
+    try {
+      await axiosInstance.post('/subscriptions', { userId: this.userId, subscription });
+      // toast.success('Notifications enabled');
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        throw new Error(error.response?.data.message || "Failed to save subscription");
+      }
+      throw new Error("Failed to save subscription");
+    }
   }
 
   public startFriendCall(receiverId: string) {

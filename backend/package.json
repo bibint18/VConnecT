@@ -2,7 +2,7 @@
   "name": "vconnect_backend",
   "version": "1.0.0",
   "main": "src/server.ts",
-  "type":"module",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon --exec tsx src/server.ts",
@@ -30,7 +30,8 @@
     "mongoose": "^8.14.0",
     "nodemailer": "^6.10.0",
     "recharts": "^2.15.3",
-    "socket.io": "^4.8.1"
+    "socket.io": "^4.8.1",
+    "web-push": "^3.6.7"
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.8",
@@ -42,8 +43,10 @@
     "@types/paypal__checkout-server-sdk": "^1.0.8",
     "@types/socket.io": "^3.0.1",
     "@types/uuid": "^10.0.0",
+    "@types/web-push": "^3.6.4",
     "nodemon": "^3.1.10",
     "ts-node": "^10.9.2",
+    "tsx": "^4.19.4",
     "typescript": "^5.8.3"
   }
 }

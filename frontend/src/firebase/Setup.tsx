@@ -1,6 +1,7 @@
 
 import { initializeApp } from "firebase/app";
 import {getAuth,GoogleAuthProvider} from 'firebase/auth'
+import {getMessaging,getToken} from 'firebase/messaging'
 const firebaseConfig = {
   apiKey: "AIzaSyDShCH3KACf7kMufW-onFzb0c7SvXHb-bs",
   authDomain: "vconnect-963a7.firebaseapp.com",
@@ -12,4 +13,13 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app)
+export const messaging = getMessaging(app)
 export const googleProvider = new GoogleAuthProvider()
+export async function getPushToken(): Promise<string | null> {
+  try {
+    return await getToken(messaging, { vapidKey: import.meta.env.VITE_VAPID_PUBLIC_KEY });
+  } catch (error) {
+    console.error('Error getting push token:', error);
+    return null;
+  }
+}

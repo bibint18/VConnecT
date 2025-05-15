@@ -6,10 +6,13 @@ import FriendsList from "./FriendList";
 import ChatBox from "./ChatBox";
 import { ChatService } from "@/services/ChatService";
 import { useAppSelector } from "@/redux/store";
+import { useLocation } from "react-router-dom";
+
 const ChatDashboard: React.FC = () => {
   const [activeChat, setActiveChat] = useState<string | null>(null);
   const {userId} = useAppSelector((state) => state.user)
   const chatServiceRef = React.useRef<ChatService | null>(null)
+  const location = useLocation()
   const handleSelectFriend = (friendId: string) => {
     setActiveChat(friendId);
   };
@@ -22,13 +25,27 @@ const ChatDashboard: React.FC = () => {
       console.log("ChatDashboard received message for", userId, ":", message);
     });
 
+    const params = new URLSearchParams(location.search);
+    const friendId = params.get('friendId');
+    if (friendId) {
+      setActiveChat(friendId);
+    }
+
+    const handleMessage = (event: MessageEvent) => {
+      if (event.data.type === 'NAVIGATE' && event.data.friendId) {
+        setActiveChat(event.data.friendId);
+      }
+    };
+    navigator.serviceWorker.addEventListener('message', handleMessage);
+
     return () => {
+      navigator.serviceWorker.removeEventListener('message',handleMessage)
       if (chatServiceRef.current) {
         // chatServiceRef.current.disconnect();
         // console.log("ChatService disconnected for user:", userId);
       }
     };
-  }, [userId]);
+  }, [userId,location]);
   return (
     <div className="flex h-screen">
       <div className="w-1/3">

@@ -9,7 +9,7 @@ import { Paperclip } from "react-feather";
 import axiosInstance from "@/utils/axiosInterceptor";
 import { io,Socket } from "socket.io-client";
 import { useNavigate } from "react-router-dom";
-import {Check,CheckCheck} from "lucide-react"
+import {Check,CheckCheck,Bell,BellOff} from "lucide-react"
 // import {v4 as uuidv4} from 'uuid'
 interface CloudinaryChatUploadResult {
   secure_url: string;
@@ -41,6 +41,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ friendId }) => {
   const [callState, setCallState] = useState<"idle" | "ringing" | "active">(
     "idle"
   );
+  const [notificationsEnabled, setNotificationsEnabled] = useState(false);
   const [localStream, setLocalStream] = useState<MediaStream | null>(null); 
   const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null); 
   const [isUploading, setIsUploading] = useState(false);
@@ -258,6 +259,30 @@ socketRef.current.on("directCall:ended", ({ callId }) => {
       }
     );
 
+
+    const initializeNotifications = async () => {
+      if ('serviceWorker' in navigator && 'PushManager' in window) {
+        try {
+          const registration = await navigator.serviceWorker.register('/service-woker.js');
+          console.log('Service Worker registered:', registration);
+
+          const permission = await Notification.requestPermission();
+          setNotificationsEnabled(permission === 'granted');
+
+          if (permission === 'granted') {
+            const subscription = await registration.pushManager.subscribe({
+              userVisibleOnly: true,
+              applicationServerKey: urlBase64ToUint8Array(import.meta.env.VITE_VAPID_PUBLIC_KEY),
+            });
+            await chatServiceRef.current?.saveSubscription(subscription);
+          }
+        } catch (error) {
+          console.error('Error initializing notifications:', error);
+          toast.error('Failed to initialize notifications');
+        }
+      }
+    };
+
     const loadInitialData = async () => {
       if (!chatServiceRef.current) {
         console.error("ChatService not initialized");
@@ -297,6 +322,7 @@ socketRef.current.on("directCall:ended", ({ callId }) => {
               new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
           )
         );
+        initializeNotifications();
       } catch (error) {
         console.error("Error loading initial data:", error);
         toast.error((error as Error).message || "Failed to load chat data");
@@ -499,6 +525,40 @@ socketRef.current.on("directCall:ended", ({ callId }) => {
       !localStream?.getVideoTracks()[0]?.enabled
     );
 
+    function urlBase64ToUint8Array(base64String: string): Uint8Array {
+    const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
+    const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+    const rawData = window.atob(base64);
+    const outputArray = new Uint8Array(rawData.length);
+    for (let i = 0; i < rawData.length; ++i) {
+      outputArray[i] = rawData.charCodeAt(i);
+    }
+    return outputArray;
+  }
+
+  const handleEnableNotifications = async () => {
+    try {
+      const permission = await Notification.requestPermission();
+      if (permission === 'granted') {
+        const registration = await navigator.serviceWorker.getRegistration();
+        if (registration) {
+          const subscription = await registration.pushManager.subscribe({
+            userVisibleOnly: true,
+            applicationServerKey: urlBase64ToUint8Array(import.meta.env.VITE_VAPID_PUBLIC_KEY),
+          });
+          await chatServiceRef.current?.saveSubscription(subscription);
+          setNotificationsEnabled(true);
+          toast.success('Notifications enabled');
+        }
+      } else {
+        toast.error('Notifications permission denied');
+      }
+    } catch (error) {
+      console.error('Error enabling notifications:', error);
+      toast.error('Failed to enable notifications');
+    }
+  };
+
     return (
       <div className="flex flex-col h-full bg-white rounded-lg shadow-lg">
         <div className="p-4 border-b flex justify-between items-center">
@@ -514,6 +574,19 @@ socketRef.current.on("directCall:ended", ({ callId }) => {
             className={` !bg-white px-3 py-1 rounded-lg text-white bg-green-500 hover:bg-green-600 ${!isConnected && "opacity-50 cursor-not-allowed"}`}
           >
             {isConnected ? "Call" : "Connecting..."}
+          </button>
+
+<button
+            onClick={handleEnableNotifications}
+            disabled={notificationsEnabled}
+            className={`p-2 rounded-lg text-white ${notificationsEnabled ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'}`}
+            title={notificationsEnabled ? 'Notifications enabled' : 'Enable notifications'} 
+          >
+            {notificationsEnabled ? (
+              <BellOff className="w-5 h-5" />
+            ) : (
+              <Bell className="w-5 h-5" />
+            )}
           </button>
         </div>
   

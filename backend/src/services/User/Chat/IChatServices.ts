@@ -5,10 +5,12 @@ import { IMessage, IMessageInput } from "../../../models/MessageModel.js";
 import mongoose  from "mongoose";
 import { IFriendCallRepository } from "../../../interfaces/user/Call/IFriendCallRepository.js";
 import { ICallInput } from "../../../models/CallModel.js";
-
+import { ISubscriptionRepository } from "../../../repositories/User/SubscriptionRepository.js";
+import { sendPush,PushPayload } from "../../../utils/push.js";
+import { User } from "../../../models/User.js";
 export class ChatService implements IChatService{
   private activeCallRequests = new Set<string>();
-  constructor(private readonly chatRepository: IChatRepository, private readonly chatIo:Namespace,private readonly callRepository:IFriendCallRepository){
+  constructor(private readonly chatRepository: IChatRepository, private readonly chatIo:Namespace,private readonly callRepository:IFriendCallRepository,private readonly subscriptionRepository:ISubscriptionRepository){
     console.log("ChatService initialized with chatIo:", chatIo ? "present" : "undefined");
     this.setupSocketEvents()
   }
@@ -28,6 +30,18 @@ export class ChatService implements IChatService{
     this.chatIo.to(recieverId).emit("receive-message",message);
     this.chatIo.to(senderId).emit("receive-message",message)
     console.log("passed to sender and reciever")
+
+    const subscription = await this.subscriptionRepository.getSubscriptionByUserId(recieverId);
+    if (subscription) {
+      const sender = await User.findById(senderId);
+      const payload: PushPayload = {
+        title: `New Message from ${sender?.name || 'Friend'}`,
+        body: content || (mediaType === 'image' ? 'Sent an image' : 'Sent a video'),
+        url: `/friends?friendId=${senderId}`, 
+      };
+      await sendPush(subscription.subscription, payload);
+    }
+
     const lastMessage = await this.chatRepository.getLastMessage(senderId,recieverId);
     console.log("service last Message",lastMessage)
     const unreadCountSender = await this.chatRepository.getUnreadMessageCount(senderId,recieverId)
@@ -41,6 +55,8 @@ export class ChatService implements IChatService{
       friendId:senderId,lastMessage,unreadCount:unreadCountReceiver
     })
   }
+
+  
 
   async getChatHistory(senderId: string, recieverId: string): Promise<IMessage[]> {
     return this.chatRepository.getMessages(senderId,recieverId)
