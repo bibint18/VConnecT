@@ -1,5 +1,5 @@
 // New: Repository for managing push subscriptions
-import { ISubscription,Subscription } from '../../models/Subscriptions';
+import { ISubscription,Subscription } from '../../models/Subscriptions.js';
 import mongoose from 'mongoose';
 
 export interface ISubscriptionRepository {
