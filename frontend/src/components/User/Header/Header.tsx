@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import logo from '../../../assets/logovct1.png';
 import { useAppDispatch, useAppSelector } from '../../../redux/store';
 import { logoutTheUser } from '../../../redux/userSlice';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
@@ -30,12 +30,12 @@ const Header: React.FC = () => {
 
       {/* Desktop Navigation */}
       <nav className="hidden md:flex space-x-6">
-        <a href="/" className="hover:text-purple-500">Home</a>
-        {/* <a href="#" className="hover:text-purple-500" onClick={fetchAbout}>About</a> */}
-        <a href="/friends" className="hover:text-purple-500">Friends</a>
-        <a href="/profile" className="hover:text-purple-500">Profile</a>
-        <a href="/dailyTrivia" className="hover:text-purple-500">Daily Trivia</a>
-        <a href="/feed" className="hover:text-purple-500">Community</a>
+        <Link to="/" className="hover:text-purple-500">Home</Link>
+        <Link to="/rooms" className="hover:text-purple-500">Rooms</Link>
+        <Link to="/friends" className="hover:text-purple-500">Friends</Link>
+        <Link to="/profile" className="hover:text-purple-500">Profile</Link>
+        <Link to="/dailyTrivia" className="hover:text-purple-500">Daily Trivia</Link>
+        <Link to="/feed" className="hover:text-purple-500">Community</Link>
       </nav>
 
       {/* Desktop Auth Section */}
@@ -87,51 +87,51 @@ const Header: React.FC = () => {
           }`}
         >
           <nav className="!flex !flex-col !p-4 !space-y-3">
-            <a
-              href="/"
+            <Link
+              to="/"
               className="!text-black !font-medium hover:!text-purple-500 !py-2 !px-3 !rounded-md hover:!bg-gray-100"
               onClick={() => setIsMenuOpen(false)}
             >
               Home
-            </a>
-            <a
-              href="#"
+            </Link>
+            <Link
+              to="/rooms"
               className="!text-black !font-medium hover:!text-purple-500 !py-2 !px-3 !rounded-md hover:!bg-gray-100"
               onClick={(e) => {
                 e.preventDefault();
                 setIsMenuOpen(false);
               }}
             >
-              About
-            </a>
-            <a
-              href="/friends"
+              Rooms
+            </Link>
+            <Link
+              to="/friends"
               className="!text-black !font-medium hover:!text-purple-500 !py-2 !px-3 !rounded-md hover:!bg-gray-100"
               onClick={() => setIsMenuOpen(false)}
             >
               Friends
-            </a>
-            <a
-              href="/profile"
+            </Link>
+            <Link
+              to="/profile"
               className="!text-black !font-medium hover:!text-purple-500 !py-2 !px-3 !rounded-md hover:!bg-gray-100"
               onClick={() => setIsMenuOpen(false)}
             >
               Profile
-            </a>
-            <a
-              href="/dailyTrivia"
+            </Link>
+            <Link
+              to="/dailyTrivia"
               className="!text-black !font-medium hover:!text-purple-500 !py-2 !px-3 !rounded-md hover:!bg-gray-100"
               onClick={() => setIsMenuOpen(false)}
             >
               Daily Trivia
-            </a>
-            <a
-              href="/feed"
+            </Link>
+            <Link
+              to="/feed"
               className="!text-black !font-medium hover:!text-purple-500 !py-2 !px-3 !rounded-md hover:!bg-gray-100"
               onClick={() => setIsMenuOpen(false)}
             >
               Community
-            </a>
+            </Link>
             {isAuthenticated ? (
               <div className="!flex !flex-col !space-y-3 !mt-2">
                 <span className="!text-gray-700 !font-medium !py-2 !px-3">{name}</span>

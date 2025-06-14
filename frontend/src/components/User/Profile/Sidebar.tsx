@@ -30,6 +30,7 @@ const navItems: NavItem[] = [
 ];
 import { logoutTheUser } from '@/redux/userSlice.js';
 import { useAppDispatch } from '@/redux/store';
+import { Link } from 'react-router-dom';
 export const Sidebar = () => {
 const dispatch = useAppDispatch()
 const logout = () => {
@@ -40,9 +41,9 @@ const logout = () => {
       <div className="flex-1 py-6">
         <nav className="space-y-2 px-2">
           {navItems.map((item) => (
-            <a
+            <Link
               key={item.name}
-              href={item.path}
+              to={item.path}
               className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors
                 ${item.isActive 
                   ? 'bg-blue-600 text-white' 
@@ -52,7 +53,7 @@ const logout = () => {
             >
               <item.icon className="w-6 h-6 flex-shrink-0" />
               <span className="hidden md:block">{item.name}</span>
-            </a>
+            </Link>
           ))}
         </nav>
       </div>
