@@ -263,6 +263,7 @@ socketRef.current.on("directCall:ended", ({ callId }) => {
     const initializeNotifications = async () => {
       if ('serviceWorker' in navigator && 'PushManager' in window) {
         try {
+          console.log("going to initialixze")
           const registration = await navigator.serviceWorker.register('/service-woker.js');
           console.log('Service Worker registered:', registration);
 
@@ -278,7 +279,7 @@ socketRef.current.on("directCall:ended", ({ callId }) => {
           }
         } catch (error) {
           console.error('Error initializing notifications:', error);
-          toast.error('Failed to initialize notifications');
+          // toast.error('Failed to initialize notifications');
         }
       }
     };

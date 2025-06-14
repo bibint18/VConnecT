@@ -42,8 +42,8 @@ self.addEventListener('push', (event) => {
   const data = event.data.json();
   const options = {
     body: data.body,
-    icon: './vite.svg', // Replace with your app logo path
-    data: { url: data.url }, // Stores /friends?friendId=${friendId}
+    icon: './logovct1.png', 
+    data: { url: data.url }, 
   };
   event.waitUntil(
     self.registration.showNotification(data.title, options)
@@ -54,8 +54,7 @@ self.addEventListener('notificationclick', (event) => {
   event.notification.close();
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
-      const url = event.notification.data.url; // e.g., /friends?friendId=${friendId}
-      // Modified: Check base path /friends to handle query params
+      const url = event.notification.data.url; 
       for (const client of clientList) {
         const clientUrl = new URL(client.url);
         if (clientUrl.pathname === '/friends' && 'focus' in client) {

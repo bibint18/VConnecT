@@ -1,26 +1,4 @@
 
-// interface User{
-//   _id:string;
-//   name:string,
-//   email:string,
-//   password:string,
-//   otp?:string,
-//   otpExpiry?:Date,
-//   isVerified:boolean
-//   isAdmin:boolean
-//   failedLoginAttempts: number;
-//   lockUntil: Date | null;
-//   plan?: {
-//     planId: string;
-//     planName: string;
-//     status: "active" | "expired" | "cancelled";
-//     startDate: Date;
-//     endDate?: Date;
-//     transactionId?: string;
-//   }[];
-//   isDeleted:boolean;
-//   isBlocked:boolean
-// }
 
 interface UsersResponse {
   users: IUser[];
@@ -51,34 +29,130 @@ export const useUsers = (
 };
 
 
-export const useBlockUser = () => {
+// export const useBlockUser = () => {
+//   const queryClient = useQueryClient();
+//   return useMutation({
+//     mutationFn: blockUser,
+//     onSuccess: () => {
+//       queryClient.invalidateQueries({ queryKey: ["users"] });
+//     },
+//   });
+// };
+
+// export const useBlockUser = () => {
+//   const queryClient = useQueryClient();
+
+// return useMutation({
+//   mutationFn: blockUser,
+//   onSuccess: (data, userId: string) => {
+//     queryClient.setQueryData<UsersResponse>(["users"], (old) => {
+//       if (!old) return old;
+//       return {
+//         ...old,
+//         users: old.users.map((user) =>
+//           user._id === userId ? { ...user, isBlocked: true } : user
+//         ),
+//       };
+//     });
+//   },
+// });
+// };
+
+
+export const useBlockUser = (
+  page: number,
+  limit: number,
+  searchTerm: string,
+  sortOption: string
+) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: blockUser,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["users"] });
+    onSuccess: (data, userId: string) => {
+      queryClient.setQueryData<UsersResponse>(
+        ["users", page, limit, searchTerm, sortOption],
+        (old) => {
+          if (!old) return old;
+          return {
+            ...old,
+            users: old.users.map((user) =>
+              user._id === userId ? { ...user, isBlocked: true } : user
+            ),
+          };
+        }
+      );
     },
   });
 };
 
+// export const useUnblockUser = () => {
+//   const queryClient = useQueryClient();
+//   return useMutation({
+//     mutationFn: unblockUser,
+//     onSuccess: () => {
+//       queryClient.invalidateQueries({ queryKey: ["users"] });
+//     },
+//   });
+// };
 
-export const useUnblockUser = () => {
+export const useUnblockUser = (
+  page: number,
+  limit: number,
+  searchTerm: string,
+  sortOption: string
+) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: unblockUser,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["users"] });
+    onSuccess: (data, userId: string) => {
+      queryClient.setQueryData<UsersResponse>(
+        ["users", page, limit, searchTerm, sortOption],
+        (old) => {
+          if (!old) return old;
+          return {
+            ...old,
+            users: old.users.map((user) =>
+              user._id === userId ? { ...user, isBlocked: false } : user
+            ),
+          };
+        }
+      );
     },
   });
 };
 
 
-export const useDeleteUser = () => {
+// export const useDeleteUser = () => {
+//   const queryClient = useQueryClient();
+//   return useMutation({
+//     mutationFn: deleteUser,
+//     onSuccess: () => {
+//       queryClient.invalidateQueries({ queryKey: ["users"] });
+//     },
+//   });
+// };
+
+export const useDeleteUser = (
+  page: number,
+  limit: number,
+  searchTerm: string,
+  sortOption: string
+) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: deleteUser,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["users"] });
+    onSuccess: (data, userId: string) => {
+      queryClient.setQueryData<UsersResponse>(
+        ["users", page, limit, searchTerm, sortOption],
+        (old) => {
+          if (!old) return old;
+          return {
+            ...old,
+            users: old.users.filter((user) => user._id !== userId),
+            totalUsers: old.totalUsers - 1,
+          };
+        }
+      );
     },
   });
 };
