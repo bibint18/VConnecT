@@ -200,18 +200,18 @@ const AdminDashboardd: React.FC = () => {
               {startDate ? format(startDate, "PPP") : "Start Date"}
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-auto p-0">
-            <Calendar
-              mode="single"
-              selected={startDate}
-              onSelect={handleStartDateSelect}
-              initialFocus
-              disabled={(date:Date) => isAfter(date, today)}
-              classNames={{
-                day_disabled: "!text-gray-400 !cursor-not-allowed",
-              }}
-            />
-          </PopoverContent>
+        <PopoverContent className="w-auto p-0">
+          <Calendar
+            mode="single"
+            selected={startDate}
+            onSelect={handleStartDateSelect}
+            initialFocus
+            disabled={(date:Date) => isAfter(date, today)}
+            classNames={{
+              day_disabled: "!text-gray-400 !cursor-not-allowed",
+            }}
+          />
+        </PopoverContent> 
         </Popover>
         <Popover>
           <PopoverTrigger asChild>
