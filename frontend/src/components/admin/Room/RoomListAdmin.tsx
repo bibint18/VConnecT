@@ -10,12 +10,12 @@ import { Room } from "@/api/adminAuth";
 export default function RoomlistAdmin() {
   const [page,setPage] = useState(1)
   const limit=6
-  const navigate = useNavigate()
-  const blockMutation = useBlockRoom()
-  const unblockMutation = useUnblockRoom()
-  // const deleteMutation = useDeleteRoom()
-  const [searchTerm,setSearchTerm] = useState('')
+    const [searchTerm,setSearchTerm] = useState('')
   const [sortOption,setSortOption] = useState<string>('all')
+  const navigate = useNavigate()
+  const blockMutation = useBlockRoom(page,limit,searchTerm,sortOption)
+  const unblockMutation = useUnblockRoom(page,limit,searchTerm,sortOption)
+  // const deleteMutation = useDeleteRoom()
   const { data, isLoading, isError } = useRooms(page, limit, searchTerm, sortOption);
   const rooms: Room[] = data?.rooms ?? []; 
   const totalRooms: number = data?.totalRooms ?? 0; 
@@ -71,28 +71,7 @@ const totalPages = Math.ceil(totalRooms/limit)
     navigate(`/admin/room-details/${id}`);
   };
 
-  // const handleDelete = (id: string) => {
-  //   Swal.fire({
-  //     title: "Are you sure?",
-  //     text: "You won't be able to revert this!",
-  //     icon: "warning",
-  //     showCancelButton: true,
-  //     confirmButtonColor: "#d33",
-  //     cancelButtonColor: "#3085d6",
-  //     confirmButtonText: "Yes, delete it!",
-  //   }).then((result) => {
-  //     if (result.isConfirmed) {
-  //       deleteMutation.mutate(id, {
-  //         onSuccess: () => {
-  //           Swal.fire("Deleted!", "The user has been deleted.", "success");
-  //         },
-  //         onError: () => {
-  //           Swal.fire("Error!", "Something went wrong.", "error");
-  //         },
-  //       });
-  //     }
-  //   });
-  // };
+
 
   if(isLoading) return <p>Loading Rooms...</p>
   if(isError) return <p>Error fetching Rooms..</p>
@@ -220,22 +199,7 @@ const totalPages = Math.ceil(totalRooms/limit)
 
           </div>
 
-          {/* <div className="sidebar">
-            <h2 className="mb-4 text-xl font-medium text-gray-700">Top Customers</h2>
-            <div className="space-y-4">
-              {topCustomers.map((customer, index) => (
-                <div key={index} className="top-customer">
-                  <div className="h-10 w-10 overflow-hidden rounded-full">
-                    <img src={customer.avatar} alt={customer.name} width={40} height={40} className="h-full w-full object-cover" />
-                  </div>
-                  <div>
-                    <h3 className="font-medium">{customer.name}</h3>
-                    <p className="text-sm text-gray-500">{customer.streak}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div> */}
+          
         </div>
       {/* </div> */}
     </div>

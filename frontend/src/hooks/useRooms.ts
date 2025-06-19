@@ -31,25 +31,84 @@ export const useRooms = (
   );
 };
 
-export const useBlockRoom = () => {
+// export const useBlockRoom = () => {
+//   const queryClient = useQueryClient();
+//   return useMutation({
+//     mutationFn: blockRoom,
+//     onSuccess: () => {
+//       queryClient.invalidateQueries({ queryKey: ["rooms"] });
+//     },
+//   });
+// };
+export const useBlockRoom = (
+  page: number,
+  limit: number,
+  searchTerm: string,
+  sortOption: string
+) => {
   const queryClient = useQueryClient();
+
   return useMutation({
-    mutationFn: blockRoom,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["rooms"] });
+    mutationFn: blockRoom, // should return success data (e.g. roomId)
+    onSuccess: (_data, roomId: string) => {
+      queryClient.setQueryData(
+        ["rooms", page, limit, searchTerm, sortOption],
+        (old: any) => {
+          if (!old) return old;
+
+          return {
+            ...old,
+            rooms: old.rooms.map((room: any) =>
+              room._id === roomId ? { ...room, isBlocked: true } : room
+            ),
+          };
+        }
+      );
     },
   });
 };
 
-export const useUnblockRoom = () => {
+
+
+// export const useUnblockRoom = () => {
+//   const queryClient = useQueryClient();
+//   return useMutation({
+//     mutationFn: unblockRoom,
+//     onSuccess: () => {
+//       queryClient.invalidateQueries({ queryKey: ["rooms"] });
+//     },
+//   });
+// };
+
+export const useUnblockRoom = (
+  page: number,
+  limit: number,
+  searchTerm: string,
+  sortOption: string
+) => {
   const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: unblockRoom,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["rooms"] });
+    onSuccess: (_data, roomId: string) => {
+      queryClient.setQueryData(
+        ["rooms", page, limit, searchTerm, sortOption],
+        (old: any) => {
+          if (!old) return old;
+
+          return {
+            ...old,
+            rooms: old.rooms.map((room: any) =>
+              room._id === roomId ? { ...room, isBlocked: false } : room
+            ),
+          };
+        }
+      );
     },
   });
 };
+
+
 
 export const useDeleteRoom = () => {
   const queryClient = useQueryClient();
