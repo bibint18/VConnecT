@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { IFriendRepository } from "../interfaces/IFriendRepository.js";
 import { AppError } from "../utils/AppError.js";
 import { User } from "../models/User.js";
+import { HTTP_STATUS_CODE } from "../utils/statusCode.js";
 
 export class FriendController {
   private friendRepository: IFriendRepository;
@@ -10,34 +11,47 @@ export class FriendController {
     this.friendRepository = friendRepository;
   }
 
-  public getPendingRequests = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  public getPendingRequests = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
-      console.log('backend friend request')
-      const userId = (req as any).user.id; 
-      if (!userId) throw new AppError("Unauthorized", 401);
+      const userId = (req as any).user.id;
+      if (!userId)
+        throw new AppError("Unauthorized", HTTP_STATUS_CODE.UNAUTHORIZED);
 
       const requests = await this.friendRepository.getPendingRequests(userId);
-      res.status(200).json({ requests });
+      res.status(HTTP_STATUS_CODE.OK).json({ requests });
     } catch (error) {
-      next(error instanceof AppError ? error : new AppError("Failed to fetch friend requests", 500));
+      next(
+        error instanceof AppError
+          ? error
+          : new AppError(
+              "Failed to fetch friend requests",
+              HTTP_STATUS_CODE.INTERNAL_SERVER_ERROR
+            )
+      );
     }
   };
 
-  async getFriends(req:Request,res:Response,next:NextFunction) {
+  async getFriends(req: Request, res: Response, next: NextFunction) {
     try {
-      const userId = (req as any).user?.id
-      if(!userId){
-        throw new Error("Unauthorized")
+      const userId = (req as any).user?.id;
+      if (!userId) {
+        throw new Error("Unauthorized");
       }
-      const user = await User.findById(userId).select("friends").populate("friends", "_id name");
-      console.log("controller friendsssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss",user)
-      if(!user){
-        throw new Error("no user")
+      const user = await User.findById(userId)
+        .select("friends")
+        .populate("friends", "_id name");
+      if (!user) {
+        throw new Error("no user");
       }
-      res.status(200).json({ friends: user.friends.map(f => ({ id: f._id.toString() })) });
+      res
+        .status(HTTP_STATUS_CODE.OK)
+        .json({ friends: user.friends.map((f) => ({ id: f._id.toString() })) });
     } catch (error) {
-      next(error)
+      next(error);
     }
   }
 }
-

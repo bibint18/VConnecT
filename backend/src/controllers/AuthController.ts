@@ -4,6 +4,7 @@ import { UserRepository } from "../repositories/userRepository.js";
 import { generateAccessToken } from "../utils/generateToken.js";
 import jwt from "jsonwebtoken";
 import { User } from "../models/User.js";
+import { HTTP_STATUS_CODE } from "../utils/statusCode.js";
 const authService = new AuthService(new UserRepository());
 
 export const login = async (
@@ -12,84 +13,61 @@ export const login = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    console.log("reached login backend", req.body);
     const { email, password } = req.body;
-    if (password) {
-      console.log("data check password", password, password.length);
-    }
     const { accessToken, refreshToken, user } = await authService.login(
       email,
       password,
       false
     );
-    console.log("access and refresh tookens ", accessToken, refreshToken);
-    // res.cookie("accessToken", accessToken, { httpOnly: true });
-    // res.cookie("refreshToken", refreshToken, { httpOnly: true });
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
       path: "/",
     });
-    console.log("Cookie added");
    res.json({ message: "Login successful", accessToken, user });
    return
   } catch (error) {
-    // res.status(400).json({ message: error.message });
     next(error);
   }
 };
 export const userLogout = async (req: Request, res: Response) => {
   res.clearCookie("refreshToken");
-  res.status(200).json({ message: "user logged out" });
+  res.status(HTTP_STATUS_CODE.OK).json({ message: "user logged out" });
 };
 
 export const refresh = async (req: Request, res: Response) => {
   try {
-    console.log("Reached backend refresh Token");
-    // if(!req.cookies.refreshToken){
-    //   window.location.href='/login'
-    // }
-    // console.log("refresh token",(req as any).cookies.refreshToken)
     const refreshToken = req.cookies.refreshToken;
-    // console.log("refresh Token: ",refreshToken)
     if (!refreshToken) {
-      res.status(403).json({ message: "NO refresh token provided" });
+      res.status(HTTP_STATUS_CODE.NOT_FOUND).json({ message: "NO refresh token provided" });
     }
     if (refreshToken) {
       const decoded: any = jwt.verify(
         refreshToken,
         process.env.REFRESH_TOKEN_SECRET as string
       );
-      console.log("decoded ", decoded);
-      // const accessToken = generateAccessToken(decoded);
       const accessToken = generateAccessToken({
         _id: decoded.id,
         isAdmin: decoded.isAdmin,
       });
-      console.log(" new CcessToken from refresh accessToken", accessToken);
-      // res.cookie("accessToken", accessToken, { httpOnly: true });
       res.json({ accessToken });
     } else {
-      res.status(403).json({ message: "No token in cookie" });
+      res.status(HTTP_STATUS_CODE.NOT_FOUND).json({ message: "No token in cookie" });
     }
   } catch {
-    res.sendStatus(403);
+    res.sendStatus(HTTP_STATUS_CODE.NOT_FOUND);
   }
 };
 
 export const LoginAdmin = async (req: Request, res: Response) => {
   try {
-    console.log("reached admin backend");
     const { email, password } = req.body;
     const { accessToken, refreshToken, user } = await authService.login(
       email,
       password,
       true
     );
-
-    // res.cookie("accessTokenAdmin", accessToken, { httpOnly: true });
-    // res.cookie("refreshTokenAdmin", refreshToken, { httpOnly: true });
     res.cookie("refreshTokenAdmin", refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
@@ -98,16 +76,16 @@ export const LoginAdmin = async (req: Request, res: Response) => {
     res.json({ message: "Admin login successful", accessToken, user });
   } catch (error) {
     if (error instanceof Error) {
-      res.status(400).json({ message: error.message });
+      res.status(HTTP_STATUS_CODE.BAD_REQUEST).json({ message: error.message });
     } else {
-      res.status(400).json({ message: "An unknown error occurred" });
+      res.status(HTTP_STATUS_CODE.BAD_REQUEST).json({ message: "An unknown error occurred" });
     }
   }
 };
 
 export const adminLogout = async (req: Request, res: Response) => {
   res.clearCookie("accessTokenAdmin");
-  res.status(200).json({ message: "Logged out successfully" });
+  res.status(HTTP_STATUS_CODE.OK).json({ message: "Logged out successfully" });
 };
 
 export const signup = async (
@@ -117,7 +95,6 @@ export const signup = async (
 ) => {
   try {
     const { name, email, password } = req.body;
-    console.log("signup details", req.body, password.length);
     const response = await authService.singup(name, email, password);
     res.json(response);
   } catch (error) {
@@ -131,9 +108,6 @@ export const verifyOTP = async (
   next: NextFunction
 ) => {
   try {
-    console.log("its here");
-    console.log("verofy: ", req.body);
-
     const { email, otp, name, password } = req.body;
     const response = await authService.verifyOTP(email, otp, name, password);
     res.json(response);
@@ -149,8 +123,7 @@ export const ResendOtp = async (
 ) => {
   try {
     const { email } = req.body;
-    const response = await authService.resendOTP(email);
-    console.log("data passed from controller", response);
+    await authService.resendOTP(email);
   } catch (error: any) {
     next(error);
   }
@@ -185,7 +158,7 @@ export const googleLogin = async (
       sameSite: "strict",
     });
     res
-      .status(200)
+      .status(HTTP_STATUS_CODE.OK)
       .json({ message: "Google login successfull", accessToken, user });
   } catch (error) {
     next(error);
@@ -199,7 +172,7 @@ export const HomeData = async (
 ) => {
   try {
     const result = await authService.HomeData();
-    res.status(200).json(result);
+    res.status(HTTP_STATUS_CODE.OK).json(result);
   } catch (error) {
     next(error);
   }

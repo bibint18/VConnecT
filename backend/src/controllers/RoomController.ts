@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { IRoom } from "../models/RoomModel.js";
 import { RoomService } from "../services/RoomService.js";
 import { RoomRepository } from "../repositories/RoomsRepository.js";
+import { HTTP_STATUS_CODE } from "../utils/statusCode.js";
 
 export class RoomController {
   private roomService: RoomService;
@@ -34,7 +35,7 @@ export class RoomController {
         isBlocked: false,
       };
       const newRoom = await this.roomService.createRoom(roomData);
-      res.status(200).json({ room: newRoom });
+      res.status(HTTP_STATUS_CODE.OK).json({ room: newRoom });
     } catch (error) {
       next(error);
     }
@@ -44,7 +45,6 @@ export class RoomController {
     try {
       const userId = req.user?.id as string;
       const { search, type, page = "1", limit = "10" } = req.query;
-      console.log("getRooms", search, type);
       const { rooms, user, total } = await this.roomService.getAllRooms(
         userId,
         parseInt(page as string, 10),
@@ -52,7 +52,7 @@ export class RoomController {
         search as string,
         type as "PUBLIC" | "PRIVATE"
       );
-      res.status(200).json({ rooms, user, total });
+      res.status(HTTP_STATUS_CODE.OK).json({ rooms, user, total });
     } catch (error) {
       next(error);
     }
@@ -60,10 +60,8 @@ export class RoomController {
 
   async joinRoom(req: Request, res: Response, next: NextFunction) {
     try {
-      console.log("reached join room controller ");
       const userId = (req as any).user.id;
       const { roomId, secretCode } = req.body;
-      console.log("backend join room controller", roomId, secretCode, userId);
       if (!roomId) {
         throw new Error("Room id is required");
       }
@@ -72,9 +70,8 @@ export class RoomController {
         userId,
         secretCode
       );
-      console.log("updatedRoom controller", updatedRoom);
       res
-        .status(200)
+        .status(HTTP_STATUS_CODE.OK)
         .json({ room: updatedRoom, message: "Joined room successfully!" });
     } catch (error) {
       next(error);
@@ -85,9 +82,9 @@ export class RoomController {
     try {
       const { roomId } = req.params;
       await this.roomService.deleteRoom(roomId);
-      res.status(200).json({ msg: "Room Deleted" });
+      res.status(HTTP_STATUS_CODE.OK).json({ msg: "Room Deleted" });
     } catch (error) {
-      next(error)
+      next(error);
     }
   }
 }

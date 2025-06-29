@@ -27,20 +27,7 @@ const io = new Server(httpServer, {
     credentials: true,
   },
 });
-console.log("Root IO initialized:", io.path());
-
-// export const chatIo =new Server(httpServer,{
-//   path:'/socket.io/chat',
-//   cors:{
-//     origin:'http://localhost:5173',
-//     methods:["GET","POST"],
-//     credentials:true
-//   }
-// })
-
 export const chatIo: Namespace = io.of("/chat");
-console.log("Chat IO initialized:", chatIo.name);
-// console.log("from app.ts chatIo initialized in app.ts:", chatIo ? "present" : "undefined");
 app.use(
   cors({
     origin: process.env.FRONTEND_URL,
@@ -66,11 +53,6 @@ chatIo.on("connection", (socket) => {
 });
 app.use(express.json());
 app.use(cookieParser());
-
-app.get("/", (req, res) => {
-  res.json({ message: "vconnect backend running..." });
-});
-
 app.use("/api/auth", authRoutes);
 app.use("/api/auth", publicRoutes);
 

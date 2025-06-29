@@ -2,6 +2,7 @@
 import { NextFunction, Request, Response } from "express";
 import { PlanService } from "../services/AdminPlanService.js";
 import { PlansRepository } from "../repositories/AdminPlanRepository.js";
+import { HTTP_STATUS_CODE } from "../utils/statusCode.js";
 
 export class AdminPlansController {
   private adminPlanService: PlanService;
@@ -14,13 +15,13 @@ export class AdminPlansController {
     try {
       console.log("reached backend plan create body: ", req.body);
       const plan = await this.adminPlanService.createPlan(req.body);
-      res.status(200).json(plan);
+      res.status(HTTP_STATUS_CODE.OK).json(plan);
     } catch (error: any) {
       console.log(error);
       if (error.message === "A plan with this name already exists") {
-        res.status(400).json({ message: error.message });
+        res.status(HTTP_STATUS_CODE.BAD_REQUEST).json({ message: error.message });
       } else {
-        res.status(500).json({ message: "Internal Server Error" });
+        res.status(HTTP_STATUS_CODE.INTERNAL_SERVER_ERROR).json({ message: "Internal Server Error" });
       }
     }
   }
@@ -35,7 +36,7 @@ export class AdminPlansController {
         Number(page),
         Number(limit)
       );
-      res.status(200).json({ plans, total });
+      res.status(HTTP_STATUS_CODE.OK).json({ plans, total });
     } catch (error) {
       next(error);
     }
@@ -45,7 +46,7 @@ export class AdminPlansController {
     try {
       const { id } = req.params;
       const plan = await this.adminPlanService.getPlanById(id);
-      res.status(200).json(plan);
+      res.status(HTTP_STATUS_CODE.OK).json(plan);
     } catch (error) {
       next(error);
     }
@@ -53,17 +54,16 @@ export class AdminPlansController {
 
   async updatePlan(req: Request, res: Response) {
     try {
-      console.log("reached edit backend");
       const { id } = req.params;
       const updateData = req.body;
       const updatePlan = await this.adminPlanService.updatePlan(id, updateData);
-      res.status(200).json(updatePlan);
+      res.status(HTTP_STATUS_CODE.OK).json(updatePlan);
     } catch (error: any) {
       console.log(error);
       if (error.message === "A plan with this name already exists.") {
-        res.status(400).json({ error: error.message });
+        res.status(HTTP_STATUS_CODE.BAD_REQUEST).json({ error: error.message });
       } else {
-        res.status(500).json({ error: "Failed to edit plan" });
+        res.status(HTTP_STATUS_CODE.INTERNAL_SERVER_ERROR).json({ error: "Failed to edit plan" });
       }
     }
   }
@@ -72,7 +72,7 @@ export class AdminPlansController {
     try {
       const { id } = req.params;
       const plan = await this.adminPlanService.deletePlan(id);
-      res.status(200).json(plan);
+      res.status(HTTP_STATUS_CODE.OK).json(plan);
     } catch (error) {
       next(error);
     }

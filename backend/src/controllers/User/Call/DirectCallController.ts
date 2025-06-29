@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { IDirectCallRepository } from "../../../interfaces/user/Call/IDirectCallRepository.js";
+import { HTTP_STATUS_CODE } from "../../../utils/statusCode.js";
 
 export class DirectCallController {
   private directCallRepository: IDirectCallRepository;
@@ -9,22 +10,19 @@ export class DirectCallController {
   }
 
   async getCallDetails(req: Request, res: Response) {
-    console.log("reached get call detailllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll")
     try {
       const callId = req.query.callId as string;
-      console.log("call id from directcall controller",callId)
       if (!callId) {
-        res.status(400).json({ message: "Call ID is required" });
+        res.status(HTTP_STATUS_CODE.BAD_REQUEST).json({ message: "Call ID is required" });
         return
       }
       const call = await this.directCallRepository.getCallById(callId);
-      console.log("Callllll",call)
       if (!call) {
-         res.status(404).json({ message: "Call not found" });
+         res.status(HTTP_STATUS_CODE.NOT_FOUND).json({ message: "Call not found" });
          return
       }
       if (call.callerId.toString() !== (req as any).user.id && call.receiverId.toString() !== (req as any).user.id) {
-        res.status(403).json({ message: "Unauthorized to access this call" });
+        res.status(HTTP_STATUS_CODE.UNAUTHORIZED).json({ message: "Unauthorized to access this call" });
         return
       }
       res.json({
@@ -36,7 +34,7 @@ export class DirectCallController {
       });
     } catch (error) {
       console.error("Error fetching call details:", error);
-      res.status(500).json({ message: "Failed to fetch call details" });
+      res.status(HTTP_STATUS_CODE.INTERNAL_SERVER_ERROR).json({ message: "Failed to fetch call details" });
     }
   }
 }

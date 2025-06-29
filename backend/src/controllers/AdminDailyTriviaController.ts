@@ -1,6 +1,7 @@
 import { Request,Response,NextFunction } from "express";
 import { IAdminDailyTriviaService } from "../interfaces/AdminIDailyTriviaService.js";
 import { AdminIDailyTriviaController } from "../interfaces/AdminIDailyTriviaController.js";
+import { HTTP_STATUS_CODE } from "../utils/statusCode.js";
 
 export class AdminDailyTriviaController implements AdminIDailyTriviaController{
   private triviaService:IAdminDailyTriviaService
@@ -12,11 +13,11 @@ export class AdminDailyTriviaController implements AdminIDailyTriviaController{
     try {
       const {question,options,correctAnswer} = req.body
       if (!question  || !options || !correctAnswer) {
-        res.status(400).json({ message: "All fields are required" });
+        res.status(HTTP_STATUS_CODE.BAD_REQUEST).json({ message: "All fields are required" });
         return;
       }
       const trivia = await this.triviaService.addTriviaQuestion(question,options,correctAnswer)
-      res.status(200).json({message:"trivia question added",trivia})
+      res.status(HTTP_STATUS_CODE.OK).json({message:"trivia question added",trivia})
     } catch (error) {
       next(error)
     }
@@ -26,7 +27,7 @@ export class AdminDailyTriviaController implements AdminIDailyTriviaController{
     try {
       const {page=1,limit=4,searchTerm=''} = req.query
       const result = await this.triviaService.getTriviaQuestions(Number(page),Number(limit),String(searchTerm))
-      res.status(200).json(result)
+      res.status(HTTP_STATUS_CODE.OK).json(result)
     } catch (error) {
       next(error)
     }
@@ -37,11 +38,11 @@ export class AdminDailyTriviaController implements AdminIDailyTriviaController{
       const {id} = req.params
       const {question,options,correctAnswer} = req.body;
       if (!question || !options || !correctAnswer) {
-        res.status(400).json({ message: "All fields are required" });
+        res.status(HTTP_STATUS_CODE.BAD_REQUEST).json({ message: "All fields are required" });
         return;
       }
       const trivia = await this.triviaService.updateTriviaQuestion(id,question,options,correctAnswer)
-      res.status(200).json({message:"Trivia Question updated",trivia})
+      res.status(HTTP_STATUS_CODE.OK).json({message:"Trivia Question updated",trivia})
     } catch (error) {
       next(error)
     }
@@ -51,7 +52,7 @@ export class AdminDailyTriviaController implements AdminIDailyTriviaController{
     try {
       const {id} = req.params
       const trivia = await this.triviaService.deleteTriviaQuestion(id)
-      res.status(200).json({message:"Trivia deleted successfully",trivia})
+      res.status(HTTP_STATUS_CODE.OK).json({message:"Trivia deleted successfully",trivia})
     } catch (error) {
       next(error)
     }
@@ -63,7 +64,7 @@ export class AdminDailyTriviaController implements AdminIDailyTriviaController{
       const { id } = req.params;
       const trivia = await this.triviaService.getTriviaQuestionById(id);
       console.log("trivia controller",trivia)
-      res.status(200).json({ trivia });
+      res.status(HTTP_STATUS_CODE.OK).json({ trivia });
     } catch (error) {
       next(error);
     }

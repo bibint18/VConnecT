@@ -1,7 +1,7 @@
-
 import { AdminUserRepository } from "../repositories/AdminUserRepository.js";
 import { AdminUserService } from "../services/AdminUserService.js";
 import { Response, Request, NextFunction } from "express";
+import { HTTP_STATUS_CODE } from "../utils/statusCode.js";
 
 export class AdminUsersController {
   private adminUserService: AdminUserService;
@@ -12,21 +12,22 @@ export class AdminUsersController {
 
   async getAllUsers(req: Request, res: Response, next: NextFunction) {
     try {
-      const { page = 1, limit = 6, searchTerm = "", sortOption = "A-Z" } = req.query;
-      console.log("users query", req.query);
-
+      const {
+        page = 1,
+        limit = 6,
+        searchTerm = "",
+        sortOption = "A-Z",
+      } = req.query;
       const users = await this.adminUserService.getAllUsers(
         Number(page),
         Number(limit),
         String(searchTerm),
         String(sortOption)
       );
-      console.log("users", users);
-
-      const totalUsers = await this.adminUserService.getTotalUsers(String(searchTerm));
-      console.log("total users", totalUsers);
-
-      res.status(200).json({ users, totalUsers });
+      const totalUsers = await this.adminUserService.getTotalUsers(
+        String(searchTerm)
+      );
+      res.status(HTTP_STATUS_CODE.OK).json({ users, totalUsers });
     } catch (error) {
       next(error);
     }
@@ -34,12 +35,9 @@ export class AdminUsersController {
 
   async blockUser(req: Request, res: Response, next: NextFunction) {
     try {
-      console.log("backend block user");
       const { id } = req.params;
-      console.log(id);
-
       const user = await this.adminUserService.blockUser(id);
-      res.status(200).json(user);
+      res.status(HTTP_STATUS_CODE.OK).json(user);
     } catch (error) {
       next(error);
     }
@@ -49,7 +47,7 @@ export class AdminUsersController {
     try {
       const { id } = req.params;
       const user = await this.adminUserService.unblockUser(id);
-      res.status(200).json(user);
+      res.status(HTTP_STATUS_CODE.OK).json(user);
     } catch (error) {
       next(error);
     }
@@ -59,11 +57,13 @@ export class AdminUsersController {
     try {
       const { id } = req.params;
       const user = await this.adminUserService.deleteUser(id);
-      res.status(200).json(user);
+      res.status(HTTP_STATUS_CODE.OK).json(user);
     } catch (error) {
       next(error);
     }
   }
 }
 
-export default new AdminUsersController(new AdminUserService(new AdminUserRepository()));
+export default new AdminUsersController(
+  new AdminUserService(new AdminUserRepository())
+);
