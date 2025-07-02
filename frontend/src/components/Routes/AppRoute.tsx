@@ -1,34 +1,21 @@
 import { Routes, Route } from "react-router-dom";
 import Signup from "../../pages/Signup";
-// import VerifyOTP from "../../pages/VerifyOTP";
 import Login from "../Login";
 import AdminLogin from "../AdminLogin";
-// import Dashboard from "./components/Dashboard";
 import "react-toastify/dist/ReactToastify.css";
-
-// import Home from "./components/Home";
 import ProtectedRoute from "../ProtectedRoute";
 import AdminDashboard from "../../pages/AdminDashboard";
-// import CustomerDashboard from "./components/admin/dashboard/CustomerDashboard";
 import AdminCustomers from "../../pages/AdminCustomers";
-// import Plans from './components/admin/plans/Plans'
-// import AddPlansPage from "./components/admin/plans/AddPlan";
 import AdminPlans from "../../pages/AdminPlans";
 import AdminAddPlan from "../../pages/AdminAddPlans";
 import AdminEditPlan from "../../pages/AdminEditPlan";
-// import Header from "./components/User/Header/Header";
 import HomePage from "../User/Header/HomePage";
 import LandingPage from "../../pages/LandingPage";
 import ProfilePage from "../User/Profile/Page";
-// import ListRoom from "./components/User/Room/ListRoom";
-// import RoomPage from "../User/Room/AddRoomPage";
-// import AddRoom from "./components/User/Room/AddRoom";
 import AddRoomPage from "../User/Room/AddRoomPage";
 import RoomPage from "../User/Room/RoomPage";
 import RoomCall from "../User/Room/Calls/RoomCall";
-// import FriendRequests from "../User/Friends/FriendRequest";
 import AdminRoom from "@/pages/AdminRoom";
-// import UserTrivia from "../User/Trivia/UserTrivia";
 import TriviaPage from "../User/Trivia/TriviaPage";
 import AdminTriviaPage from "@/pages/AdminTririvaPage";
 import AdminTriviaAddPage from "@/pages/AdminTriviaAdd";
@@ -37,22 +24,18 @@ import ChatDashboard from "../User/Chat/ChatDashboard";
 import AdminRewardPage from "../admin/Reward/RewardPage";
 import AddRewardPage from "../admin/Reward/AddRewardPage";
 import RoomDetailsPage from "../admin/Room/RoomDetailsPage";
-
 import RewardPage from "../User/Reward/RewardPage";
 import PlansPage from "../User/Plans/PlansPage";
 import PricingSuccess from "../User/Plans/PricingSuccess";
 import UserProtectedRoute from "../User/UserProtectedRoute";
 import DirectCallPage from "../User/Chat/DirectCallPage";
-// import AdminDashboardd from "../admin/Dashboardd/AdminDashboard";
 import DashboardPageAdmin from "@/pages/DashboardPage";
-// import CreatePost from "../User/Post/CreatePost";
-// import MyPosts from "../User/Post/MyPost";
-// import PostFeed from "../User/Post/PostFeed";
 import MyPostPage from "../User/Post/MyPostPage";
 import PostView from "../User/Post/PostView";
 import FeedPage from "../User/Post/FeedPage";
 import FriendRequestPage from "../User/Friends/FriendRequestPage";
 import DetailsPage from "../User/Room/DetailsPage";
+import NotFound from "@/pages/NotFound";
 function AppRoute() {
   return (
     <Routes>
@@ -110,6 +93,7 @@ function AppRoute() {
         {/* <Route path="/dashboardPage" element={<AdminDashboardd />} /> */}
         <Route path="/dashboardPage" element={<DashboardPageAdmin />} />
       </Route>
+      <Route path="*" element={<NotFound/>} />
     </Routes>
   );
 }

@@ -20,7 +20,7 @@ declare module 'express' {
 
 export const authenticateToken =async (req: Request, res: Response, next: NextFunction):Promise<void> => {
   const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1]; // Expect "Bearer <token>"
+  const token = authHeader && authHeader.split(' ')[1]; 
   console.log("at middleware token ",token)
   if (!token){
     res.status(401).json({ message: 'No token provided' });
