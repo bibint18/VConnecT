@@ -6,7 +6,7 @@ import { AppError } from "../utils/AppError.js";
 export class AdminRoomRepository implements IAdminRoomRepository{
   async getAllRooms(page: number, limit: number, searchTerm: string, sortOption: string): Promise<IRoom[]> {
     console.log("reached repo admin room",page,limit,searchTerm,sortOption)
-    const query:any = {}
+    const query:any = {isDeleted:false}
     if(searchTerm){
       query.title={$regex:searchTerm,$options:'i'}
     }

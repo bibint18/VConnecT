@@ -1,10 +1,11 @@
 
 import { IProfileRepository } from "../interfaces/IProfileRepository.js";
+import { IProfileService } from "../interfaces/user/Profile/IProfileService.js";
 import { IUser } from "../models/User.js";
 import { AppError } from "../utils/AppError.js";
 import bcrypt from 'bcryptjs'
 
-export class ProfileService {
+export class ProfileService implements IProfileService {
   private profileRepository:IProfileRepository
   constructor(profileRepo:IProfileRepository){
     this.profileRepository=profileRepo

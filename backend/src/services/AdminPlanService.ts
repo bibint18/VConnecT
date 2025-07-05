@@ -1,7 +1,8 @@
 import { IPlan } from "../models/PlansModel.js";
 import { IPlanRepository } from "../interfaces/IAdminPlanRepository.js";
+import { IAdminPlanService } from "../interfaces/Admin/Plans/IAdminPlanService.js";
 
-export class PlanService{
+export class PlanService implements IAdminPlanService{
   private planRepository :IPlanRepository;
   constructor(planRepository:IPlanRepository){
     this.planRepository=planRepository

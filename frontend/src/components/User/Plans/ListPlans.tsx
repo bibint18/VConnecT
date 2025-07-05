@@ -88,7 +88,7 @@ const PricingPlans = () => {
       </div>
     );
   }
-
+  console.log('spln',userPlan)
   return (
     <div className="min-h-[calc(100vh-4rem)] bg-black text-white px-4 sm:px-6 py-12 flex flex-col items-center   pt-16">
       <motion.h1
@@ -102,47 +102,80 @@ const PricingPlans = () => {
 
 
 
-      {userPlan && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="relative rounded-3xl overflow-hidden border border-gray-800 shadow-lg bg-gray-900 w-full max-w-2xl mb-12"
+{userPlan ? (
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.5 }}
+    className="relative rounded-3xl overflow-hidden border border-gray-800 shadow-lg bg-gray-900 w-full max-w-2xl mb-12"
+  >
+    <div className="relative p-6 sm:p-8 flex flex-col">
+      <h2 className="text-xl sm:text-2xl font-bold text-gray-200 mb-2">
+        Your Current Plan: {userPlan.planName ?? "Free Plan"}
+      </h2>
+      <p className="text-sm text-gray-400 mb-4">
+        Status:{" "}
+        <span
+          className={`capitalize ${
+            userPlan.status === "active" ? "text-green-400" : "text-red-400"
+          }`}
         >
-          <div className="relative p-6 sm:p-8 flex flex-col">
-            <h2 className="text-xl sm:text-2xl font-bold text-gray-200 mb-2">
-              Your Current Plan: {userPlan.planName}
-            </h2>
-            <p className="text-sm text-gray-400 mb-4">
-              Status: <span className={`capitalize ${userPlan.status === "active" ? "text-green-400" : "text-red-400"}`}>{userPlan.status}</span>
-            </p>
-            <div className="my-4 sm:my-6">
-              <p className="text-sm text-gray-400">
-                Purchased On: {new Date(userPlan.startDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
-              </p>
-              <p className="text-sm text-gray-400">
-                Expires On: {
-                  userPlan.endDate
-                    ? new Date(userPlan.endDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
-                    : "N/A"
-                }
-              </p>
-              <p className="text-sm text-gray-400">
-                Transaction ID: {userPlan.transactionId || "N/A"}
-              </p>
-              <p className="text-sm text-gray-400">
-                Room Benefit: {userPlan.roomBenefit} rooms
-              </p>
-            </div>
-            {/* <button
-              onClick={() => navigate("/plans")}
-              className="w-full py-2 sm:py-3 rounded-full bg-gradient-to-r from-pink-400 to-purple-400 text-white font-semibold hover:brightness-110 transition-all duration-300 mt-4"
-            >
-              Change Plan
-            </button> */}
-          </div>
-        </motion.div>
-      )}
+          {userPlan.status}
+        </span>
+      </p>
+      <div className="my-4 sm:my-6">
+        <p className="text-sm text-gray-400">
+          Purchased On:{" "}
+          {new Date(userPlan.startDate).toLocaleDateString("en-US", {
+            month: "long",
+            day: "numeric",
+            year: "numeric",
+          })}
+        </p>
+        <p className="text-sm text-gray-400">
+          Expires On:{" "}
+          {userPlan.endDate
+            ? new Date(userPlan.endDate).toLocaleDateString("en-US", {
+                month: "long",
+                day: "numeric",
+                year: "numeric",
+              })
+            : "N/A"}
+        </p>
+        <p className="text-sm text-gray-400">
+          Transaction ID: {userPlan.transactionId || "N/A"}
+        </p>
+        <p className="text-sm text-gray-400">
+          Room Benefit: {userPlan.roomBenefit} rooms
+        </p>
+      </div>
+    </div>
+  </motion.div>
+) : (
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.5 }}
+    className="relative rounded-3xl overflow-hidden border border-gray-800 shadow-lg bg-gray-900 w-full max-w-2xl mb-12"
+  >
+    <div className="relative p-6 sm:p-8 flex flex-col">
+      <h2 className="text-xl sm:text-2xl font-bold text-gray-200 mb-2">
+        Your Current Plan: Free Plan
+      </h2>
+      <p className="text-sm text-gray-400 mb-4">
+        Status: <span className="text-green-400 capitalize">active</span>
+      </p>
+      <div className="my-4 sm:my-6">
+        <p className="text-sm text-gray-400">Purchased On: N/A</p>
+        <p className="text-sm text-gray-400">Expires On: N/A</p>
+        <p className="text-sm text-gray-400">Transaction ID: N/A</p>
+        <p className="text-sm text-gray-400">Room Benefit: 1 room</p>
+      </div>
+    </div>
+  </motion.div>
+)}
+      
+      
 
 <motion.h1
         initial={{ opacity: 0, y: -20 }}

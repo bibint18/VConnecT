@@ -3,7 +3,8 @@ import { IRoomRepository } from "../interfaces/IRoomRepository.js";
 import { IRoom } from "../models/RoomModel.js";
 import { v4 as uuidv4 } from 'uuid';
 import { IUser } from "../models/User.js";
-export class RoomService {
+import { IRoomService } from "../interfaces/user/Room/IRoomService.js";
+export class RoomService implements IRoomService {
   private roomRepository:IRoomRepository
   constructor(RoomRepo:IRoomRepository){
     this.roomRepository=RoomRepo
