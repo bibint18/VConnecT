@@ -2,15 +2,20 @@ import { AdminUserRepository } from "../repositories/AdminUserRepository.js";
 import { AdminUserService } from "../services/AdminUserService.js";
 import { Response, Request, NextFunction } from "express";
 import { HTTP_STATUS_CODE } from "../utils/statusCode.js";
+import { IAdminUserController } from "../interfaces/Admin/Users/IAdminUserController.js";
 
-export class AdminUsersController {
+export class AdminUsersController implements IAdminUserController {
   private adminUserService: AdminUserService;
 
   constructor(adminUserService: AdminUserService) {
     this.adminUserService = adminUserService;
   }
 
-  async getAllUsers(req: Request, res: Response, next: NextFunction) {
+  async getAllUsers(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
       const {
         page = 1,
@@ -33,7 +38,11 @@ export class AdminUsersController {
     }
   }
 
-  async blockUser(req: Request, res: Response, next: NextFunction) {
+  async blockUser(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
       const { id } = req.params;
       const user = await this.adminUserService.blockUser(id);
@@ -43,7 +52,11 @@ export class AdminUsersController {
     }
   }
 
-  async unblockUser(req: Request, res: Response, next: NextFunction) {
+  async unblockUser(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
       const { id } = req.params;
       const user = await this.adminUserService.unblockUser(id);
@@ -53,7 +66,11 @@ export class AdminUsersController {
     }
   }
 
-  async deleteUser(req: Request, res: Response, next: NextFunction) {
+  async deleteUser(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
       const { id } = req.params;
       const user = await this.adminUserService.deleteUser(id);

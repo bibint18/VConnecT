@@ -2,14 +2,19 @@ import { Request, Response, NextFunction } from "express";
 import { AdminRoomService } from "../services/AdminRoomService.js";
 import { AdminRoomRepository } from "../repositories/AdminRoomRepository.js";
 import { HTTP_STATUS_CODE } from "../utils/statusCode.js";
+import { IAdminRoomController } from "../interfaces/Admin/Room/IAdminRoomController.js";
 
 const roomService = new AdminRoomService(new AdminRoomRepository());
-export class AdminRoomController {
+export class AdminRoomController implements IAdminRoomController {
   private adminRoomService: AdminRoomService;
   constructor(adminRoomService: AdminRoomService) {
     this.adminRoomService = adminRoomService;
   }
-  async getAllRooms(req: Request, res: Response, next: NextFunction) {
+  async getAllRooms(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
       const {
         page = 1,
@@ -30,7 +35,11 @@ export class AdminRoomController {
     }
   }
 
-  async blockRoom(req: Request, res: Response, next: NextFunction) {
+  async blockRoom(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
       const { id } = req.params;
       const room = await roomService.blockRoom(id);
@@ -40,7 +49,11 @@ export class AdminRoomController {
     }
   }
 
-  async unblockRoom(req: Request, res: Response, next: NextFunction) {
+  async unblockRoom(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
       const { id } = req.params;
       const room = await roomService.unblockRoom(id);
@@ -50,7 +63,11 @@ export class AdminRoomController {
     }
   }
 
-  async deleteRoom(req: Request, res: Response, next: NextFunction) {
+  async deleteRoom(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
       const { id } = req.params;
       const room = await roomService.deleteRoom(id);
@@ -60,7 +77,11 @@ export class AdminRoomController {
     }
   }
 
-  async getRoomDetails(req: Request, res: Response, next: NextFunction) {
+  async getRoomDetails(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
       const { id } = req.params;
       const room = await this.adminRoomService.getRoomDetails(id);

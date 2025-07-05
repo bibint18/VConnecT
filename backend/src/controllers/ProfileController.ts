@@ -4,6 +4,7 @@ import { ProfileRepository } from "../repositories/ProfileRepository.js";
 import cloudinary from "cloudinary";
 import { AppError } from "../utils/AppError.js";
 import { HTTP_STATUS_CODE } from "../utils/statusCode.js";
+import { IProfileController } from "../interfaces/user/Profile/IProfileController.js";
 
 cloudinary.v2.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -11,14 +12,18 @@ cloudinary.v2.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-export class ProfileController {
+export class ProfileController implements IProfileController {
   private profileService: ProfileService;
 
   constructor(profileService: ProfileService) {
     this.profileService = profileService;
   }
 
-  async getProfile(req: Request, res: Response, next: NextFunction) {
+  async getProfile(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
       const userId = (req as any).user.id;
       const user = await this.profileService.getUserProfile(userId);
@@ -28,7 +33,11 @@ export class ProfileController {
     }
   }
 
-  async updateProfile(req: Request, res: Response, next: NextFunction) {
+  async updateProfile(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
       const id = (req as any).user?.id;
       const profileData = req.body;
@@ -48,7 +57,7 @@ export class ProfileController {
     req: Request,
     res: Response,
     next: NextFunction
-  ) {
+  ): Promise<void> {
     try {
       const timestamp = Math.round(new Date().getTime() / 1000);
       const paramsToSign = {
@@ -70,7 +79,7 @@ export class ProfileController {
     req: Request,
     res: Response,
     next: NextFunction
-  ) {
+  ): Promise<void> {
     try {
       const timestamp = Math.round(new Date().getTime() / 1000);
       const paramsToSign = {
@@ -88,7 +97,11 @@ export class ProfileController {
     }
   }
 
-  async updateProfileImage(req: Request, res: Response, next: NextFunction) {
+  async updateProfileImage(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
       const id = (req as any).user?.id;
       const { imageUrl } = req.body;
@@ -107,7 +120,11 @@ export class ProfileController {
     }
   }
 
-  async updateStreak(req: Request, res: Response, next: NextFunction) {
+  async updateStreak(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
       const userId = (req as any).user.id;
       const updatedUser = await this.profileService.updateStreak(userId);
@@ -120,7 +137,11 @@ export class ProfileController {
     }
   }
 
-  async changePassword(req: Request, res: Response, next: NextFunction) {
+  async changePassword(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
       const userId = req.user?.id as string;
       const { currentPassword, newPassword } = req.body;

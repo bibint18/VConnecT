@@ -3,19 +3,22 @@ import { IUser,User } from "../models/User.js";
 import { OtpVerification } from "../models/OtpModel.js";
 import { Types } from "mongoose";
 import { Room } from "../models/RoomModel.js";
+import { BaseRepository } from "./Base/BaseRepository.js";
 
-export class UserRepository implements IUserRepository{
+export class UserRepository extends BaseRepository<IUser> implements IUserRepository{
+  constructor(){
+    super(User)
+  }
   async createUser(data: Partial<IUser>): Promise<IUser |null> {
-    console.log("reached create user reposiory")
-    return await new User(data).save()
+    return await super.create(data)
   }
 
   async findById(id: string): Promise<IUser | null> {
-    return await User.findById(id);
+    return await super.findById(id)
   }
   
   async findByEmail(email: string): Promise<IUser | null> {
-    return await User.findOne({email})
+    return await this.findOne({email})
   }
 
   async updateOtp(email: String, otp: String, otpExpiry: Date): Promise<void> {
@@ -34,7 +37,6 @@ export class UserRepository implements IUserRepository{
   }
 
   async updateUser(email:string,updateData:Partial<IUser>){
-    console.log("reached updateUser repository",email,updateData)
     return await User.findOneAndUpdate({email},updateData,{new:true})
   }
 

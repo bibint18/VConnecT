@@ -1,32 +1,41 @@
-
 import { NextFunction, Request, Response } from "express";
 import { PlanService } from "../services/AdminPlanService.js";
 import { PlansRepository } from "../repositories/AdminPlanRepository.js";
 import { HTTP_STATUS_CODE } from "../utils/statusCode.js";
+import { IAdminPlanController } from "../interfaces/Admin/Plans/IAdminPlansController.js";
 
-export class AdminPlansController {
+export class AdminPlansController implements IAdminPlanController {
   private adminPlanService: PlanService;
 
   constructor(adminPlanService: PlanService) {
     this.adminPlanService = adminPlanService;
   }
 
-  async createPlan(req: Request, res: Response) {
+  async createPlan(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
       console.log("reached backend plan create body: ", req.body);
       const plan = await this.adminPlanService.createPlan(req.body);
       res.status(HTTP_STATUS_CODE.OK).json(plan);
-    } catch (error: any) {
-      console.log(error);
-      if (error.message === "A plan with this name already exists") {
-        res.status(HTTP_STATUS_CODE.BAD_REQUEST).json({ message: error.message });
-      } else {
-        res.status(HTTP_STATUS_CODE.INTERNAL_SERVER_ERROR).json({ message: "Internal Server Error" });
-      }
+    } catch (error) {
+      // console.log(error);
+      // if (error.message === "A plan with this name already exists") {
+      //   res.status(HTTP_STATUS_CODE.BAD_REQUEST).json({ message: error.message });
+      // } else {
+      //   res.status(HTTP_STATUS_CODE.INTERNAL_SERVER_ERROR).json({ message: "Internal Server Error" });
+      // }
+      next(error);
     }
   }
 
-  async getAllPlans(req: Request, res: Response, next: NextFunction) {
+  async getAllPlans(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
       console.log("reached backend fetch plans", req.query);
       const { search = "", sort = "", page = 1, limit = 4 } = req.query;
@@ -42,7 +51,11 @@ export class AdminPlansController {
     }
   }
 
-  async getPlanById(req: Request, res: Response, next: NextFunction) {
+  async getPlanById(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
       const { id } = req.params;
       const plan = await this.adminPlanService.getPlanById(id);
@@ -52,23 +65,34 @@ export class AdminPlansController {
     }
   }
 
-  async updatePlan(req: Request, res: Response) {
+  async updatePlan(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
       const { id } = req.params;
       const updateData = req.body;
       const updatePlan = await this.adminPlanService.updatePlan(id, updateData);
       res.status(HTTP_STATUS_CODE.OK).json(updatePlan);
     } catch (error: any) {
-      console.log(error);
-      if (error.message === "A plan with this name already exists.") {
-        res.status(HTTP_STATUS_CODE.BAD_REQUEST).json({ error: error.message });
-      } else {
-        res.status(HTTP_STATUS_CODE.INTERNAL_SERVER_ERROR).json({ error: "Failed to edit plan" });
-      }
+      // console.log(error);
+      // if (error.message === "A plan with this name already exists.") {
+      //   res.status(HTTP_STATUS_CODE.BAD_REQUEST).json({ error: error.message });
+      // } else {
+      //   res
+      //     .status(HTTP_STATUS_CODE.INTERNAL_SERVER_ERROR)
+      //     .json({ error: "Failed to edit plan" });
+      // }
+      next(error);
     }
   }
 
-  async deletePlan(req: Request, res: Response, next: NextFunction) {
+  async deletePlan(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
       const { id } = req.params;
       const plan = await this.adminPlanService.deletePlan(id);

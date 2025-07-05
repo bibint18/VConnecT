@@ -3,14 +3,19 @@ import { IRoom } from "../models/RoomModel.js";
 import { RoomService } from "../services/RoomService.js";
 import { RoomRepository } from "../repositories/RoomsRepository.js";
 import { HTTP_STATUS_CODE } from "../utils/statusCode.js";
+import { IRoomController } from "../interfaces/user/Room/IRoomController.js";
 
-export class RoomController {
+export class RoomController implements IRoomController {
   private roomService: RoomService;
   constructor(roomService: RoomService) {
     this.roomService = roomService;
   }
 
-  async createRoom(req: Request, res: Response, next: NextFunction) {
+  async createRoom(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
       const userId = (req as any).user?.id;
       const now = new Date();
@@ -41,7 +46,11 @@ export class RoomController {
     }
   }
 
-  async getAllRooms(req: Request, res: Response, next: NextFunction) {
+  async getAllRooms(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
       const userId = req.user?.id as string;
       const { search, type, page = "1", limit = "10" } = req.query;
@@ -78,7 +87,11 @@ export class RoomController {
     }
   }
 
-  async deleteRoom(req: Request, res: Response, next: NextFunction) {
+  async deleteRoom(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
       const { roomId } = req.params;
       await this.roomService.deleteRoom(roomId);

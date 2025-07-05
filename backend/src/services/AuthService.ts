@@ -18,18 +18,9 @@ export class AuthService {
     console.log("reaching here")
     console.log("existing user",existingUser)
     if(existingUser) throw new Error("Email already exist")
-      // const hashedPassword = await bcrypt.hash(password,10)
-      // const data = {name:name,email:email,password:hashedPassword,isVerified:false}
-
-      // await this.userRepository.createUser(data)
       const otp = crypto.randomInt(100000,999999).toString()
       console.log("otp code ",otp)
     const otpExpiry= new Date(Date.now() + 10 * 60 * 1000)
-    // await OtpVerification.updateOne(
-    //   { email },
-    //   { email, otp, expiresAt: otpExpiry },
-    //   { upsert: true } 
-    // );
     await this.userRepository.updateOtp(email,otp,otpExpiry)
     await this.sendOTP(email,otp)
     return { message: "OTP sent successfully!" };
@@ -50,10 +41,6 @@ export class AuthService {
   }
 
   async verifyOTP(email: string, otp: string, name: string, password: string) {
-    console.log("here");
-    console.log("Received data:", { email, otp, name, password });
-
-    // Check if OTP exists
     const otpRecord = await OtpVerification.findOne({ email });
     console.log("otpRecord", otpRecord);
 
@@ -75,14 +62,8 @@ export class AuthService {
         console.log("Name or password is missing", { name, password });
         throw new Error("Invalid request: Missing name or password.");
     }
-
-    console.log("Hashing password...");
-    console.log("to be hashed: ",password)
-    console.log("length of psw",password.length)
     const hashedPassword = await bcrypt.hash(password,10);
-    console.log("Password hashed:", hashedPassword);
-    const isMatch = await bcrypt.compare(password,hashedPassword)
-    console.log("Ismatch after the hashing",isMatch)
+     await bcrypt.compare(password,hashedPassword)
     const username = await this.generateUniqueUsername(name)
     const newUser = await this.userRepository.createUser({
         name,

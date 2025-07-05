@@ -432,7 +432,6 @@ const isCheckInDisabled = () => {
           </div>
         )}
       </form>
-<h3>Rest Your password here </h3>
 <br />
 {/* freset paswordne  */}
 <div className="mt-8">

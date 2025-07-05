@@ -41,7 +41,6 @@ function AppRoute() {
     <Routes>
       <Route path="/signup" element={<Signup />} />
       <Route path="/landing" element={<LandingPage />} />
-      {/* <Route path="/verify-otp" element={<VerifyOTP />} /> */}
       <Route path="/login" element={<Login />} />
       <Route path="/adminLogin" element={<AdminLogin />} />
       <Route path="/" element={<HomePage />} />
@@ -53,7 +52,6 @@ function AppRoute() {
       <Route path="/room/:roomId/call" element={<RoomCall />} />
       <Route path="/profile" element={<ProfilePage />} />
       <Route path="/addRoom" element={<AddRoomPage />} />
-      
       <Route path="/rooms" element={<RoomPage />} />
       <Route path="/dailyTrivia" element={<TriviaPage />} />
       <Route path="/friends" element={<ChatDashboard />} />
@@ -61,7 +59,6 @@ function AppRoute() {
       <Route path="/user/plans" element={<PlansPage />} />
       <Route path="/pricing/success" element={<PricingSuccess />} />
       <Route path="/call/:callId" element={<DirectCallPage />} />
-      {/* <Route path="/createPost" element={<CreatePost />} /> */}
       <Route path="/myPost" element={<MyPostPage />} />
       <Route path="/feed" element={<FeedPage />} />
       <Route path="/post/:postId" element={<PostView />} />
@@ -90,7 +87,6 @@ function AppRoute() {
           path="/admin/rewards/edit/:rewardId"
           element={<AddRewardPage />}
         />
-        {/* <Route path="/dashboardPage" element={<AdminDashboardd />} /> */}
         <Route path="/dashboardPage" element={<DashboardPageAdmin />} />
       </Route>
       <Route path="*" element={<NotFound/>} />
