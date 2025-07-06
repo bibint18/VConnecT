@@ -6,6 +6,7 @@ import { useAppSelector } from "@/redux/store";
 import { useNavigate } from "react-router-dom";
 import "./ListPlans.css";
 import Pagination from "@/components/Pagination";
+import Spinner from "@/components/Spinner";
 
 const PricingPlans = () => {
   const [plans, setPlans] = useState<IPlan[]>([]);
@@ -81,11 +82,7 @@ const PricingPlans = () => {
     setCurrentPage(page)
   }
   if (loading || userPlanLoading) {
-    return (
-      <div className="flex justify-center items-center min-h-[calc(100vh-4rem)] bg-black text-white ml-20 md:ml-64 pt-16">
-        Loading...
-      </div>
-    );
+   return <Spinner/>
   }
 
   if (plans.length === 0) {

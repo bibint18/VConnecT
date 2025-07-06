@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { RewardService, IReward } from "@/services/RewardService";
 import { IUser } from "@/components/admin/dashboard/CustomerDashboard";
 import { useAppSelector } from "@/redux/store";
@@ -7,6 +7,7 @@ import { Lock, Unlock, CheckCircle, Star, Sparkle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import "./RewardList.css";
 import Pagination from "@/components/Pagination";
+import Spinner from "@/components/Spinner";
 const RewardsList: React.FC = () => {
   const { userId } = useAppSelector((state) => state.user);
   const [rewards, setRewards] = useState<IReward[]>([]);
@@ -15,7 +16,7 @@ const RewardsList: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalRewards, setTotalRewards] = useState(0);
   const rewardsPerPage = 6;
-  const rewardService = new RewardService();
+  const rewardService =useMemo(() => new RewardService(),[]) 
 
   useEffect(() => {
     if (!userId) {
@@ -42,7 +43,7 @@ const RewardsList: React.FC = () => {
     };
 
     fetchData();
-  }, [userId, currentPage]);
+  }, [userId, currentPage,rewardService]);
 
   const handleClaim = useCallback(
     async (rewardId: string) => {
@@ -64,7 +65,7 @@ const RewardsList: React.FC = () => {
         );
       }
     },
-    [userId]
+    [userId,rewardService]
   );
 
   const handlePageChange = (page: number) => {
@@ -72,11 +73,7 @@ const RewardsList: React.FC = () => {
   };
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-[calc(100vh-4rem)] text-white">
-        Loading rewards...
-      </div>
-    );
+    return <Spinner/>
   }
 
   if (

@@ -202,10 +202,10 @@ const RoomCall: React.FC = () => {
   const getVideoGridClass = () => {
     const count = streams.size;
     if (count === 1) return "!grid-cols-1";
-    if (count === 2) return "md:!grid-cols-2 !grid-cols-1"; // 2 users: 1 per row on small screens, 2 per row on larger screens
-    if (count === 3) return "sm:!grid-cols-2 !grid-cols-2 !auto-rows-fr"; // 3 users: 3 per row on small screens, 2+1 on medium/large screens
-    if (count === 4) return "!grid-cols-2"; // 4 users: 2 per row (all screen sizes)
-    return "lg:!grid-cols-3 !grid-cols-2"; // 5+ users: 2 per row on small/medium screens, 3 per row on large screens
+    if (count === 2) return "md:!grid-cols-2 !grid-cols-1";
+    if (count === 3) return "sm:!grid-cols-2 !grid-cols-2 !auto-rows-fr"; 
+    if (count === 4) return "!grid-cols-2"; 
+    return "lg:!grid-cols-3 !grid-cols-2"; 
   };
 
   return (

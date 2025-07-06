@@ -6,7 +6,6 @@ import { login } from "../redux/authSlice";
 const AdminLogin: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  // const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const dispatch = useAppDispatch()
@@ -18,7 +17,6 @@ const AdminLogin: React.FC = () => {
   },[admin,navigate])
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    // if (!captchaToken) return setError("Please complete the CAPTCHA");
 
     try {
       const response = await loginAdmin(email, password);
