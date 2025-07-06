@@ -1,4 +1,4 @@
 import { IPlan } from "../../../models/PlansModel.js";
 export interface IUserPlanRepository{
-  findActivePlans():Promise<IPlan[]>
+  findActivePlans(page:number,limit:number):Promise<{plans:IPlan[],total:number}>
 }

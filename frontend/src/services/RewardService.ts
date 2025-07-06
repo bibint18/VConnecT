@@ -17,10 +17,11 @@ export interface IReward {
 }
 
 export class RewardService {
-  async getRewards(): Promise<IReward[]> {
+  async getRewards(page:number=1,limit:number=9): Promise<{ rewards: IReward[], total: number }> {
     try {
-      const response = await axiosInstance.get("/rewards");
-      return response.data.data;
+      const response = await axiosInstance.get("/rewards",{params:{page,limit}});
+      console.log('response',response.data)
+      return {rewards: response.data.data,total:response.data.total}
     } catch (error: unknown) {
       if(error instanceof AxiosError && error.message){
         throw new Error(error.response?.data.message)

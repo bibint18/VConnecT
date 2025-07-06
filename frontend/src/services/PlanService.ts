@@ -27,20 +27,21 @@ export interface IUserPlan {
 }
 
 export class PlanService{
-  async getPlans():Promise<IPlan[]>{
+  async getPlans(page:number=1,limit:number=4):Promise<{plans:IPlan[],total:number}>{
     try {
-      const response = await axiosInstance.get('/plans')
+      const response = await axiosInstance.get('/plans',{params:{page,limit}})
+      console.log("response",response.data.data)
       const plans: IPlan[] = response.data.data
         .filter((plan: IPlan) => plan.isListed && !plan.isDeleted)
         .map((plan: IPlan, index: number, array: IPlan[]) => ({
           ...plan,
           id: plan._id ,
           color: plan.isPopular ? "bg-purple-600/50" : "from-purple-600 to-purple-900",
-          isPopular: index === array.length - 1, // Mark the last plan (highest regularAmount) as popular
+          isPopular: index === array.length - 1, 
         }));
         plans.sort((a, b) => a.regularAmount - b.regularAmount);
-      
-      return plans;
+      console.log('plans',plans)
+      return {plans,total:response.data.total}
     } catch (error:unknown) {
      if(error instanceof AxiosError && error.message){
            throw new Error(error.response?.data.message)
@@ -52,6 +53,7 @@ export class PlanService{
   async getUserPlan(): Promise<IUserPlan | null> {
     try {
       const response = await axiosInstance.get('/user-plan');
+      console.log('userplan response',response.data)
       return response.data.data || null;
     } catch (error: unknown) {
       if (error instanceof AxiosError && error.message) {

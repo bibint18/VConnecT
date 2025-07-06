@@ -15,9 +15,9 @@ export class PaymentService implements IPaymentService{
   }
 
   async createPayment(userId: string, planId: string, amount: number): Promise<{ approvalUrl: string; paymentId: string; }> {
-    const plann = await this.planRepository.findActivePlans()
-    console.log("plans from oayment service",plann)
-    const plan = plann.find((p) => p._id.toString() === planId)
+    const {plans} = await this.planRepository.findActivePlans(1,100)
+    console.log("plans from oayment service",plans)
+    const plan = plans.find((p) => p._id.toString() === planId)
     if (!plan) throw new Error("Plan not found");
     if(plan.discountAmount !== amount) {
       throw new Error("Invalid amount")

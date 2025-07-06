@@ -10,10 +10,11 @@ export class UserRewardService implements IUserRewardService {
     private userRepository: IUserRepository
   ) {}
 
-  async getUserRewards(userId: string): Promise<IReward[]> {
+  async getUserRewards(userId: string,page: number,
+    limit: number): Promise<{ rewards: IReward[], total: number }> {
     const user = await this.userRepository.findById(userId);
     if (!user) throw new Error("User not found");
-    const { rewards } = await this.rewardRepository.findAllRewards(1, 100, "");
+    const { rewards ,total} = await this.rewardRepository.findAllRewards(page,limit, "");
 
     const data = rewards.map((reward) => ({
       ...reward, // .lean() ensures plain object
@@ -23,7 +24,7 @@ export class UserRewardService implements IUserRewardService {
       isClaimed: user.claimedRewards.some((cr) => cr.rewardId === reward.rewardId),
     }));
     console.log("list rewards",data)
-    return data
+    return {rewards:data,total}
   }
 
   async claimReward(userId: string, rewardId: string): Promise<void> {

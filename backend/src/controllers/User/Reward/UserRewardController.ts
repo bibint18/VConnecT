@@ -12,10 +12,13 @@ export class UserRewardController implements IUserRewardController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const rewards = await this.userRewardService.getUserRewards(
-        req.user?.id as string
+      const {page = "1", limit = "10" } = req.query;
+      const rewardsData = await this.userRewardService.getUserRewards(
+        req.user?.id as string,
+        parseInt(page as string, 10),
+        parseInt(limit as string, 10),
       );
-      res.status(HTTP_STATUS_CODE.OK).json({ success: true, data: rewards });
+      res.status(HTTP_STATUS_CODE.OK).json({ success: true, data: rewardsData.rewards,total:rewardsData.total });
     } catch (error) {
       next(error);
     }

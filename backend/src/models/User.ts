@@ -19,6 +19,7 @@ export interface IUser extends Document{
     startDate:Date;
     endDate?:Date;
     transactionId?:string;
+    roomBenefit?:number;
   }[];
   isDeleted:boolean;
   isBlocked:boolean;

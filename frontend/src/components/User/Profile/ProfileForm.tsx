@@ -433,7 +433,6 @@ const isCheckInDisabled = () => {
         )}
       </form>
 <br />
-{/* freset paswordne  */}
 <div className="mt-8">
         <h3 className="text-lg font-semibold mb-4">Reset Your Password</h3>
         <form onSubmit={handleResetPassword}>
@@ -488,9 +487,6 @@ const isCheckInDisabled = () => {
         </form>
       </div>
 
-      
-
-      {/* Verified Information */}
       <div className="mt-8">
         <h2 className="text-lg font-semibold mb-4">Verified Information</h2>
         <VerifiedItem value={user?.email || ''} timestamp="Verified" />

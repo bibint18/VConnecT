@@ -15,10 +15,14 @@ export class UserPlanController implements IUserPlanController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const plans = await this.planService.getActivePlans();
+      const {page = "1", limit = "10" } = req.query;
+      const plansData = await this.planService.getActivePlans(
+        parseInt(page as string, 10),
+        parseInt(limit as string, 10)
+      );
       res.status(HTTP_STATUS_CODE.OK).json({
         success: true,
-        data: plans,
+        data: plansData.plans, total:plansData.total,
         message: "Plans fetched successfully",
       });
     } catch (error) {

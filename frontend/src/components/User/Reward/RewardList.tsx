@@ -1,17 +1,20 @@
-
 import React, { useState, useEffect, useCallback } from "react";
-import { RewardService, IReward} from "@/services/RewardService";
+import { RewardService, IReward } from "@/services/RewardService";
 import { IUser } from "@/components/admin/dashboard/CustomerDashboard";
 import { useAppSelector } from "@/redux/store";
 import toast from "react-hot-toast";
 import { Lock, Unlock, CheckCircle, Star, Sparkle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import './RewardList.css'
+import "./RewardList.css";
+import Pagination from "@/components/Pagination";
 const RewardsList: React.FC = () => {
   const { userId } = useAppSelector((state) => state.user);
   const [rewards, setRewards] = useState<IReward[]>([]);
   const [userData, setUserData] = useState<IUser | null>(null);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalRewards, setTotalRewards] = useState(0);
+  const rewardsPerPage = 6;
   const rewardService = new RewardService();
 
   useEffect(() => {
@@ -26,10 +29,11 @@ const RewardsList: React.FC = () => {
         setLoading(true);
         const [userData, rewardsData] = await Promise.all([
           rewardService.getUserDetails(userId as string),
-          rewardService.getRewards(),
+          rewardService.getRewards(currentPage, rewardsPerPage),
         ]);
         setUserData(userData);
-        setRewards(rewardsData);
+        setRewards(rewardsData.rewards);
+        setTotalRewards(rewardsData.total);
       } catch (err: unknown) {
         toast.error(err instanceof Error ? err.message : "Failed to load data");
       } finally {
@@ -38,14 +42,16 @@ const RewardsList: React.FC = () => {
     };
 
     fetchData();
-  }, [userId]);
+  }, [userId, currentPage]);
 
   const handleClaim = useCallback(
     async (rewardId: string) => {
       try {
         await rewardService.claimReward(rewardId);
         setRewards((prev) =>
-          prev.map((r) => (r.rewardId === rewardId ? { ...r, isClaimed: true } : r))
+          prev.map((r) =>
+            r.rewardId === rewardId ? { ...r, isClaimed: true } : r
+          )
         );
         if (userId) {
           const updatedUser = await rewardService.getUserDetails(userId);
@@ -53,12 +59,17 @@ const RewardsList: React.FC = () => {
         }
         toast.success("Reward claimed!");
       } catch (err: unknown) {
-        toast.error(err instanceof Error ? err.message : "Failed to claim reward");
+        toast.error(
+          err instanceof Error ? err.message : "Failed to claim reward"
+        );
       }
     },
     [userId]
   );
 
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
 
   if (loading) {
     return (
@@ -68,27 +79,29 @@ const RewardsList: React.FC = () => {
     );
   }
 
-  if (!userData || userData.point === undefined || userData.streak === undefined) {
+  if (
+    !userData ||
+    userData.point === undefined ||
+    userData.streak === undefined
+  ) {
     return (
       <div className="flex items-center justify-center min-h-[calc(100vh-4rem)] text-red-500">
         Failed to load user data
       </div>
     );
   }
-
+  const totalPages = Math.ceil(totalRewards/rewardsPerPage)
   const { point, streak } = userData;
 
   return (
     <div className="min-h-[calc(100vh-4rem)] bg-black text-white px-4 sm:px-6 py-6">
-      
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
         className="relative bg-black/50 backdrop-blur-sm rounded-2xl p-4 sm:p-6 mb-8 border border-pink-500/20 shadow-lg shadow-pink-500/10 overflow-hidden"
       >
-
-<div className="absolute inset-0 gradient-float" />
+        <div className="absolute inset-0 gradient-float" />
         <div className="relative flex flex-col items-center space-y-4 text-center">
           <p className="text-gray-200 text-sm sm:text-base font-semibold">
             <motion.span
@@ -105,15 +118,16 @@ const RewardsList: React.FC = () => {
           </p>
           <div className="flex items-center justify-center space-x-4">
             <p className="text-gray-200 font-medium">
-              Streak: {streak} <Sparkle className="inline w-4 h-4 text-purple-400" />
+              Streak: {streak}{" "}
+              <Sparkle className="inline w-4 h-4 text-purple-400" />
             </p>
             <p className="text-gray-200 font-medium">
-              Points: {point} <Sparkle className="inline w-4 h-4 text-pink-400" />
+              Points: {point}{" "}
+              <Sparkle className="inline w-4 h-4 text-pink-400" />
             </p>
           </div>
           <div className="w-16 h-1 bg-gradient-to-r from-pink-400 to-purple-400 rounded-full mt-2" />
         </div>
-
       </motion.div>
 
       <motion.h1
@@ -164,11 +178,18 @@ const RewardsList: React.FC = () => {
                 <p className="text-gray-300 mb-4">{reward.description}</p>
                 {reward.requiredPoints && (
                   <div className="mb-4">
-                    <p className="text-sm text-gray-400">Points Required: {reward.requiredPoints}</p>
+                    <p className="text-sm text-gray-400">
+                      Points Required: {reward.requiredPoints}
+                    </p>
                     <div className="w-full bg-gray-700 rounded-full h-2.5 overflow-hidden">
                       <motion.div
                         initial={{ width: 0 }}
-                        animate={{ width: `${Math.min((point / reward.requiredPoints) * 100, 100)}%` }}
+                        animate={{
+                          width: `${Math.min(
+                            (point / reward.requiredPoints) * 100,
+                            100
+                          )}%`,
+                        }}
                         transition={{ duration: 1, ease: "easeOut" }}
                         className="!bg-white h-2.5 rounded-full"
                       />
@@ -177,11 +198,18 @@ const RewardsList: React.FC = () => {
                 )}
                 {reward.requiredStreak && (
                   <div className="mb-4">
-                    <p className="text-sm text-gray-400">Streak Required: {reward.requiredStreak}</p>
+                    <p className="text-sm text-gray-400">
+                      Streak Required: {reward.requiredStreak}
+                    </p>
                     <div className="w-full !bg-gray-700 rounded-full h-2.5 overflow-hidden">
                       <motion.div
                         initial={{ width: 0 }}
-                        animate={{ width: `${Math.min((streak / reward.requiredStreak) * 100, 100)}%` }}
+                        animate={{
+                          width: `${Math.min(
+                            (streak / reward.requiredStreak) * 100,
+                            100
+                          )}%`,
+                        }}
                         transition={{ duration: 1, ease: "easeOut" }}
                         className="!bg-purple-600 h-2.5 rounded-full"
                       />
@@ -206,6 +234,13 @@ const RewardsList: React.FC = () => {
           </div>
         )}
       </AnimatePresence>
+      {totalPages > 1 && (
+        <Pagination 
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
+      )}
     </div>
   );
 };

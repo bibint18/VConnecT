@@ -7,6 +7,7 @@ import './ListRoom.css';
 import toast from 'react-hot-toast';
 import { IUser } from '@/components/admin/dashboard/CustomerDashboard';
 import { Lock, Unlock, Search, Trash2 } from 'lucide-react';
+import Pagination from '@/components/Pagination';
 
 interface Room {
   _id: string;
@@ -324,8 +325,16 @@ const ListRoom: React.FC = () => {
             ))}
           </div>
         </motion.div>
-
+          
         {totalPages > 1 && (
+          <Pagination 
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+          />
+        )}
+
+        {/* {totalPages > 1 && (
           <div className="pagination mt-4 sm:mt-6 flex justify-center items-center gap-2">
             <motion.button
               onClick={() => handlePageChange(currentPage - 1)}
@@ -355,7 +364,7 @@ const ListRoom: React.FC = () => {
               Next
             </motion.button>
           </div>
-        )}
+        )} */}
 
         {showModal && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">

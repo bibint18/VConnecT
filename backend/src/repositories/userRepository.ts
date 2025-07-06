@@ -89,7 +89,6 @@ export class UserRepository extends BaseRepository<IUser> implements IUserReposi
       }
       user.plan = user.plan.map((plan) => plan.status ==='active' ? {...plan,status:'expired',endDate:new Date()} : plan)
       user.plan.push(planData)
-      console.log("roomBenefit",roomBenefit)
       if(roomBenefit){
         user.availableRoomLimit = (user.availableRoomLimit || 0) + roomBenefit
       }

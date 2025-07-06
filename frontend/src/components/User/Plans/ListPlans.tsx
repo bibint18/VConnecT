@@ -1,10 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { PlanService, IPlan, IUserPlan } from "@/services/PlanService";
 import toast from "react-hot-toast";
 import { useAppSelector } from "@/redux/store";
 import { useNavigate } from "react-router-dom";
 import "./ListPlans.css";
+import Pagination from "@/components/Pagination";
 
 const PricingPlans = () => {
   const [plans, setPlans] = useState<IPlan[]>([]);
@@ -13,14 +14,18 @@ const PricingPlans = () => {
   const [loading, setLoading] = useState(true);
   const [paymentLoading, setPaymentLoading] = useState(false);
   const [userPlanLoading,setUserPlanLoading] = useState(true);
-  const planService = new PlanService();
+  const [currentPage,setCurrentPage]=useState(1)
+  const [totalPlans,setTotalPlans] =useState(0)
+  const plansPerPage=4
+  const planService =useMemo(() => new PlanService(),[] ) 
   const userId = useAppSelector((state) => state.user.userId);
   const navigate = useNavigate();
   useEffect(() => {
     const fetchPlans = async () => {
       try {
-        const plansData = await planService.getPlans();
-        setPlans(plansData);
+        const plansData = await planService.getPlans(currentPage,plansPerPage);
+        setPlans(plansData.plans);
+        setTotalPlans(plansData.total)
         setLoading(false);
       } catch (error: unknown) {
         toast.error(
@@ -48,7 +53,7 @@ const PricingPlans = () => {
     };
     fetchPlans();
     fetchUserPlan();
-  }, [userId]);
+  }, [userId,currentPage,planService]);
 
   const handleSelectPlan = async (planId: string) => {
     if (!userId) {
@@ -72,7 +77,9 @@ const PricingPlans = () => {
       );
     }
   };
-
+  const handlePageChange = (page:number) => {
+    setCurrentPage(page)
+  }
   if (loading || userPlanLoading) {
     return (
       <div className="flex justify-center items-center min-h-[calc(100vh-4rem)] bg-black text-white ml-20 md:ml-64 pt-16">
@@ -88,7 +95,8 @@ const PricingPlans = () => {
       </div>
     );
   }
-  console.log('spln',userPlan)
+  const totalPages=Math.ceil(totalPlans/plansPerPage)
+  console.log('userPlan',userPlan)
   return (
     <div className="min-h-[calc(100vh-4rem)] bg-black text-white px-4 sm:px-6 py-12 flex flex-col items-center   pt-16">
       <motion.h1
@@ -174,9 +182,6 @@ const PricingPlans = () => {
     </div>
   </motion.div>
 )}
-      
-      
-
 <motion.h1
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -285,6 +290,12 @@ const PricingPlans = () => {
           ))}
         </div>
       </AnimatePresence>
+
+      <Pagination
+      currentPage={currentPage}
+      totalPages={totalPages}
+      onPageChange={handlePageChange}
+      />
     </div>
   );
 };

@@ -13,20 +13,20 @@ export class UserPlanService implements UserIPlanService{
     this.userRepository=userRepository
   }
 
-  async getActivePlans(): Promise<IPlan[]> {
-    return await this.planRepository.findActivePlans()
+  async getActivePlans(page: number, limit: number): Promise<{ plans: IPlan[]; total: number; }> {
+    return await this.planRepository.findActivePlans(page,limit)
   }
 
   async updateUserPlan(userId: string, planId: string, transactionId: string): Promise<IUser> {
     try{
     const user = await this.userRepository.findById(userId);
     if (!user) throw new Error("User not found");
-    const plan = await this.planRepository.findActivePlans()
-    const selectedPlan = plan.find((p) => p._id.toString() === planId)
+    const {plans} = await this.planRepository.findActivePlans(1,100)
+    const selectedPlan = plans.find((p) => p._id.toString() === planId)
     
     if (!selectedPlan) throw new Error("Plan not found");
-    console.log("Selected plan:", selectedPlan); // Should show roomBenefit: 4
-    console.log("roomBenefit:", selectedPlan.roomBenefit); // Debug: Confirm undefined
+    console.log("Selected plan:", selectedPlan); 
+    console.log("roomBenefit:", selectedPlan.roomBenefit); 
     console.log("selectedPlan type:", Object.getPrototypeOf(selectedPlan));
     const durationMap: Record<IPlan['duration'], number> = {
       "1 month": 30,
@@ -60,7 +60,6 @@ export class UserPlanService implements UserIPlanService{
         endDate,
         transactionId,
       };
-      console.log("user plans updating data",planUpdate)
       return await this.userRepository.updateUserPlans(userId,planUpdate,roomBenefit)
     }catch(error){
       throw new Error(`Service error ${error}`);
@@ -73,9 +72,13 @@ export class UserPlanService implements UserIPlanService{
       throw new Error("User not found")
     }
     const activePlan = user.plan.filter((p) => p.status ==='active').sort((a,b) => new Date(b.startDate).getTime() - new Date(a.startDate).getTime())[0]
+    console.log('active plan ',activePlan)
     if(!activePlan){
       return null
     }
+    const {plans} = await this.planRepository.findActivePlans(1,100)
+    const plan = plans.find((p) => p._id.toString()===activePlan.planId.toString())
+    const roomBenefit=plan ? plan.roomBenefit || 0 : 0
     return {
       planId: activePlan.planId.toString(),
       planName: activePlan.planName,
@@ -83,7 +86,7 @@ export class UserPlanService implements UserIPlanService{
       startDate: activePlan.startDate,
       endDate: activePlan.endDate, 
       transactionId: activePlan.transactionId, 
-      roomBenefit: user.availableRoomLimit || 0, 
+      roomBenefit 
     };
   }
 
