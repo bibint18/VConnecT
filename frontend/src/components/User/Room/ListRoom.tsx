@@ -8,7 +8,7 @@ import toast from 'react-hot-toast';
 import { IUser } from '@/components/admin/dashboard/CustomerDashboard';
 import { Lock, Unlock, Search, Trash2 } from 'lucide-react';
 import Pagination from '@/components/Pagination';
-
+import Swal from 'sweetalert2';
 interface Room {
   _id: string;
   title: string;
@@ -82,17 +82,52 @@ const ListRoom: React.FC = () => {
     }
   };
 
+  // const handleDeleteRoom = async (roomId: string, roomTitle: string) => {
+  //   if (!confirm(`Are you sure you want to delete "${roomTitle}"?`)) return;
+  //   try {
+  //     await deleteRoom(roomId); 
+  //     setRooms(rooms.filter((room) => room._id !== roomId)); 
+  //     setTotalRooms(totalRooms - 1); 
+  //     toast.success(`Room "${roomTitle}" deleted successfully`, { duration: 3000 });
+  //   } catch (err) {
+  //     toast.error(err instanceof Error ? err.message : 'Failed to delete room');
+  //   }
+  // };
+
   const handleDeleteRoom = async (roomId: string, roomTitle: string) => {
-    if (!confirm(`Are you sure you want to delete "${roomTitle}"?`)) return;
+  const result = await Swal.fire({
+    title: `Delete "${roomTitle}"?`,
+    text: "This action cannot be undone.",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#d33',
+    cancelButtonColor: '#3085d6',
+    confirmButtonText: 'Yes, delete it!',
+    cancelButtonText: 'Cancel',
+  });
+
+  if (result.isConfirmed) {
     try {
-      await deleteRoom(roomId); 
-      setRooms(rooms.filter((room) => room._id !== roomId)); 
-      setTotalRooms(totalRooms - 1); 
-      toast.success(`Room "${roomTitle}" deleted successfully`, { duration: 3000 });
+      await deleteRoom(roomId);
+      setRooms(rooms.filter((room) => room._id !== roomId));
+      setTotalRooms(totalRooms - 1);
+      Swal.fire({
+        title: 'Deleted!',
+        text: `Room "${roomTitle}" was successfully deleted.`,
+        icon: 'success',
+        timer: 3000,
+        showConfirmButton: false,
+      });
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Failed to delete room');
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: err instanceof Error ? err.message : 'Failed to delete room',
+      });
     }
-  };
+  }
+};
+
 
   const handleViewRoomDetails =async (roomId: string) => {
     navigate(`/roomDetails/${roomId}`)
@@ -201,7 +236,7 @@ const ListRoom: React.FC = () => {
                   setCurrentPage(1);
                 }}
                 placeholder="Search by title or description..."
-                className="search-input !text-black p-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 w-full sm:w-auto"
+                className="search-input !text-white-900 p-2 border border-white-900 rounded-md focus:ring-indigo-500 focus:border-indigo-500 w-full sm:w-auto"
               />
               <div className="filter-select-wrapper">
                 <select
