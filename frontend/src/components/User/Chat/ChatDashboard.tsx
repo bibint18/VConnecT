@@ -7,6 +7,7 @@ import ChatBox from "./ChatBox";
 import { ChatService } from "@/services/ChatService";
 import { useAppSelector } from "@/redux/store";
 import { useLocation } from "react-router-dom";
+import Header from "../Header/Header";
 
 const ChatDashboard: React.FC = () => {
   const [activeChat, setActiveChat] = useState<string | null>(null);
@@ -47,18 +48,26 @@ const ChatDashboard: React.FC = () => {
     };
   }, [userId,location]);
   return (
-    <div className="flex h-screen">
-      <div className="w-1/3">
-        <FriendsList activeChat={activeChat} onSelectFriend={handleSelectFriend} />
+    <div className="!flex !flex-col !h-screen">
+      <div className="!bg-black !text-white">
+        <Header />
       </div>
-      <div className="w-2/3">
-        {activeChat ? (
-          <ChatBox friendId={activeChat} />
-        ) : (
-          <div className="flex items-center justify-center h-full text-gray-500">
-            Select a friend to start chatting
-          </div>
-        )}
+      <div className="flex flex-1 overflow-hidden">
+        <div className="w-1/3">
+          <FriendsList
+            activeChat={activeChat}
+            onSelectFriend={handleSelectFriend}
+          />
+        </div>
+        <div className="w-2/3">
+          {activeChat ? (
+            <ChatBox friendId={activeChat} />
+          ) : (
+            <div className="flex items-center justify-center h-full text-gray-500">
+              Select a friend to start chatting
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
