@@ -166,6 +166,74 @@ export class DashboardRepository implements IDashboardRepository{
         },
       },
     ]);
+
+    const revenueDetails = await User.aggregate([
+        { $match: { isDeleted: false } },
+        { $unwind: "$plan" },
+        { $match: { "plan.status": "active" } },
+        ...(startDate && endDate
+          ? [{ $match: { "plan.startDate": { $gte: startDate, $lte: endDate } } }]
+          : []),
+        {
+          $lookup: {
+            from: "plans",
+            localField: "plan.planId",
+            foreignField: "_id",
+            as: "planDetails",
+          },
+        },
+        { $unwind: "$planDetails" },
+        { $match: { "planDetails.type": "paid" } },
+        {
+          $project: {
+            _id: 0,
+            userName: "$name",
+            email: "$email",
+            planName: "$planDetails.name",
+            amount: "$planDetails.discountAmount",
+            purchaseDate: "$plan.startDate",
+          },
+        },
+        { $sort: { purchaseDate: 1 } },
+      ]);
+
+      // Added aggregation for user details: all users with creation and premium status
+      const userDetails = await User.aggregate([
+        { $match: { isDeleted: false } },
+        ...(startDate && endDate
+          ? [{ $match: { createdAt: { $gte: startDate, $lte: endDate } } }]
+          : []),
+        {
+          $lookup: {
+            from: "plans",
+            localField: "plan.planId",
+            foreignField: "_id",
+            as: "planDetails",
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            userName: "$name",
+            email: "$email",
+            createdAt: "$createdAt",
+            isPremium: {
+              $cond: {
+                if: {
+                  $and: [
+                    { $gt: [{ $size: "$planDetails" }, 0] },
+                    { $eq: [{ $arrayElemAt: ["$planDetails.type", 0] }, "paid"] },
+                    { $eq: [{ $arrayElemAt: ["$plan.status", 0] }, "active"] },
+                  ],
+                },
+                then: true,
+                else: false,
+              },
+            },
+          },
+        },
+        { $sort: { createdAt: 1 } },
+      ]);
     return {totalUsers,
       premiumUsers,
       popularPlans,
@@ -173,7 +241,10 @@ export class DashboardRepository implements IDashboardRepository{
       incomeOverTime,
       totalRooms,
       roomTypes,
-      userCreationOverTime,}
+      userCreationOverTime,
+      revenueDetails,
+      userDetails
+    }
     } catch (error) {
       throw new AppError("Failed to fetch Dashboard details",500)
     }
