@@ -145,10 +145,7 @@ router.get(
 );
 
 //reward
-
 const adminRewardRepository = new RewardRepository();
-// const userRewardRepository = new UserRewardRepository()
-// const userRewardService = new UserReward     user service needed to be written
 const adminRewardService = new AdminRewardService(adminRewardRepository);
 const adminRewardController = new AdminRewardController(adminRewardService);
 

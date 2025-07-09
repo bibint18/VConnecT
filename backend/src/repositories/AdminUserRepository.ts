@@ -15,6 +15,7 @@ export class AdminUserRepository implements IAdminUserRepository{
       sortQuery={createdAt:-1}
     }
     return await User.find(query)
+    .select('-password')
     .populate('plan.planId','name')
     .sort(sortQuery)
     .skip((page-1) * limit)
