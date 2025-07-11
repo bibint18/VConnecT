@@ -6,7 +6,6 @@ import dotenv from "dotenv";
 import conneectDB from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import publicRoutes from "./routes/publicRoute.js";
-// import userRoutes from './routes/userRoute'
 import { createUserRoutes } from "./routes/userRoute.js";
 import { errorHandler } from "./middlewares/globalErrorHandler.js";
 import { CallService } from "./services/CallService.js";
@@ -16,6 +15,7 @@ import { FriendService } from "./services/FriendService.js";
 import { FriendRepository } from "./repositories/FriendRepository.js";
 import { DirectCallRepository } from "./repositories/User/call/DirectCallRepository.js";
 import { DirectCallController } from "./controllers/User/Call/DirectCallController.js";
+import { errorLoggerMiddleware } from "./middlewares/errorLogger.js";
 
 dotenv.config();
 const app = express();
@@ -65,6 +65,7 @@ export const callService = new CallService(
 );
 export const friendService = new FriendService(new FriendRepository(), io);
 app.use("/api/auth", createUserRoutes(chatIo, directCallController));
+app.use(errorLoggerMiddleware)
 app.use(errorHandler);
 
 conneectDB();

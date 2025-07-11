@@ -18,6 +18,42 @@ import { DashboardService } from "../services/Admin/Dashboard/DashboardService.j
 import { DashboardController } from "../controllers/Admin/Dashboard/DashboardController.js";
 const router = express.Router();
 
+//reward
+const adminRewardRepository = new RewardRepository();
+const adminRewardService = new AdminRewardService(adminRewardRepository);
+const adminRewardController = new AdminRewardController(adminRewardService);
+
+router.post(
+  "/admin/rewards",
+  authenticateToken,
+  restrictToAdmin,
+  adminRewardController.createReward.bind(adminRewardController)
+);
+router.put(
+  "/admin/rewards/:rewardId",
+  authenticateToken,
+  restrictToAdmin,
+  adminRewardController.updateReward.bind(adminRewardController)
+);
+router.delete(
+  "/admin/rewards/:rewardId",
+  authenticateToken,
+  restrictToAdmin,
+  adminRewardController.deleteReward.bind(adminRewardController)
+);
+router.get(
+  "/admin/rewards",
+  authenticateToken,
+  restrictToAdmin,
+  adminRewardController.getRewards.bind(adminRewardController)
+);
+router.get(
+  "/admin/reward",
+  authenticateToken,
+  restrictToAdmin,
+  adminRewardController.getRewardById.bind(adminRewardController)
+);
+
 //adminUser MAnagement
 router.get(
   "/admin/users",
@@ -144,41 +180,7 @@ router.get(
   dailyTriviaController.getTriviaQuestionById.bind(dailyTriviaController)
 );
 
-//reward
-const adminRewardRepository = new RewardRepository();
-const adminRewardService = new AdminRewardService(adminRewardRepository);
-const adminRewardController = new AdminRewardController(adminRewardService);
 
-router.post(
-  "/admin/rewards",
-  authenticateToken,
-  restrictToAdmin,
-  adminRewardController.createReward.bind(adminRewardController)
-);
-router.put(
-  "/admin/rewards/:rewardId",
-  authenticateToken,
-  restrictToAdmin,
-  adminRewardController.updateReward.bind(adminRewardController)
-);
-router.delete(
-  "/admin/rewards/:rewardId",
-  authenticateToken,
-  restrictToAdmin,
-  adminRewardController.deleteReward.bind(adminRewardController)
-);
-router.get(
-  "/admin/rewards",
-  authenticateToken,
-  restrictToAdmin,
-  adminRewardController.getRewards.bind(adminRewardController)
-);
-router.get(
-  "/admin/reward",
-  authenticateToken,
-  restrictToAdmin,
-  adminRewardController.getRewardById.bind(adminRewardController)
-);
 
 //dashboard
 const dashboardRepository = new DashboardRepository();

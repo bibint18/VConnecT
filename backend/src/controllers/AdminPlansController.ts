@@ -21,12 +21,6 @@ export class AdminPlansController implements IAdminPlanController {
       const plan = await this.adminPlanService.createPlan(req.body);
       res.status(HTTP_STATUS_CODE.OK).json(plan);
     } catch (error) {
-      // console.log(error);
-      // if (error.message === "A plan with this name already exists") {
-      //   res.status(HTTP_STATUS_CODE.BAD_REQUEST).json({ message: error.message });
-      // } else {
-      //   res.status(HTTP_STATUS_CODE.INTERNAL_SERVER_ERROR).json({ message: "Internal Server Error" });
-      // }
       next(error);
     }
   }
@@ -76,14 +70,6 @@ export class AdminPlansController implements IAdminPlanController {
       const updatePlan = await this.adminPlanService.updatePlan(id, updateData);
       res.status(HTTP_STATUS_CODE.OK).json(updatePlan);
     } catch (error: any) {
-      // console.log(error);
-      // if (error.message === "A plan with this name already exists.") {
-      //   res.status(HTTP_STATUS_CODE.BAD_REQUEST).json({ error: error.message });
-      // } else {
-      //   res
-      //     .status(HTTP_STATUS_CODE.INTERNAL_SERVER_ERROR)
-      //     .json({ error: "Failed to edit plan" });
-      // }
       next(error);
     }
   }

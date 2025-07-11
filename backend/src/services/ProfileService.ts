@@ -39,6 +39,7 @@ export class ProfileService implements IProfileService {
   async changePassword(userId: string, currentPassword: string, newPassword: string): Promise<IUser> {
     const user = await this.profileRepository.findById(userId);
     if (!user) throw new AppError("User not found", 404);
+    console.log(user)
     if (!user.password) {
       throw new AppError("No password set for this account. Use password reset.", 400);
     }

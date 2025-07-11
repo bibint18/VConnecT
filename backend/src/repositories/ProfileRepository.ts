@@ -5,7 +5,7 @@ import { User } from "../models/User.js";
 export class ProfileRepository implements IProfileRepository{
   async findById(id: string): Promise<IUser | null> {
     try {
-      return await User.findById(id).select('-password -claimedRewards -point -friends -failedLoginAttempts -lockUntil -availableRoomLimit -point -plan').exec()
+      return await User.findById(id).exec()
     } catch (error) {
       console.error('error finding user by id',error)
       throw error
