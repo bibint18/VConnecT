@@ -44,14 +44,17 @@ export class RoomRepository implements IRoomRepository{
     page: number = 1,
     limit: number = 10,
     search?: string,
-    type?: "PUBLIC" | "PRIVATE"): Promise<{ rooms: IRoom[], user: IUser | null ; total:number }> {
+    type?: "PUBLIC" | "PRIVATE" | "MY"): Promise<{ rooms: IRoom[], user: IUser | null ; total:number }> {
     const user = await User.findById(userId)
     const query:any = {};
     if(search){
       query.$or = [{title:{$regex:search,$options:'i'}},{description:{$regex:search,$options:'i'}}]
     }
-    if(type){
-      query.type =type;
+    if(type==='MY'){
+      console.log("My repo")
+      query.createdBy=new mongoose.Types.ObjectId(userId)
+    }else if(type==='PRIVATE' || type==='PUBLIC'){
+      query.type=type
     }
     query.isDeleted = false;
     query.isBlocked = false;

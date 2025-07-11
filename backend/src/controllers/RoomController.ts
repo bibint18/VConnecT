@@ -59,8 +59,9 @@ export class RoomController implements IRoomController {
         parseInt(page as string, 10),
         parseInt(limit as string, 10),
         search as string,
-        type as "PUBLIC" | "PRIVATE"
+        type as "PUBLIC" | "PRIVATE" | "MY"
       );
+      console.log("Type: ",type)
       res.status(HTTP_STATUS_CODE.OK).json({ rooms, user, total });
     } catch (error) {
       next(error);

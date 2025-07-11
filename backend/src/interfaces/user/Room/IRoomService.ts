@@ -7,7 +7,7 @@ export interface IRoomService{
       page: number,
       limit: number,
       search?: string,
-      type?: "PUBLIC" | "PRIVATE"):Promise<{ rooms: IRoom[], user: IUser | null, total: number }>
+      type?: "PUBLIC" | "PRIVATE" | "MY"):Promise<{ rooms: IRoom[], user: IUser | null, total: number }>
   joinRoom(RoomId:string,userId:string,secretCode:string):Promise<IRoom | null>
   deleteRoom(roomId:string):Promise<void>
 }

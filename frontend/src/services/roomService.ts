@@ -26,7 +26,7 @@ export const createRoom = async (RoomData:RoomFormData) => {
 export const getAllRooms = async (page: number = 1,
   limit: number = 10,
   search: string = "",
-  type: "PUBLIC" | "PRIVATE" | "" = "") => {
+  type: "PUBLIC" | "MY" | "PRIVATE" | "" = "") => {
   const response = await axiosInstance.get('/user/rooms',{params: {page, limit, search, type}})
   return response.data
 }

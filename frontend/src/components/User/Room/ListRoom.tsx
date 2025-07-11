@@ -26,7 +26,7 @@ const ListRoom: React.FC = () => {
   const [modalSecretCode, setModalSecretCode] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null);
-  const [filter, setFilter] = useState<"" | "PUBLIC" | "PRIVATE">('');
+  const [filter, setFilter] = useState<"" | "PUBLIC" | "PRIVATE" | "MY">('');
   const [search, setSearch] = useState('');
   const [totalRooms, setTotalRooms] = useState(0);
   const roomsPerPage = 9;
@@ -82,17 +82,7 @@ const ListRoom: React.FC = () => {
     }
   };
 
-  // const handleDeleteRoom = async (roomId: string, roomTitle: string) => {
-  //   if (!confirm(`Are you sure you want to delete "${roomTitle}"?`)) return;
-  //   try {
-  //     await deleteRoom(roomId); 
-  //     setRooms(rooms.filter((room) => room._id !== roomId)); 
-  //     setTotalRooms(totalRooms - 1); 
-  //     toast.success(`Room "${roomTitle}" deleted successfully`, { duration: 3000 });
-  //   } catch (err) {
-  //     toast.error(err instanceof Error ? err.message : 'Failed to delete room');
-  //   }
-  // };
+
 
   const handleDeleteRoom = async (roomId: string, roomTitle: string) => {
   const result = await Swal.fire({
@@ -243,13 +233,14 @@ const ListRoom: React.FC = () => {
                   className="filter-select p-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 text-sm sm:text-base"
                   value={filter}
                   onChange={(e) => {
-                    setFilter(e.target.value as "" | "PUBLIC" | "PRIVATE");
+                    setFilter(e.target.value as "" | "PUBLIC" | "PRIVATE" | "MY");
                     setCurrentPage(1);
                   }}
                 >
-                  <option value="" className="!text-black">All Types</option>
-                  <option value="PUBLIC" className="!text-black">Public</option>
-                  <option value="PRIVATE" className="!text-black">Private</option>
+                  <option value="" className="!text-black">ALL ROOMS</option>
+                  <option value="PUBLIC" className="!text-black">PUBLIC</option>
+                  <option value="PRIVATE" className="!text-black">PRIVATE</option>
+                  <option value="MY" className="!text-black">MY ROOMS</option>
                 </select>
                 <div className="filter-select-arrow">
                   <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20">
@@ -368,38 +359,6 @@ const ListRoom: React.FC = () => {
           onPageChange={handlePageChange}
           />
         )}
-
-        {/* {totalPages > 1 && (
-          <div className="pagination mt-4 sm:mt-6 flex justify-center items-center gap-2">
-            <motion.button
-              onClick={() => handlePageChange(currentPage - 1)}
-              disabled={currentPage === 1}
-              className={`px-3 sm:px-4 py-1 sm:py-2 rounded-md text-sm sm:text-base ${
-                currentPage === 1 ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-indigo-600 text-white hover:bg-indigo-700'
-              }`}
-              variants={buttonVariants}
-              whileHover={currentPage !== 1 ? "hover" : undefined}
-              whileTap={currentPage !== 1 ? "tap" : undefined}
-            >
-              Previous
-            </motion.button>
-            <span className="px-3 sm:px-4 py-1 sm:py-2 text-sm sm:text-base">
-              Page {currentPage} of {totalPages}
-            </span>
-            <motion.button
-              onClick={() => handlePageChange(currentPage + 1)}
-              disabled={currentPage === totalPages}
-              className={`px-3 sm:px-4 py-1 sm:py-2 rounded-md text-sm sm:text-base ${
-                currentPage === totalPages ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-indigo-600 text-white hover:bg-indigo-700'
-              }`}
-              variants={buttonVariants}
-              whileHover={currentPage !== totalPages ? "hover" : undefined}
-              whileTap={currentPage !== totalPages ? "tap" : undefined}
-            >
-              Next
-            </motion.button>
-          </div>
-        )} */}
 
         {showModal && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">

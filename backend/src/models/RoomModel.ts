@@ -6,14 +6,14 @@ export interface IParticipant {
   firstJoin: Date;
   lastJoin: Date;
   lastLeave: Date | null;
-  totalDuration: number; // In milliseconds
+  totalDuration: number; 
 }
 export interface IRoom{
   id?: string; 
   title: string;
   limit: number;
   premium: boolean; 
-  type: 'PUBLIC' | 'PRIVATE';
+  type: 'PUBLIC' | 'PRIVATE' | 'MY';
   description: string;
   createdAt?: Date; 
   createdBy:Partial<IUser>;
@@ -34,7 +34,7 @@ const RoomSchema:Schema = new Schema({
   title:{type:String,require:true},
   limit: { type: Number, required: true, min: 0 },
   premium: { type: Boolean, required: true },
-  type: { type: String, enum: ['PUBLIC', 'PRIVATE'], required: true },
+  type: { type: String, enum: ['PUBLIC', 'PRIVATE','MY'], required: true },
   description: { type: String, required: true },
   createdAt: { type: Date, default: Date.now },
   createdBy:{ type: Schema.Types.ObjectId, ref: "User", required: true },
