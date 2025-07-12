@@ -62,6 +62,12 @@ export class PlanService{
       throw new Error("Failed to fetch user plan");
     }
   }
+  async getUserPlanHistory(page: number, limit: number) {
+  const response = await axiosInstance.get(`/plans/history`, {
+    params: { page, limit }
+  });
+  return response.data; 
+}
 
   async reverseName(name:string){
     const response = await axiosInstance.post(`/reverse/${name}`)

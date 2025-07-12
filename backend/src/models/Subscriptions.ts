@@ -1,4 +1,4 @@
-// New: Define Mongoose schema for push subscriptions
+
 import mongoose, { Document, Schema } from 'mongoose';
 
 export interface ISubscription extends Document {

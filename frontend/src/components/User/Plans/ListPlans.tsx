@@ -7,12 +7,14 @@ import { useNavigate } from "react-router-dom";
 import "./ListPlans.css";
 import Pagination from "@/components/Pagination";
 import Spinner from "@/components/Spinner";
+import SubscriptionHistory from "./SubscriptionHistory";
 
 const PricingPlans = () => {
   const [plans, setPlans] = useState<IPlan[]>([]);
   const [userPlan,setUserPlan] = useState<IUserPlan | null>(null)
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [showHistory, setShowHistory] = useState(false);
   const [paymentLoading, setPaymentLoading] = useState(false);
   const [userPlanLoading,setUserPlanLoading] = useState(true);
   const [currentPage,setCurrentPage]=useState(1)
@@ -154,6 +156,12 @@ const PricingPlans = () => {
           Room Benefit: {userPlan.roomBenefit} rooms
         </p>
       </div>
+      <button
+            onClick={() => setShowHistory(true)}
+            className="mt-2 text-sm text-pink-400 hover:underline self-start"
+          >
+            View Subscription History
+          </button>
     </div>
   </motion.div>
 ) : (
@@ -187,6 +195,7 @@ const PricingPlans = () => {
       >
         Choose Your New Plan
       </motion.h1>
+
 
       <AnimatePresence>
         <div className="w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 justify-center">
@@ -293,6 +302,8 @@ const PricingPlans = () => {
       totalPages={totalPages}
       onPageChange={handlePageChange}
       />
+
+      {showHistory && <SubscriptionHistory onClose={() => setShowHistory(false)} />}
     </div>
   );
 };

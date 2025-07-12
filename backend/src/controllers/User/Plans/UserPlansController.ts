@@ -50,4 +50,16 @@ export class UserPlanController implements IUserPlanController {
       next(error);
     }
   }
+
+  async getUserPlanHistory(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const userId = req.user?.id as string;
+      const page = parseInt(req.query.page as string) || 1;
+      const limit = parseInt(req.query.limit as string) || 4;
+      const result=await this.planService.getUserPlanHistory(userId,page,limit)
+      res.status(HTTP_STATUS_CODE.OK).json(result)
+    } catch (error) {
+      next(error)
+    }
+  }
 }

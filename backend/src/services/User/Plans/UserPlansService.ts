@@ -35,16 +35,13 @@ export class UserPlanService implements UserIPlanService{
       "9 months": 270,
       "12 months": 365
     };
-    // const durationDays = selectedPlan.duration === "Year" ? 365 : 30; 
     const durationDays = durationMap[selectedPlan.duration];
     if (!durationDays) {
       throw new Error(`Invalid duration: ${selectedPlan.duration}`);
     }
       const startDate = new Date();
       const endDate = new Date(startDate.getTime() + durationDays * 24 * 60 * 60 * 1000);
-      // await this.userRepository.updateRoomLimit(userId,selectedPlan.roomBenifit)
       const roomBenefit = selectedPlan.roomBenefit
-      console.log("roomBenefit serrice",roomBenefit)
       const planUpdate: {
         planId: Types.ObjectId;
         planName: string;
@@ -88,6 +85,10 @@ export class UserPlanService implements UserIPlanService{
       transactionId: activePlan.transactionId, 
       roomBenefit 
     };
+  }
+
+  async getUserPlanHistory(userId: string, page: number, limit: number): Promise<{ plans: IUser["plan"]; total: number; }> {
+    return await this.planRepository.getUserPlanHistory(userId,page,limit)
   }
 
 }

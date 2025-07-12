@@ -202,6 +202,7 @@ export const createUserRoutes = (
     authenticateToken,
     plansController.getUserPlan.bind(plansController)
   );
+  router.get('/plans/history',authenticateToken,plansController.getUserPlanHistory.bind(plansController))
 
   //payment
   const paymentService = new PaymentService(plansRepository);
