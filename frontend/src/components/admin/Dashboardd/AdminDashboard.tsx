@@ -81,7 +81,7 @@ const AdminDashboard: React.FC = () => {
   const fetchDashboardData = async () => {
     try {
       setLoading(true);
-      const params = startDate && endDate ? { startDate: startDate.toISOString(), endDate: endDate.toISOString() } : {};
+      const params = startDate && endDate ? { startDate: new Date(startDate.setHours(0, 0, 0, 0)).toISOString(), endDate: new Date(endDate.setHours(23, 59, 59, 999)).toISOString() } : {};
       const response = await axiosInstance.get("/dashboard", {
         params,
       });
@@ -306,8 +306,8 @@ const AdminDashboard: React.FC = () => {
       return;
     }
 
-    if (startDate && (isBefore(date, startDate) || isEqual(date, startDate))) {
-      toast.error("End date must be after the start date");
+    if (startDate && (isBefore(date, startDate))) {
+      toast.error("End date cannot be before start date");
       return;
     }
 
@@ -356,7 +356,7 @@ const AdminDashboard: React.FC = () => {
               onSelect={handleEndDateSelect}
               initialFocus
               disabled={(date: Date) =>
-                (startDate && (isBefore(date, startDate) || isEqual(date, startDate))) ||
+                (startDate && (isBefore(date, startDate))) ||
                 isAfter(date, today)
               }
               classNames={{

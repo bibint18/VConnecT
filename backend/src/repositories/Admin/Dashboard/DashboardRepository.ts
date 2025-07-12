@@ -7,11 +7,12 @@ import { AppError } from "../../../utils/AppError.js";
 export class DashboardRepository implements IDashboardRepository{
   async getDashboardData(startDate?: Date, endDate?: Date): Promise<DashboardData> {
     try {
+      console.log('startand ednd',startDate,endDate)
      const totalUsers = await User.countDocuments({isDeleted:false})  
      const premiumUsersResult = await User.aggregate([
       { $match: { isDeleted: false } },
       { $unwind: "$plan" },
-      { $match: { "plan.status": "active" } },
+      // { $match: { "plan.status": "active" } },
       ...(startDate && endDate
         ? [{ $match: { "plan.startDate": { $gte: startDate, $lte: endDate } } }]
         : []),
@@ -32,7 +33,7 @@ export class DashboardRepository implements IDashboardRepository{
     const popularPlans = await User.aggregate([
       { $match: { isDeleted: false } },
       { $unwind: "$plan" },
-      { $match: { "plan.status": "active" } },
+      // { $match: { "plan.status": "active" } },
       ...(startDate && endDate
         ? [{ $match: { "plan.startDate": { $gte: startDate, $lte: endDate } } }]
         : []),
@@ -62,7 +63,7 @@ export class DashboardRepository implements IDashboardRepository{
     const totalIncomeResult = await User.aggregate([
       { $match: { isDeleted: false } },
       { $unwind: "$plan" },
-      { $match: { "plan.status": "active" } },
+      // { $match: { "plan.status": "active" } },
       ...(startDate && endDate
         ? [{ $match: { "plan.startDate": { $gte: startDate, $lte: endDate } } }]
         : []),
@@ -89,7 +90,7 @@ export class DashboardRepository implements IDashboardRepository{
     const incomeOverTime = await User.aggregate([
       { $match: { isDeleted: false } },
       { $unwind: "$plan" },
-      { $match: { "plan.status": "active" } },
+      // { $match: { "plan.status": "active" } },
       ...(startDate && endDate
         ? [{ $match: { "plan.startDate": { $gte: startDate, $lte: endDate } } }]
         : []),
@@ -166,11 +167,12 @@ export class DashboardRepository implements IDashboardRepository{
         },
       },
     ]);
+    console.log('usercreation ',userCreationOverTime)
 
     const revenueDetails = await User.aggregate([
         { $match: { isDeleted: false } },
         { $unwind: "$plan" },
-        { $match: { "plan.status": "active" } },
+        // { $match: { "plan.status": "active" } },
         ...(startDate && endDate
           ? [{ $match: { "plan.startDate": { $gte: startDate, $lte: endDate } } }]
           : []),
@@ -196,8 +198,8 @@ export class DashboardRepository implements IDashboardRepository{
         },
         { $sort: { purchaseDate: 1 } },
       ]);
+      console.log('reveneu details',revenueDetails)
 
-      // Added aggregation for user details: all users with creation and premium status
       const userDetails = await User.aggregate([
         { $match: { isDeleted: false } },
         ...(startDate && endDate
@@ -223,7 +225,7 @@ export class DashboardRepository implements IDashboardRepository{
                   $and: [
                     { $gt: [{ $size: "$planDetails" }, 0] },
                     { $eq: [{ $arrayElemAt: ["$planDetails.type", 0] }, "paid"] },
-                    { $eq: [{ $arrayElemAt: ["$plan.status", 0] }, "active"] },
+                    // { $eq: [{ $arrayElemAt: ["$plan.status", 0] }, "active"] },
                   ],
                 },
                 then: true,
