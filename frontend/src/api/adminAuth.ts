@@ -1,9 +1,10 @@
 
+import { UserActionResponseDTO, UsersResponseDTO } from "@/types/AdminUserDTO";
 import axiosInstance from "../utils/axiosInterceptor";
 
 
 //USERS API
-export const fetchUsers = async (page: number, limit: number,searchTerm:string,sortOption:string) => {
+export const fetchUsers = async (page: number, limit: number,searchTerm:string,sortOption:string):Promise<UsersResponseDTO> => {
   const response = await axiosInstance.get(`/admin/users`, {
     params: { page, limit ,searchTerm,sortOption},
     withCredentials:true
@@ -13,20 +14,20 @@ export const fetchUsers = async (page: number, limit: number,searchTerm:string,s
 };
 
 
-export const blockUser = async (id: string) => {
+export const blockUser = async (id: string):Promise<UserActionResponseDTO> => {
   console.log(id)
   const response = await axiosInstance.post(`/admin/users/block/${id}`);
   return response.data;
 };
 
 
-export const unblockUser = async (id: string) => {
+export const unblockUser = async (id: string):Promise<UserActionResponseDTO> => {
   const response = await axiosInstance.post(`/admin/users/unblock/${id}`);
   return response.data;
 };
 
 
-export const deleteUser = async (id: string) => {
+export const deleteUser = async (id: string):Promise<UserActionResponseDTO> => {
   const response = await axiosInstance.post(`/admin/users/delete/${id}`);
   return response.data;
 };

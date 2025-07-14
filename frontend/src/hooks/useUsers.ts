@@ -1,14 +1,7 @@
 
-
-interface UsersResponse {
-  users: IUser[];
-  totalUsers: number;
-}
-
-
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchUsers, blockUser, unblockUser, deleteUser } from "../api/adminAuth";
-import { IUser } from "@/components/admin/dashboard/CustomerDashboard";
+import { UserActionResponseDTO, UsersResponseDTO } from "@/types/AdminUserDTO";
 
 export const useUsers = (
   page: number,
@@ -16,9 +9,9 @@ export const useUsers = (
   searchTerm: string,
   sortOption: string
 ) => {
-  return useQuery<UsersResponse, Error>(
+  return useQuery<UsersResponseDTO, Error>(
     ["users", page, limit, searchTerm, sortOption],
-    async (): Promise<UsersResponse> => {
+    async (): Promise<UsersResponseDTO> => {
       const response = await fetchUsers(page, limit, searchTerm, sortOption);
       return response;
     },
@@ -28,37 +21,6 @@ export const useUsers = (
   );
 };
 
-
-// export const useBlockUser = () => {
-//   const queryClient = useQueryClient();
-//   return useMutation({
-//     mutationFn: blockUser,
-//     onSuccess: () => {
-//       queryClient.invalidateQueries({ queryKey: ["users"] });
-//     },
-//   });
-// };
-
-// export const useBlockUser = () => {
-//   const queryClient = useQueryClient();
-
-// return useMutation({
-//   mutationFn: blockUser,
-//   onSuccess: (data, userId: string) => {
-//     queryClient.setQueryData<UsersResponse>(["users"], (old) => {
-//       if (!old) return old;
-//       return {
-//         ...old,
-//         users: old.users.map((user) =>
-//           user._id === userId ? { ...user, isBlocked: true } : user
-//         ),
-//       };
-//     });
-//   },
-// });
-// };
-
-
 export const useBlockUser = (
   page: number,
   limit: number,
@@ -66,17 +28,17 @@ export const useBlockUser = (
   sortOption: string
 ) => {
   const queryClient = useQueryClient();
-  return useMutation({
+  return useMutation<UserActionResponseDTO,Error,string>({
     mutationFn: blockUser,
-    onSuccess: (data, userId: string) => {
-      queryClient.setQueryData<UsersResponse>(
+    onSuccess: ( data) => {
+      queryClient.setQueryData<UsersResponseDTO>(
         ["users", page, limit, searchTerm, sortOption],
         (old) => {
           if (!old) return old;
           return {
             ...old,
             users: old.users.map((user) =>
-              user._id === userId ? { ...user, isBlocked: true } : user
+              user._id === data.user._id ? data.user : user
             ),
           };
         }
@@ -84,16 +46,6 @@ export const useBlockUser = (
     },
   });
 };
-
-// export const useUnblockUser = () => {
-//   const queryClient = useQueryClient();
-//   return useMutation({
-//     mutationFn: unblockUser,
-//     onSuccess: () => {
-//       queryClient.invalidateQueries({ queryKey: ["users"] });
-//     },
-//   });
-// };
 
 export const useUnblockUser = (
   page: number,
@@ -102,17 +54,17 @@ export const useUnblockUser = (
   sortOption: string
 ) => {
   const queryClient = useQueryClient();
-  return useMutation({
+  return useMutation<UserActionResponseDTO, Error, string>({
     mutationFn: unblockUser,
-    onSuccess: (data, userId: string) => {
-      queryClient.setQueryData<UsersResponse>(
+    onSuccess: (data) => {
+      queryClient.setQueryData<UsersResponseDTO>(
         ["users", page, limit, searchTerm, sortOption],
         (old) => {
           if (!old) return old;
           return {
             ...old,
             users: old.users.map((user) =>
-              user._id === userId ? { ...user, isBlocked: false } : user
+              user._id === data.user._id ? data.user : user
             ),
           };
         }
@@ -122,16 +74,6 @@ export const useUnblockUser = (
 };
 
 
-// export const useDeleteUser = () => {
-//   const queryClient = useQueryClient();
-//   return useMutation({
-//     mutationFn: deleteUser,
-//     onSuccess: () => {
-//       queryClient.invalidateQueries({ queryKey: ["users"] });
-//     },
-//   });
-// };
-
 export const useDeleteUser = (
   page: number,
   limit: number,
@@ -139,16 +81,16 @@ export const useDeleteUser = (
   sortOption: string
 ) => {
   const queryClient = useQueryClient();
-  return useMutation({
+  return useMutation<UserActionResponseDTO, Error, string>({
     mutationFn: deleteUser,
-    onSuccess: (data, userId: string) => {
-      queryClient.setQueryData<UsersResponse>(
+    onSuccess: (data) => {
+      queryClient.setQueryData<UsersResponseDTO>(
         ["users", page, limit, searchTerm, sortOption],
         (old) => {
           if (!old) return old;
           return {
             ...old,
-            users: old.users.filter((user) => user._id !== userId),
+            users: old.users.filter((user) => user._id !== data.user._id),
             totalUsers: old.totalUsers - 1,
           };
         }

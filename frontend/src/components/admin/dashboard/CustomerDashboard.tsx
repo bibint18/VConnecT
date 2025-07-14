@@ -44,6 +44,7 @@ import {
   useUnblockUser,
 } from "../../../hooks/useUsers";
 import Swal from "sweetalert2";
+import { UserResponseDTO } from "@/types/AdminUserDTO";
 export default function CustomerDashboard() {
   const [page, setPage] = useState(1);
   const limit = 6;
@@ -59,7 +60,7 @@ export default function CustomerDashboard() {
     sortOption
   );
   console.log("data from component ", data);
-  const users: IUser[] = data?.users ?? [];
+  const users: UserResponseDTO[] = data?.users ?? [];
   const totalUsers: number = data?.totalUsers ?? 0;
   const totalPages = Math.ceil(totalUsers / limit);
   console.log("totalCount", totalPages);
@@ -133,11 +134,8 @@ export default function CustomerDashboard() {
     });
   };
 
-  const getActivePlanName = (plans: IUser["plan"]) => {
-    if (plans) {
-      const activePlan = plans.find((plan) => plan.status === "active");
-      return activePlan ? activePlan.planName : "No Active Plan";
-    }
+  const getActivePlanName = (plan: UserResponseDTO["plan"]) => {
+      return plan ? plan.planName : "No Active Plan";
   };
 
   if (isLoading) return <p>Loading users...</p>;
@@ -212,7 +210,7 @@ export default function CustomerDashboard() {
               </thead>
               <tbody>
                 {users?.length > 0 ? (
-                  users?.map((user: IUser, index: number) => (
+                  users?.map((user: UserResponseDTO, index: number) => (
                     <tr
                       key={user._id}
                       className="table-row border-b border-gray-100 last:border-0"

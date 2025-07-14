@@ -18,10 +18,10 @@ export class VerifyOtpDTO {
   })
   password: string;
 
-  constructor(email: string, otp: string, name: string, password: string) {
-    this.email = email;
-    this.otp = otp;
-    this.name = name;
-    this.password = password;
+  constructor(email?: string, otp?: string, name?: string, password?: string) {
+    this.email = email ?? "";
+    this.otp = otp ?? "";
+    this.name = name ?? "";
+    this.password = password ?? "";
   }
 }

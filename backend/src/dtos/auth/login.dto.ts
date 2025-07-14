@@ -8,8 +8,8 @@ export class LoginDTO {
   @MinLength(8, { message: "Password must be at least 8 characters" })
   password: string;
 
-  constructor(email: string, password: string) {
-    this.email = email;
-    this.password = password;
+  constructor(email?: string, password?: string) {
+    this.email = email ?? "";
+    this.password = password ?? "";
   }
 }

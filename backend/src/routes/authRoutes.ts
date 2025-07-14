@@ -16,6 +16,9 @@ import { AdminRewardController } from "../controllers/Admin/Reward/RewardControl
 import { DashboardRepository } from "../repositories/Admin/Dashboard/DashboardRepository.js";
 import { DashboardService } from "../services/Admin/Dashboard/DashboardService.js";
 import { DashboardController } from "../controllers/Admin/Dashboard/DashboardController.js";
+import { validateRequest } from "../middlewares/validateRequest.js";
+import { GetUsersDTO } from "../dtos/AdminUser/GetUsersDTO.js";
+import { validateObjectId } from "../middlewares/validateObjectId.js";
 const router = express.Router();
 
 //reward
@@ -59,24 +62,28 @@ router.get(
   "/admin/users",
   authenticateToken,
   restrictToAdmin,
+  validateRequest(GetUsersDTO),
   AdminUsersController.getAllUsers.bind(AdminUsersController)
 );
 router.post(
   "/admin/users/block/:id",
   authenticateToken,
   restrictToAdmin,
+  validateObjectId,
   AdminUsersController.blockUser.bind(AdminUsersController)
 );
 router.post(
   "/admin/users/unblock/:id",
   authenticateToken,
   restrictToAdmin,
+  validateObjectId,
   AdminUsersController.unblockUser.bind(AdminUsersController)
 );
 router.post(
   "/admin/users/delete/:id",
   authenticateToken,
   restrictToAdmin,
+  validateObjectId,
   AdminUsersController.deleteUser.bind(AdminUsersController)
 );
 

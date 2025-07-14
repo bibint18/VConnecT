@@ -15,11 +15,10 @@ export class AdminUserRepository implements IAdminUserRepository{
       sortQuery={createdAt:-1}
     }
     return await User.find(query)
-    .select('-password')
     .populate('plan.planId','name')
     .sort(sortQuery)
     .skip((page-1) * limit)
-    .limit(limit)
+    .limit(limit).lean().exec()
   }
   async getTotalUsers(search: string): Promise<number> {
     let query:any = {isDeleted:false,isAdmin:false}
@@ -30,18 +29,18 @@ export class AdminUserRepository implements IAdminUserRepository{
   }
 
   async getUserById (id:string){
-    return await User.findById(id)
+    return await User.findById(id).lean()
   }
 
   async blockUser(id:string){
-    return await User.findByIdAndUpdate(id,{isBlocked:true},{new:true})
+    return await User.findByIdAndUpdate(id,{isBlocked:true},{new:true}).lean()
   }
 
   async unblockUser(id:string){
-    return await User.findByIdAndUpdate(id,{isBlocked:false},{new:true})
+    return await User.findByIdAndUpdate(id,{isBlocked:false},{new:true}).lean()
   }
 
   async deleteUser(id:string){
-    return await User.findByIdAndUpdate(id,{isDeleted:true},{new:true})
+    return await User.findByIdAndUpdate(id,{isDeleted:true},{new:true}).lean()
   }
 }

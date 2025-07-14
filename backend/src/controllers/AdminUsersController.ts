@@ -3,6 +3,7 @@ import { AdminUserService } from "../services/AdminUserService.js";
 import { Response, Request, NextFunction } from "express";
 import { HTTP_STATUS_CODE } from "../utils/statusCode.js";
 import { IAdminUserController } from "../interfaces/Admin/Users/IAdminUserController.js";
+import { UserActionResponseDTO, UserResponseDTO } from "../dtos/AdminUser/AdminUserDTO.js";
 
 export class AdminUsersController implements IAdminUserController {
   private adminUserService: AdminUserService;
@@ -23,16 +24,16 @@ export class AdminUsersController implements IAdminUserController {
         searchTerm = "",
         sortOption = "A-Z",
       } = req.query;
-      const users = await this.adminUserService.getAllUsers(
+      const response:UserResponseDTO = await this.adminUserService.getAllUsers(
         Number(page),
         Number(limit),
         String(searchTerm),
         String(sortOption)
       );
-      const totalUsers = await this.adminUserService.getTotalUsers(
-        String(searchTerm)
-      );
-      res.status(HTTP_STATUS_CODE.OK).json({ users, totalUsers });
+      // const totalUsers = await this.adminUserService.getTotalUsers(
+      //   String(searchTerm)
+      // );
+      res.status(HTTP_STATUS_CODE.OK).json(response);
     } catch (error) {
       next(error);
     }
@@ -45,8 +46,8 @@ export class AdminUsersController implements IAdminUserController {
   ): Promise<void> {
     try {
       const { id } = req.params;
-      const user = await this.adminUserService.blockUser(id);
-      res.status(HTTP_STATUS_CODE.OK).json(user);
+      const response:UserActionResponseDTO = await this.adminUserService.blockUser(id);
+      res.status(HTTP_STATUS_CODE.OK).json(response);
     } catch (error) {
       next(error);
     }
@@ -59,8 +60,8 @@ export class AdminUsersController implements IAdminUserController {
   ): Promise<void> {
     try {
       const { id } = req.params;
-      const user = await this.adminUserService.unblockUser(id);
-      res.status(HTTP_STATUS_CODE.OK).json(user);
+      const response:UserActionResponseDTO = await this.adminUserService.unblockUser(id);
+      res.status(HTTP_STATUS_CODE.OK).json(response);
     } catch (error) {
       next(error);
     }
@@ -73,8 +74,8 @@ export class AdminUsersController implements IAdminUserController {
   ): Promise<void> {
     try {
       const { id } = req.params;
-      const user = await this.adminUserService.deleteUser(id);
-      res.status(HTTP_STATUS_CODE.OK).json(user);
+      const response:UserActionResponseDTO = await this.adminUserService.deleteUser(id);
+      res.status(HTTP_STATUS_CODE.OK).json(response);
     } catch (error) {
       next(error);
     }
