@@ -5,6 +5,7 @@ import cloudinary from "cloudinary";
 import { AppError } from "../utils/AppError.js";
 import { HTTP_STATUS_CODE } from "../utils/statusCode.js";
 import { IProfileController } from "../interfaces/user/Profile/IProfileController.js";
+import { ProfileMapper } from "../mappers/Profile/ProfileMapper.js";
 
 cloudinary.v2.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -27,7 +28,8 @@ export class ProfileController implements IProfileController {
     try {
       const userId = (req as any).user.id;
       const user = await this.profileService.getUserProfile(userId);
-      res.json({ user });
+      const getProfileResponseDto = ProfileMapper.toGetProfileResponse(user);
+      res.json(getProfileResponseDto);
     } catch (error) {
       next(error);
     }
@@ -44,11 +46,15 @@ export class ProfileController implements IProfileController {
       const updatedUser = await this.profileService.updateUserProfile(
         id,
         profileData
+      ); 
+      console.log("[ProfileController] updateProfile - Updated User:", updatedUser);
+      const updateProfileResponseDto = ProfileMapper.toUpdateProfileResponse(
+        updatedUser,
+        "Profile updated"
       );
-      res
-        .status(HTTP_STATUS_CODE.OK)
-        .json({ user: updatedUser, message: "Profile updated" });
+      res.status(HTTP_STATUS_CODE.OK).json(updateProfileResponseDto);
     } catch (error) {
+      console.error("[ProfileController] updateProfile - Error:", error);
       next(error);
     }
   }
@@ -112,9 +118,15 @@ export class ProfileController implements IProfileController {
         id,
         imageUrl
       );
-      res
-        .status(HTTP_STATUS_CODE.OK)
-        .json({ user: updatedUser, message: "Profile picture updated" });
+      if (!updatedUser) {
+        throw new AppError("Cannot update profile image", 400);
+      }
+      const updateProfileImageResponseDto =
+        ProfileMapper.toUpdateProfileImageResponse(
+          updatedUser,
+          "Profile picture updated"
+        );
+      res.status(HTTP_STATUS_CODE.OK).json(updateProfileImageResponseDto);
     } catch (error) {
       next(error);
     }
@@ -128,10 +140,14 @@ export class ProfileController implements IProfileController {
     try {
       const userId = (req as any).user.id;
       const updatedUser = await this.profileService.updateStreak(userId);
-      console.log(updatedUser);
-      res
-        .status(HTTP_STATUS_CODE.OK)
-        .json({ user: updatedUser, message: "Streaks updated" });
+      if (!updatedUser) {
+        throw new AppError("Cannot update streaks", 400);
+      }
+      const updateStreakResponseDto = ProfileMapper.toUpdateStreakResponse(
+        updatedUser,
+        "Streaks updated"
+      );
+      res.status(HTTP_STATUS_CODE.OK).json(updateStreakResponseDto);
     } catch (error) {
       next(error);
     }
@@ -145,6 +161,7 @@ export class ProfileController implements IProfileController {
     try {
       const userId = req.user?.id as string;
       const { currentPassword, newPassword } = req.body;
+      console.log("[ProfileController] changePassword - User ID:", userId, "Body:", req.body)
       if (!currentPassword || !newPassword) {
         throw new AppError(
           "Current and new passwords are required",
@@ -156,9 +173,14 @@ export class ProfileController implements IProfileController {
         currentPassword,
         newPassword
       );
-      res
-        .status(HTTP_STATUS_CODE.OK)
-        .json({ user: updatedUser, message: "Password updated successfully" });
+      if (!updatedUser) {
+        throw new AppError("Cannot change password", 400);
+      }
+      const changePasswordResponseDto = ProfileMapper.toChangePasswordResponse(
+        updatedUser,
+        "Password updated successfully"
+      );
+      res.status(HTTP_STATUS_CODE.OK).json(changePasswordResponseDto);
     } catch (error) {
       next(error);
     }

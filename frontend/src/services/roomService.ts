@@ -47,7 +47,7 @@ export const joinRoom = async(roomId:string,secretCode?:string) => {
 
 
 export interface Participant {
-  userId: { _id: string; name: string; email: string };
+  userId: { name: string; email: string };
   firstJoin: Date;
   lastJoin: Date;
   lastLeave: Date | null;
@@ -57,16 +57,14 @@ export interface Participant {
 export interface IDetailRoom {
   _id: string;
   title: string;
-  createdBy: { _id: string; name: string; email: string };
+  createdBy: { name: string; email: string }
   limit: number;
   participants: Participant[];
   createdAt: Date;
-  isDeleted?: boolean;
-  isBlocked: boolean;
   type: "PUBLIC" | "PRIVATE";
   premium: boolean;
+  secretCode?:string;
   description: string;
-  secretCode?: string;
 }
 export const getRoomDetails = async (roomId: string): Promise<{ room: IDetailRoom }> => {
   const response = await axiosInstance.get(`/admin/room/details/${roomId}`, { withCredentials: true });

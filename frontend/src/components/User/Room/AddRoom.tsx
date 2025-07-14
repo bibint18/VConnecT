@@ -8,8 +8,8 @@ import './AddRoom.css';
 export interface RoomFormData {
   title: string;
   limit: number;
-  premium: string;
-  type: string;
+  premium: "Yes" | "No";
+  type: "PUBLIC" | "PRIVATE";
   description: string;
 }
 
@@ -42,7 +42,7 @@ const AddRoom: React.FC = () => {
       const response = await createRoom(formData);
       const newRoom = response.room;
       if (newRoom.type === 'PRIVATE' && newRoom.secretCode) {
-        setSecretCode(newRoom.secretCode);
+        setSecretCode(response.room.secretCode);
         setShowModal(true); 
       } else {
         navigate('/rooms'); 

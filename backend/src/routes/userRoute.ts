@@ -32,6 +32,13 @@ import { PostController } from "../controllers/User/Post/PostController.js";
 import { body, query } from "express-validator";
 import { SubscriptionRepository } from "../repositories/User/SubscriptionRepository.js";
 import { SubscriptionController } from "../controllers/SubscriptionController.js";
+import { validateRequest } from "../middlewares/validateRequest.js";
+import { UpdateProfileDTO } from "../dtos/profile/updateProfile.dto.js";
+import { UpdateProfileImageDTO } from "../dtos/profile/updateProfileImage.dto.js";
+import { ChangePasswordDTO } from "../dtos/profile/changePassword.dto.js";
+import { CreateRoomDTO } from "../dtos/Room/createRoom.dto.js";
+import { GetAllRoomsDTO } from "../dtos/Room/getAllRooms.dto.js";
+import { JoinRoomDTO } from "../dtos/Room/joinRoom.dto.js";
 export const createUserRoutes = (
   chatIo: Namespace,
   directCallController: DirectCallController
@@ -46,7 +53,7 @@ export const createUserRoutes = (
   );
   router.put(
     "/user/profile/edit",
-    authenticateToken,
+    authenticateToken,validateRequest(UpdateProfileDTO),
     ProfileController.updateProfile.bind(ProfileController)
   );
   router.get(
@@ -61,7 +68,7 @@ export const createUserRoutes = (
   );
   router.post(
     "/user/profile/image",
-    authenticateToken,
+    authenticateToken,validateRequest(UpdateProfileImageDTO),
     ProfileController.updateProfileImage.bind(ProfileController)
   );
   router.post(
@@ -71,24 +78,24 @@ export const createUserRoutes = (
   );
   router.post(
     "/user/profile/change-password",
-    authenticateToken,
+    authenticateToken, validateRequest(ChangePasswordDTO),
     ProfileController.changePassword.bind(ProfileController)
   );
 
   //rooms
   router.post(
     "/user/room/create",
-    authenticateToken,
+    authenticateToken,validateRequest(CreateRoomDTO) , 
     RoomController.createRoom.bind(RoomController)
   );
   router.get(
     "/user/rooms",
-    authenticateToken,
+    authenticateToken,validateRequest(GetAllRoomsDTO),
     RoomController.getAllRooms.bind(RoomController)
   );
   router.post(
     "/user/room/join",
-    authenticateToken,
+    authenticateToken, validateRequest(JoinRoomDTO),
     RoomController.joinRoom.bind(RoomController)
   );
 

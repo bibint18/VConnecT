@@ -20,17 +20,23 @@ import { errorLoggerMiddleware } from "./middlewares/errorLogger.js";
 dotenv.config();
 const app = express();
 const httpServer = createServer(app);
+// app.use((req: Request, res: Response, next: NextFunction) => {
+//   console.log(`[Server] Request: ${req.method} ${req.path}`); // Debug log
+//   next();
+// });
 const io = new Server(httpServer, {
   cors: {
     origin: process.env.FRONTEND_URL,
     methods: ["GET", "POST"],
     credentials: true,
-  },
+  }, 
 });
 export const chatIo: Namespace = io.of("/chat");
 app.use(
   cors({
     origin: process.env.FRONTEND_URL,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
   })
 );

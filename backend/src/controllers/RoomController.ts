@@ -4,6 +4,8 @@ import { RoomService } from "../services/RoomService.js";
 import { RoomRepository } from "../repositories/RoomsRepository.js";
 import { HTTP_STATUS_CODE } from "../utils/statusCode.js";
 import { IRoomController } from "../interfaces/user/Room/IRoomController.js";
+import { RoomMapper } from "../mappers/Room/RoomMapper.js";
+import { AppError } from "../utils/AppError.js";
 
 export class RoomController implements IRoomController {
   private roomService: RoomService;
@@ -40,7 +42,14 @@ export class RoomController implements IRoomController {
         isBlocked: false,
       };
       const newRoom = await this.roomService.createRoom(roomData);
-      res.status(HTTP_STATUS_CODE.OK).json({ room: newRoom });
+      if(!newRoom){
+        throw new AppError("Cannot create room",HTTP_STATUS_CODE.BAD_REQUEST)
+      }
+      const response = RoomMapper.toRoomResponse(newRoom)
+      if (newRoom.type === "PRIVATE") {
+      response.room.secretCode = newRoom.secretCode;
+    }
+      res.status(HTTP_STATUS_CODE.OK).json(response);
     } catch (error) {
       next(error);
     }
@@ -54,15 +63,15 @@ export class RoomController implements IRoomController {
     try {
       const userId = req.user?.id as string;
       const { search, type, page = "1", limit = "10" } = req.query;
-      const { rooms, user, total } = await this.roomService.getAllRooms(
+      const result = await this.roomService.getAllRooms(
         userId,
         parseInt(page as string, 10),
         parseInt(limit as string, 10),
         search as string,
         type as "PUBLIC" | "PRIVATE" | "MY"
       );
-      console.log("Type: ",type)
-      res.status(HTTP_STATUS_CODE.OK).json({ rooms, user, total });
+      const response = RoomMapper.toRoomsResponse(result.rooms, result.user, result.total)
+      res.status(HTTP_STATUS_CODE.OK).json(response);
     } catch (error) {
       next(error);
     }
@@ -80,6 +89,11 @@ export class RoomController implements IRoomController {
         userId,
         secretCode
       );
+      if(!updatedRoom){
+        throw new AppError("Cannot join room",HTTP_STATUS_CODE.BAD_REQUEST)
+      }
+      const response = RoomMapper.toRoomResponse(updatedRoom);
+      response.message = "Joined room successfully!";
       res
         .status(HTTP_STATUS_CODE.OK)
         .json({ room: updatedRoom, message: "Joined room successfully!" });
@@ -96,7 +110,8 @@ export class RoomController implements IRoomController {
     try {
       const { roomId } = req.params;
       await this.roomService.deleteRoom(roomId);
-      res.status(HTTP_STATUS_CODE.OK).json({ msg: "Room Deleted" });
+      const response = RoomMapper.toDeleteRoomResponse()
+      res.status(HTTP_STATUS_CODE.OK).json(response);
     } catch (error) {
       next(error);
     }

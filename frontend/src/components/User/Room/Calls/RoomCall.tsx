@@ -87,7 +87,7 @@ const RoomCall: React.FC = () => {
       const video = videoRefs.current.get(streamUserId);
       if (!video) {
         const newVideo = document.createElement("video");
-        newVideo.muted = streamUserId === userId; // Mute self
+        newVideo.muted = streamUserId === userId; 
         newVideo.autoplay = true;
         newVideo.playsInline = true;
         newVideo.className = "!w-full !h-full !object-cover !rounded-lg";
@@ -109,7 +109,6 @@ const RoomCall: React.FC = () => {
       }
     });
 
-    // Clean up removed streams
     videoRefs.current.forEach((video, vidUserId) => {
       if (!streams.has(vidUserId)) {
         video.remove();
@@ -159,7 +158,6 @@ const RoomCall: React.FC = () => {
     }
   };
 
-  // Animation variants
   const buttonVariants = {
     hover: {
       scale: 1.1,
@@ -282,7 +280,7 @@ const RoomCall: React.FC = () => {
                     (streams.size % 2 === 1 && index === streams.size - 1)
                       ? "!col-start-1 !col-span-2 !mx-auto !w-1/2"
                       : ""
-                  }`} // Center the last user if odd count on larger screens
+                  }`} 
                   variants={videoVariants}
                   initial="hidden"
                   animate="visible"
@@ -382,7 +380,7 @@ const RoomCall: React.FC = () => {
               </motion.button>
             </div>
 
-            {/* Settings panel */}
+            {/* Settings */}
             {showSettings && (
               <motion.div
                 className="!mt-4 !p-4 !bg-gray-800 !rounded-lg !shadow-md !border !border-gray-700"
@@ -416,7 +414,7 @@ const RoomCall: React.FC = () => {
           </div>
         </div>
 
-        {/* Participants sidebar */}
+        {/* Participants */}
         <motion.div
           className={`!fixed lg:!static !top-0 !right-0 !h-full lg:!h-fit !w-full sm:!w-80 !bg-gray-900 !rounded-xl !p-4 !shadow-lg lg:!shadow-md !z-50 lg:!flex lg:!flex-col !transform lg:!transform-none ${
             showParticipants ? "!block" : "!hidden lg:!block"

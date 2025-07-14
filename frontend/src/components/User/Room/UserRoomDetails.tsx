@@ -7,7 +7,6 @@ import { Lock, Unlock } from "lucide-react";
 import { getRoomDetails } from "@/services/roomService";
 import { IDetailRoom } from "@/services/roomService";
 
-// Animation variants matching ListRoom
 const containerVariants = {
   hidden: { opacity: 0, y: 30 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
@@ -144,9 +143,9 @@ export default function UserRoomDetails() {
                 <strong>Created At:</strong>{" "}
                 {new Date(room.createdAt).toLocaleString()}
               </p>
-              <p className="!mb-1 sm:!mb-2 !text-2xs sm:!text-xs md:!text-base">
+              {/* <p className="!mb-1 sm:!mb-2 !text-2xs sm:!text-xs md:!text-base">
                 <strong>Status:</strong> {room.isBlocked ? "Blocked" : "Active"}
-              </p>
+              </p> */}
               <p className="!mb-1 sm:!mb-2 !text-2xs sm:!text-xs md:!text-base">
                 <strong>Secret Code:</strong> {room.secretCode || "N/A"}
               </p>

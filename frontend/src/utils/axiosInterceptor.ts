@@ -92,7 +92,6 @@ axiosInstance.interceptors.response.use(
         if (error.response?.status !== 403 || error.response?.data?.message !== 'User is blocked') {
           store.dispatch(isAdminRoute ? logout() : logoutTheUser());
         }
-        // Logout on refresh failure
         store.dispatch(isAdminRoute ? logout() : logoutTheUser());
         return Promise.reject(refreshError);
       }

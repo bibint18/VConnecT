@@ -179,14 +179,21 @@ export const ProfileContent = () => {
 
   const handleSubmit = async (e:React.FormEvent) => {
     e.preventDefault();
-    if(!formData) return
+    if (!formData || Object.keys(formData).length === 0) {
+    console.log("[ProfileContent] Empty formData, aborting submit"); // Debug log
+    setError("At least one field must be provided");
+    return;
+  }
+  console.log("[ProfileContent] Sending formData to /user/profile/edit:", formData);
     try {
       const updatedUser = await updateUserProfile(formData)
+      console.log("[ProfileContent] Update response:", updatedUser);
       setUser(updatedUser)
       setIsEditing(false)
       dispatch(updateProfile({name:updatedUser.user.name}))
       window.location.reload()
     } catch (error) {
+      console.error("[ProfileContent] Update profile error:", error); 
       if(error instanceof Error){
         setError(error.message)
       }else{

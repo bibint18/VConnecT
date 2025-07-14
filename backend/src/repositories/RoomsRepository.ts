@@ -60,7 +60,7 @@ export class RoomRepository implements IRoomRepository{
     query.isBlocked = false;
     const skip = (page -1) * limit;
 
-    const rooms = await Room.find(query).sort({createdAt:-1}).skip(skip).limit(limit).exec()
+    const rooms = await Room.find(query).populate("createdBy", "name email").populate("participants.userId", "name email").sort({createdAt:-1}).skip(skip).limit(limit).exec()
     console.log("rooms from service ",rooms)
     const total = await Room.countDocuments(query)
     return {rooms,user,total}
@@ -68,8 +68,7 @@ export class RoomRepository implements IRoomRepository{
 
   async joinRoom(RoomId: string, userId: string, secretCode: string): Promise<IRoom | null> {
     try {
-      const room = await Room.findById(RoomId)
-      console.log("repository rooommmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm",room,userId)
+      const room = await Room.findById(RoomId).populate("createdBy", "name email").populate("participants.userId", "name email");
       if(room?.isBlocked){
         throw new Error("Room is Blocked")
       }
@@ -83,10 +82,7 @@ export class RoomRepository implements IRoomRepository{
         return room
       }
       const activeParticipants = room.participants.filter((p) => !p.lastLeave || p.lastJoin > p.lastLeave);
-            console.log("active participantsssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss",activeParticipants)
             const isParticipant = room.participants.some((p) => p.userId.toString() === userId);
-            console.log("is participantsssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss",isParticipant)
-            console.log("active participants length",activeParticipants.length)
             if (!isParticipant && activeParticipants.length >= room.limit) {
               throw new AppError("Room is full", 400);
             }

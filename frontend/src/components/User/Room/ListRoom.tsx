@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom';
 import { getAllRooms, joinRoom,deleteRoom} from '@/services/roomService';
 import './ListRoom.css';
 import toast from 'react-hot-toast';
-import { IUser } from '@/components/admin/dashboard/CustomerDashboard';
 import { Lock, Unlock, Search, Trash2 } from 'lucide-react';
 import Pagination from '@/components/Pagination';
 import Swal from 'sweetalert2';
@@ -17,7 +16,13 @@ interface Room {
   premium: boolean;
   type: 'PUBLIC' | 'PRIVATE';
   createdAt: string;
-  createdBy: string; 
+  createdBy: { name: string; email: string };
+}
+
+interface User {
+  name: string;
+  email: string;
+  availableRoomLimit: number;
 }
 
 const ListRoom: React.FC = () => {
@@ -34,7 +39,7 @@ const ListRoom: React.FC = () => {
   const [rooms, setRooms] = useState<Room[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [user, setUser] = useState<IUser | null>(null);
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     const fetchRooms = async () => {
@@ -304,7 +309,7 @@ const ListRoom: React.FC = () => {
                     )}
                   </div>
                   
-                  {user && room.createdBy === user._id && (
+                  {user && room.createdBy.email === user.email && (
                     <div className="flex items-center gap-2">
                       
                       <motion.button
