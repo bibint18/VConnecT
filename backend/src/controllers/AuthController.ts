@@ -5,6 +5,7 @@ import { generateAccessToken } from "../utils/generateToken.js";
 import jwt from "jsonwebtoken";
 import { User } from "../models/User.js";
 import { HTTP_STATUS_CODE } from "../utils/statusCode.js";
+import {UserMapper } from "../mappers/Auth/UserMapper.js";
 const authService = new AuthService(new UserRepository());
 
 export const login = async (
@@ -25,7 +26,8 @@ export const login = async (
       sameSite: "strict",
       path: "/",
     });
-   res.json({ message: "Login successful", accessToken, user });
+    const loginResponseDto=UserMapper.toLoginResponse(user)
+   res.json({ message: "Login successful", accessToken, user:loginResponseDto });
    return
   } catch (error) {
     next(error);

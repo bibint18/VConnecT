@@ -14,7 +14,6 @@ export const loginUser = async(email:string,password:string,recaptchaToken:strin
   })
   const {accessToken,user} = response.data
   console.log("service folder ",accessToken,user)
-  // store.dispatch(loginTheUser({name:user.name,email:user.email,accessToken}))
   return response.data
   }catch(error:unknown){
     if (error instanceof AxiosError && error.response) {
@@ -32,9 +31,6 @@ export const logoutUser = async () => {
   } catch (error) {
     console.error(error)
   }
-  // document.cookie = "adminToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-  // store.dispatch({type:"user/logoutTheuser"})
-  // window.location.href='/'
 }
 
 export const loginAdmin = async (email:string,password:string) => {
@@ -42,8 +38,6 @@ export const loginAdmin = async (email:string,password:string) => {
     email,
     password,
   })
-  // const {accessToken} = response.data
-  // store.dispatch(login({accessToken})) 
   return response.data
   
 }

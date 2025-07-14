@@ -13,12 +13,14 @@ import
   HomeData
 } 
 from '../controllers/AuthController.js'
+import { validateRequest } from '../middlewares/validateRequest.js'
+import { LoginDTO } from '../dtos/auth/login.dto.js'
 
 const router = express.Router()
 router.post("/signup",signup)
 router.post("/verify-otp",verifyOTP)
 router.post('/resend-otp',ResendOtp)
-router.post('/login',verifyRecaptcha,login)
+router.post('/login',verifyRecaptcha,validateRequest(LoginDTO),login)
 router.post('/refresh',refresh)
 router.post("/adminLogin",LoginAdmin)
 router.post('/adminLogout',adminLogout)
