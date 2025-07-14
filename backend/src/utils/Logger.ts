@@ -11,7 +11,7 @@ const errorTransport = new DailyRotateFile({
   datePattern:'YYYY-MM-DD',
   level:'error',
   zippedArchive:false,
-  maxFiles:'1d'
+  maxFiles:'7d'
 })
 
 const logger = winston.createLogger({

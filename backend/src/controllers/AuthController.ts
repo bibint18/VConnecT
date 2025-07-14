@@ -98,7 +98,8 @@ export const signup = async (
   try {
     const { name, email, password } = req.body;
     const response = await authService.signup(name, email, password);
-    res.json(response);
+    const signupResponseDTO=UserMapper.toSignupResponse(response.message)
+    res.json(signupResponseDTO);
   } catch (error) {
     next(error);
   }
@@ -112,7 +113,8 @@ export const verifyOTP = async (
   try {
     const { email, otp, name, password } = req.body;
     const response = await authService.verifyOTP(email, otp, name, password);
-    res.json(response);
+    const verifyOtpResponseDto =UserMapper.toVerifyOtpResponse(response.message,response.user)
+    res.json(verifyOtpResponseDto);
   } catch (error) {
     next(error);
   }
@@ -174,7 +176,8 @@ export const HomeData = async (
 ) => {
   try {
     const result = await authService.HomeData();
-    res.status(HTTP_STATUS_CODE.OK).json(result);
+    const homeDataResponseDto =UserMapper.toHomeDataResponse(result)
+    res.status(HTTP_STATUS_CODE.OK).json(homeDataResponseDto);
   } catch (error) {
     next(error);
   }

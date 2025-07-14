@@ -15,10 +15,12 @@ import
 from '../controllers/AuthController.js'
 import { validateRequest } from '../middlewares/validateRequest.js'
 import { LoginDTO } from '../dtos/auth/login.dto.js'
+import { SignupDTO } from '../dtos/auth/signup.dto.js'
+import { VerifyOtpDTO } from '../dtos/auth/verifyOtp.dto.js'
 
 const router = express.Router()
-router.post("/signup",signup)
-router.post("/verify-otp",verifyOTP)
+router.post("/signup",validateRequest(SignupDTO),signup)
+router.post("/verify-otp",validateRequest(VerifyOtpDTO),verifyOTP)
 router.post('/resend-otp',ResendOtp)
 router.post('/login',verifyRecaptcha,validateRequest(LoginDTO),login)
 router.post('/refresh',refresh)
