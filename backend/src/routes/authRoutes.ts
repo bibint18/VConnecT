@@ -19,6 +19,8 @@ import { DashboardController } from "../controllers/Admin/Dashboard/DashboardCon
 import { validateRequest } from "../middlewares/validateRequest.js";
 import { GetUsersDTO } from "../dtos/AdminUser/GetUsersDTO.js";
 import { validateObjectId } from "../middlewares/validateObjectId.js";
+import { CreatePlanDTO } from "../dtos/AdminPlans/CreatePlan.dto.js";
+import { UpdatePlanDTO } from "../dtos/AdminPlans/updatePlan.dto.js";
 const router = express.Router();
 
 //reward
@@ -92,6 +94,7 @@ router.post(
   "/admin/plans/add",
   authenticateToken,
   restrictToAdmin,
+  validateRequest(CreatePlanDTO),
   AdminPlansController.createPlan.bind(AdminPlansController)
 );
 router.get(
@@ -104,18 +107,22 @@ router.get(
   "/admin/plans/:id",
   authenticateToken,
   restrictToAdmin,
+  validateObjectId,
   AdminPlansController.getPlanById.bind(AdminPlansController)
 );
 router.put(
   "/admin/plans/edit/:id",
   authenticateToken,
   restrictToAdmin,
+  validateObjectId,
+  validateRequest(UpdatePlanDTO),
   AdminPlansController.updatePlan.bind(AdminPlansController)
 );
 router.post(
   "/admin/plans/delete/:id",
   authenticateToken,
   restrictToAdmin,
+  validateObjectId,
   AdminPlansController.deletePlan.bind(AdminPlansController)
 );
 

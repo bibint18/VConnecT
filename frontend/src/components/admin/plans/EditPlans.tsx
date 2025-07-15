@@ -7,14 +7,14 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useUpdatePlan } from "../../../hooks/useUpdatePlan";
 interface PlanFormData {
   name: string;
-  type: 'paid' | 'free';
+  type: "paid" | "free";
   description: string;
   regularAmount: number;
   discountAmount: number;
   benefits: string[];
   isListed: boolean;
-  duration: '1 month' | '3 months' | '6 months' | '9 months' | '12 months';
-  roomBenefit:number;
+  duration: "1 month" | "3 months" | "6 months" | "9 months" | "12 months";
+  roomBenefit: number;
 }
 
 const EditPlan: React.FC = () => {
@@ -40,8 +40,8 @@ const EditPlan: React.FC = () => {
       name: user.name || '',
       type: user.type || 'paid',
       description: user.description || '',
-      regularAmount: user.regularAmount || '',
-      discountAmount: user.discountAmount || '',
+      regularAmount: user.regularAmount || 0,
+      discountAmount: user.discountAmount || 0,
       benefits: user.benefits || '',
       isListed: Boolean(user.isListed),
       duration: user.duration || '1 month',
@@ -99,19 +99,6 @@ const EditPlan: React.FC = () => {
             />
           </div>
 
-          {/* <div className="form-group">
-            <label htmlFor="type" className="form-label">Type</label>
-            <input
-              type="text"
-              id="type"
-              name="type"
-              value={formData.type}
-              onChange={handleChange}
-              className="form-input"
-              placeholder="Enter plan type"
-              
-            />
-          </div> */}
 
 <div className="form-group">
             <label htmlFor="type" className="form-label">Type</label>
@@ -201,19 +188,6 @@ const EditPlan: React.FC = () => {
 
           {/* Duration & Status */}
           <div className="form-row">
-            {/* <div className="form-group half-width">
-              <label htmlFor="duration" className="form-label">Duration</label>
-              <input
-                type="text"
-                id="duration"
-                name="duration"
-                value={formData.duration}
-                onChange={handleChange}
-                className="form-input"
-                placeholder="Enter duration"
-                
-              />
-            </div> */}
 
 <div className="form-group half-width">
               <label htmlFor="duration" className="form-label">Duration</label>

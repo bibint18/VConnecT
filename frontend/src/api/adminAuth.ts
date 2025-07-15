@@ -36,40 +36,69 @@ export const deleteUser = async (id: string):Promise<UserActionResponseDTO> => {
 
 
 //PLANS API
-export interface PlanFormData {
+export interface Plan {
+  _id: string;
   name: string;
-  type: 'paid' | 'free';
+  type: "paid" | "free";
+  regularAmount: number;
+  discountAmount: number;
+  benefits: string[];
+  isListed: boolean;
+}
+
+export interface PlanDetails {
+  _id: string;
+  name: string;
+  type: "paid" | "free";
   description: string;
   regularAmount: number;
   discountAmount: number;
   benefits: string[];
   isListed: boolean;
-  duration: '1 month' | '3 months' | '6 months' | '9 months' | '12 months';
+  duration: "1 month" | "3 months" | "6 months" | "9 months" | "12 months";
+  createdAt: string;
   roomBenefit: number;
 }
-export const addNewPlan = async(PlanData:PlanFormData) =>{
+
+export interface PlanListResponse {
+  plans: Plan[];
+  total: number;
+}
+
+export interface PlanFormData {
+  name: string;
+  type: "paid" | "free";
+  description: string;
+  regularAmount: number;
+  discountAmount: number;
+  benefits: string[];
+  isListed: boolean;
+  duration: "1 month" | "3 months" | "6 months" | "9 months" | "12 months";
+  roomBenefit: number;
+}
+export const addNewPlan = async(PlanData:PlanFormData):Promise<PlanDetails> =>{
   const response = await axiosInstance.post(`/admin/plans/add`,PlanData)
   return response.data
 }
 
-export const fetchPlans = async (page=1,limit=4,search='',sort='A-Z') => {
+export const fetchPlans = async (page=1,limit=4,search='',sort='A-Z'):Promise<PlanListResponse> => {
   const response = await axiosInstance.get(`/admin/plans`,{params:{page,limit,search,sort}})
   console.log("fetching plans response api ",response.data)
   return response.data
 }
 
-export const findPlanById =async (id:string) => {
+export const findPlanById =async (id:string):Promise<PlanDetails> => {
   const response = await axiosInstance.get(`/admin/plans/${id}`)
   return response.data
 }
 
-export const updatePlan = async (id:string,planData:Partial<PlanFormData>) => {
+export const updatePlan = async (id:string,planData:Partial<PlanFormData>):Promise<PlanDetails> => {
   console.log("update api ",id,planData)
   const response =await axiosInstance.put(`/admin/plans/edit/${id}`,planData)
   return response.data
 }
 
-export const deletePlan = async (id:string) => {
+export const deletePlan = async (id:string):Promise<{ success: boolean }> => {
   const response = await axiosInstance.post(`/admin/plans/delete/${id}`)
   return response.data
 }

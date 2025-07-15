@@ -3,6 +3,7 @@ import { PlanService } from "../services/AdminPlanService.js";
 import { PlansRepository } from "../repositories/AdminPlanRepository.js";
 import { HTTP_STATUS_CODE } from "../utils/statusCode.js";
 import { IAdminPlanController } from "../interfaces/Admin/Plans/IAdminPlansController.js";
+import { PlanMapper } from "../mappers/AdminPlan/AdminPlanMapper.js";
 
 export class AdminPlansController implements IAdminPlanController {
   private adminPlanService: PlanService;
@@ -17,9 +18,8 @@ export class AdminPlansController implements IAdminPlanController {
     next: NextFunction
   ): Promise<void> {
     try {
-      console.log("reached backend plan create body: ", req.body);
       const plan = await this.adminPlanService.createPlan(req.body);
-      res.status(HTTP_STATUS_CODE.OK).json(plan);
+      res.status(HTTP_STATUS_CODE.OK).json(PlanMapper.toPlanDetailsResponse(plan!));
     } catch (error) {
       next(error);
     }
@@ -33,13 +33,13 @@ export class AdminPlansController implements IAdminPlanController {
     try {
       console.log("reached backend fetch plans", req.query);
       const { search = "", sort = "", page = 1, limit = 4 } = req.query;
-      const { plans, total } = await this.adminPlanService.gettAllPlans(
+      const result = await this.adminPlanService.gettAllPlans(
         String(search),
         String(sort),
         Number(page),
         Number(limit)
       );
-      res.status(HTTP_STATUS_CODE.OK).json({ plans, total });
+      res.status(HTTP_STATUS_CODE.OK).json(PlanMapper.toPlanListResponse(result.plans,result.total));
     } catch (error) {
       next(error);
     }
@@ -53,7 +53,7 @@ export class AdminPlansController implements IAdminPlanController {
     try {
       const { id } = req.params;
       const plan = await this.adminPlanService.getPlanById(id);
-      res.status(HTTP_STATUS_CODE.OK).json(plan);
+      res.status(HTTP_STATUS_CODE.OK).json(plan ? PlanMapper.toPlanDetailsResponse(plan) : null);
     } catch (error) {
       next(error);
     }
@@ -68,7 +68,7 @@ export class AdminPlansController implements IAdminPlanController {
       const { id } = req.params;
       const updateData = req.body;
       const updatePlan = await this.adminPlanService.updatePlan(id, updateData);
-      res.status(HTTP_STATUS_CODE.OK).json(updatePlan);
+      res.status(HTTP_STATUS_CODE.OK).json(updatePlan ? PlanMapper.toPlanDetailsResponse(updatePlan) : null);
     } catch (error: any) {
       next(error);
     }
@@ -81,8 +81,8 @@ export class AdminPlansController implements IAdminPlanController {
   ): Promise<void> {
     try {
       const { id } = req.params;
-      const plan = await this.adminPlanService.deletePlan(id);
-      res.status(HTTP_STATUS_CODE.OK).json(plan);
+      const success = await this.adminPlanService.deletePlan(id);
+      res.status(HTTP_STATUS_CODE.OK).json({success});
     } catch (error) {
       next(error);
     }

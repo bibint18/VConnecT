@@ -7,14 +7,14 @@ import { useNavigate } from "react-router-dom";
 
 interface PlanFormData {
   name: string;
-  type: 'paid' | 'free';
+  type: "paid" | "free";
   description: string;
   regularAmount: number;
   discountAmount: number;
   benefits: string[];
   isListed: boolean;
-  duration: '1 month' | '3 months' | '6 months' | '9 months' | '12 months';
-  roomBenefit:number;
+  duration: "1 month" | "3 months" | "6 months" | "9 months" | "12 months";
+  roomBenefit: number;
 }
 
 const AddPlan: React.FC = () => {

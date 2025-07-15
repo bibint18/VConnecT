@@ -3,9 +3,8 @@ import { findPlanById } from "../api/adminAuth";
 
 export const useGetPlanById = (id: string) => {
   return useQuery({
-    queryKey: ["plan", id], 
-    queryFn: () => findPlanById(id), 
-    enabled: !!id, 
+    queryKey: ["plan", id],
+    queryFn: () => findPlanById(id),
+    enabled: !!id,
   });
 };
-

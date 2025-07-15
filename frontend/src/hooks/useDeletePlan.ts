@@ -6,7 +6,7 @@ export const useDeletePlan = () => {
   return useMutation({
     mutationFn: (id: string) => deletePlan(id),
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["plans"] });
+        queryClient.invalidateQueries({ queryKey: ["subscriptionPlans"] });
       },
       onError: (error) => {
         console.error("Error deleting user:", error);

@@ -103,12 +103,13 @@ const totalPages = Math.ceil(totalRooms/limit)
                   value={sortOption}
                   onChange={(e) => setSortOption(e.target.value)}
                   >
-                    <ChevronDown className="h-4 w-4" />
+                    
                     <option className="text-black" value="all">ALL</option>
                     <option className="text-black" value="public">PUBLIC</option>
     <option className="text-black " value="private">PRIVATE</option>
     {/* <option className="text-black " value="recent">Premium</option> */}
                   </select>
+                  <ChevronDown className="h-4 w-4" />
                 </div>
 
                 {/* <div className="sort-item">
