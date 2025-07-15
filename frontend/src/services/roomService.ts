@@ -1,15 +1,6 @@
 import { RoomFormData } from "@/components/User/Room/AddRoom";
 import axiosInstance from "@/utils/axiosInterceptor";
 import { AxiosError } from "axios";
-// import FormData  from "@/components/User/Room/AddRoom";
-// interface RoomData{
-//   title:string;
-//   limit:number;
-//   isPremium:string;
-//   type:'PUBLIC' | "PRIVATE";
-//   description:string
-// }
-
 export const createRoom = async (RoomData:RoomFormData) => {
   try {
     const response = await axiosInstance.post('/user/room/create',RoomData)
@@ -46,27 +37,54 @@ export const joinRoom = async(roomId:string,secretCode?:string) => {
 
 
 
-export interface Participant {
-  userId: { name: string; email: string };
-  firstJoin: Date;
-  lastJoin: Date;
-  lastLeave: Date | null;
-  totalDuration: number; 
+// export interface Participant {
+//   userId: { name: string; email: string };
+//   firstJoin: Date;
+//   lastJoin: Date;
+//   lastLeave: Date | null;
+//   totalDuration: number; 
+// }
+
+// export interface IDetailRoom {
+//   _id: string;
+//   title: string;
+//   createdBy: { name: string; email: string }
+//   limit: number;
+//   participants: Participant[];
+//   createdAt: Date;
+//   type: "PUBLIC" | "PRIVATE";
+//   premium: boolean;
+//   isBlocked?:boolean;
+//   secretCode?:string;
+//   description: string;
+// }
+
+interface Participant {
+  name: string;
+  email: string;
+  firstJoin: string;
+  lastJoin: string;
+  lastLeave?: string;
+  totalDuration: number;
 }
 
-export interface IDetailRoom {
-  _id: string;
-  title: string;
-  createdBy: { name: string; email: string }
-  limit: number;
-  participants: Participant[];
-  createdAt: Date;
-  type: "PUBLIC" | "PRIVATE";
-  premium: boolean;
-  secretCode?:string;
-  description: string;
+export interface RoomDetailsResponse {
+  room: {
+    _id: string;
+    title: string;
+    type: "PUBLIC" | "PRIVATE";
+    limit: number;
+    premium: boolean;
+    description: string;
+    createdByName: string;
+    createdByEmail: string;
+    createdAt: string;
+    isBlocked: boolean;
+    secretCode?: string;
+    participants: Participant[];
+  };
 }
-export const getRoomDetails = async (roomId: string): Promise<{ room: IDetailRoom }> => {
+export const getRoomDetails = async (roomId: string): Promise<RoomDetailsResponse> => {
   const response = await axiosInstance.get(`/admin/room/details/${roomId}`, { withCredentials: true });
   return response.data;
 };

@@ -130,23 +130,27 @@ router.post(
   "/admin/rooms/block/:id",
   authenticateToken,
   restrictToAdmin,
+  validateObjectId,
   AdminRoomController.blockRoom.bind(AdminRoomController)
 );
 router.post(
   "/admin/rooms/unblock/:id",
   authenticateToken,
   restrictToAdmin,
+  validateObjectId,
   AdminRoomController.unblockRoom.bind(AdminRoomController)
 );
 router.post(
   "/admin/rooms/delete/:id",
   authenticateToken,
   restrictToAdmin,
+  validateObjectId,
   AdminRoomController.deleteRoom.bind(AdminRoomController)
 );
 router.get(
   "/admin/room/details/:id",
   authenticateToken,
+  validateObjectId,
   AdminRoomController.getRoomDetails.bind(AdminRoomController)
 );
 

@@ -22,14 +22,14 @@ export class AdminRoomController implements IAdminRoomController {
         searchTerm = "",
         sortOption = "public",
       } = req.query;
-      const rooms = await roomService.getAllRooms(
+      const response = await this.adminRoomService.getAllRooms(
         Number(page),
         Number(limit),
         String(searchTerm),
         String(sortOption)
       );
-      const totalRooms = await roomService.getTotalRooms(String(searchTerm));
-      res.status(HTTP_STATUS_CODE.OK).json({ rooms, totalRooms });
+      // const totalRooms = await this.adminRoomService.getTotalRooms(String(searchTerm));
+      res.status(HTTP_STATUS_CODE.OK).json(response);
     } catch (error) {
       next(error);
     }
@@ -42,7 +42,7 @@ export class AdminRoomController implements IAdminRoomController {
   ): Promise<void> {
     try {
       const { id } = req.params;
-      const room = await roomService.blockRoom(id);
+      const room = await this.adminRoomService.blockRoom(id);
       res.status(HTTP_STATUS_CODE.OK).json(room);
     } catch (error) {
       next(error);
@@ -56,7 +56,7 @@ export class AdminRoomController implements IAdminRoomController {
   ): Promise<void> {
     try {
       const { id } = req.params;
-      const room = await roomService.unblockRoom(id);
+      const room = await this.adminRoomService.unblockRoom(id);
       res.status(HTTP_STATUS_CODE.OK).json(room);
     } catch (error) {
       next(error);

@@ -2,12 +2,35 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getRoomDetails } from "@/services/roomService";
-import { IDetailRoom } from "@/services/roomService";
+interface Participant {
+  name: string;
+  email: string;
+  firstJoin: string;
+  lastJoin: string;
+  lastLeave?: string;
+  totalDuration: number;
+}
 
+interface RoomDetailsResponse {
+  room: {
+    _id: string;
+    title: string;
+    type: "PUBLIC" | "PRIVATE";
+    limit: number;
+    premium: boolean;
+    description: string;
+    createdByName: string;
+    createdByEmail: string;
+    createdAt: string;
+    isBlocked: boolean;
+    secretCode?: string;
+    participants: Participant[];
+  };
+}
 export default function RoomDetails() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const [room, setRoom] = useState<IDetailRoom | null>(null);
+  const [room, setRoom] = useState<RoomDetailsResponse["room"] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -15,8 +38,8 @@ export default function RoomDetails() {
     const fetchRoomDetails = async () => {
       if (!id) return;
       try {
-        const { room } = await getRoomDetails(id);
-        setRoom(room);
+        const response = await getRoomDetails(id);
+        setRoom(response.room);
       } catch (err) {
         setError(err instanceof Error ? err.message : "Failed to fetch room details");
       } finally {
@@ -50,7 +73,7 @@ export default function RoomDetails() {
             <p><strong>Description:</strong> {room.description}</p>
           </div>
           <div>
-            <p><strong>Created By:</strong> {room.createdBy.name} ({room.createdBy.email})</p>
+            <p><strong>Created By:</strong> {room.createdByName} ({room.createdByEmail})</p>
             <p><strong>Created At:</strong> {new Date(room.createdAt).toLocaleString()}</p>
             <p><strong>Status:</strong> {room.isBlocked ? "Blocked" : "Active"}</p>
             <p><strong>Secret Code:</strong> {room.secretCode || "N/A"}</p>
@@ -74,8 +97,8 @@ export default function RoomDetails() {
               {room.participants.length > 0 ? (
                 room.participants.map((participant, index) => (
                   <tr key={index} className="border-b last:border-0 hover:bg-gray-50">
-                    <td className="px-4 py-3">{participant.userId.name}</td>
-                    <td className="px-4 py-3">{participant.userId.email}</td>
+                    <td className="px-4 py-3">{participant.name}</td>
+                    <td className="px-4 py-3">{participant.email}</td>
                     <td className="px-4 py-3">{new Date(participant.firstJoin).toLocaleString()}</td>
                     <td className="px-4 py-3">{new Date(participant.lastJoin).toLocaleString()}</td>
                     <td className="px-4 py-3">

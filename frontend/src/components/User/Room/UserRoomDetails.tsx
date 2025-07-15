@@ -4,8 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Lock, Unlock } from "lucide-react";
-import { getRoomDetails } from "@/services/roomService";
-import { IDetailRoom } from "@/services/roomService";
+import { getRoomDetails, RoomDetailsResponse } from "@/services/roomService";
 
 const containerVariants = {
   hidden: { opacity: 0, y: 30 },
@@ -27,7 +26,7 @@ export default function UserRoomDetails() {
   const { roomId } = useParams<{ roomId: string }>();
   console.log(roomId);
   const navigate = useNavigate();
-  const [room, setRoom] = useState<IDetailRoom | null>(null);
+  const [room, setRoom] = useState<RoomDetailsResponse["room"]| null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -136,8 +135,8 @@ export default function UserRoomDetails() {
             </div>
             <div>
               <p className="!mb-1 sm:!mb-2 !text-2xs sm:!text-xs md:!text-base">
-                <strong>Created By:</strong> {room.createdBy.name} (
-                {room.createdBy.email})
+                <strong>Created By:</strong> {room.createdByName} (
+                {room.createdByEmail})
               </p>
               <p className="!mb-1 sm:!mb-2 !text-2xs sm:!text-xs md:!text-base">
                 <strong>Created At:</strong>{" "}
@@ -187,10 +186,10 @@ export default function UserRoomDetails() {
                       className="!border-b !last:border-0 !hover:bg-gray-100"
                     >
                       <td className="!px-0.5 sm:!px-1 md:!px-3 !py-0.25 sm:!py-0.5 md:!py-2 !text-[9px] sm:!text-xs md:!text-sm !truncate">
-                        {participant.userId.name}
+                        {participant.name}
                       </td>
                       <td className="!px-0.5 sm:!px-1 md:!px-3 !py-0.25 sm:!py-0.5 md:!py-2 !text-[9px] sm:!text-xs md:!text-sm !truncate">
-                        {participant.userId.email}
+                        {participant.email}
                       </td>
                       <td className="!px-0.5 sm:!px-1 md:!px-3 !py-0.25 sm:!py-0.5 md:!py-2 !text-[9px] sm:!text-xs md:!text-sm !truncate">
                         {new Date(participant.firstJoin).toLocaleString()}

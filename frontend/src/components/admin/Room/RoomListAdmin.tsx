@@ -130,7 +130,7 @@ const totalPages = Math.ceil(totalRooms/limit)
                     <th className="px-4 py-3 text-left text-sm">createdBy</th>
                     <th className="px-4 py-3 text-left text-sm">Type</th>
                     <th className="px-4 py-3 text-left text-sm">Limit</th>
-                    <th className="px-4 py-3 text-left text-sm">Live</th>
+                    {/* <th className="px-4 py-3 text-left text-sm">Live</th> */}
                     <th className="px-4 py-3 text-left text-sm">Status</th>
                     <th className="rounded-tr-lg px-4 py-3 text-left text-sm">Update</th>
                   </tr>
@@ -143,10 +143,10 @@ const totalPages = Math.ceil(totalRooms/limit)
                           <span className="font-bold">{index + 1}</span>
                         </td>
                         <td className="px-4 py-3">{room.title}</td>
-                        <td className="px-4 py-3">{(room.createdBy as any)?.name || "Unknown"}</td>
+                        <td className="px-4 py-3">{room.createdByName || "Unknown"}</td>
                         <td className="px-4 py-3">{room.type}</td>
                         <td className="px-4 py-3">{room.limit}</td>
-                        <td className="px-4 py-3">{room.participants.length}</td>
+                        {/* <td className="px-4 py-3">{room.participantCount}</td> */}
                         <td className="px-4 py-3">
                           {room.isBlocked ? (
                             <button

@@ -1,5 +1,9 @@
+import { RoomDetailsResponseDTO } from "../dtos/AdminRooms/RoomDetailsResponse.dto.js";
+import { RoomListResponseDTO } from "../dtos/AdminRooms/RoomListResponse.dto.js";
+import { RoomResponseDTO } from "../dtos/AdminRooms/RoomResponse.dto.js";
 import { IAdminRoomService } from "../interfaces/Admin/Room/IAdminRoomService.js";
 import { IAdminRoomRepository } from "../interfaces/IAdminRoomRepository.js";
+import { RoomMapper } from "../mappers/AdminRooms/AdminRoomMapper.js";
 import { IRoom } from "../models/RoomModel.js";
 
 export class AdminRoomService implements IAdminRoomService {
@@ -14,34 +18,37 @@ export class AdminRoomService implements IAdminRoomService {
     limit: number,
     searchTerm: string,
     sortOption: string
-  ): Promise<IRoom[]> {
+  ): Promise<RoomListResponseDTO> {
     const rooms = await this.roomRepository.getAllRooms(
       page,
       limit,
       searchTerm,
       sortOption
     );
-    console.log(rooms, "from service");
-    return rooms;
+    const totalRooms = await this.roomRepository.getTotalRooms(searchTerm)
+    return RoomMapper.toRoomListResponse(rooms,totalRooms)
   }
 
   async getTotalRooms(searchTerm: string): Promise<number> {
     return await this.roomRepository.getTotalRooms(searchTerm);
   }
 
-  async blockRoom(id: string): Promise<any> {
-    return await this.roomRepository.blockRoom(id);
+  async blockRoom(id: string): Promise<RoomResponseDTO> {
+    const room=await this.roomRepository.blockRoom(id);
+    return RoomMapper.toRoomResponse(room)
   }
 
-  async unblockRoom(id: string): Promise<any> {
-    return await this.roomRepository.unblockRoom(id);
+  async unblockRoom(id: string): Promise<RoomResponseDTO> {
+   const room= await this.roomRepository.unblockRoom(id);
+   return RoomMapper.toRoomResponse(room)
   }
 
   async deleteRoom(id: string): Promise<IRoom> {
     return await this.roomRepository.deleteRoom(id);
   }
 
-  async getRoomDetails(id: string): Promise<IRoom | null> {
-    return await this.roomRepository.getRoomDetails(id);
+  async getRoomDetails(id: string): Promise<RoomDetailsResponseDTO | null> {
+    const room=await this.roomRepository.getRoomDetails(id);
+    return room ? RoomMapper.toRoomDetailsResponse(room) : null
   }
 }
