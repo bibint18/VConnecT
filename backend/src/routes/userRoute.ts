@@ -39,6 +39,7 @@ import { ChangePasswordDTO } from "../dtos/profile/changePassword.dto.js";
 import { CreateRoomDTO } from "../dtos/Room/createRoom.dto.js";
 import { GetAllRoomsDTO } from "../dtos/Room/getAllRooms.dto.js";
 import { JoinRoomDTO } from "../dtos/Room/joinRoom.dto.js";
+import { SubmitTriviaDto } from "../dtos/DailyTrivia/SubmitTrivia.dto.js";
 export const createUserRoutes = (
   chatIo: Namespace,
   directCallController: DirectCallController
@@ -128,6 +129,7 @@ export const createUserRoutes = (
   router.post(
     "/user/trivia/submit",
     authenticateToken,
+    validateRequest(SubmitTriviaDto),
     dailyTriviaController.submitTriviaAnswer.bind(dailyTriviaController)
   );
 

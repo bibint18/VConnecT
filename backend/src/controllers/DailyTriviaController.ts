@@ -35,7 +35,7 @@ export class DailyTriviaController implements IDailyTriviaController {
   ): Promise<void> {
     try {
       const { triviaId, submittedAnswer } = req.body;
-      const userId = (req as any).user?.id;
+      const userId = req.user?.id as string;
       console.log("controller triviaId", triviaId);
       console.log(
         "submitt trivia controller",

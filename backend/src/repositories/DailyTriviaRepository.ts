@@ -7,7 +7,6 @@ import { AppError } from "../utils/AppError.js";
 export class DailyTriviaRepository implements IDailyTriviaRepository{
   async getDailyTriviaQuestions(limit: number): Promise<IDailyTrivia[]> {
     console.log("reached repo ",limit)
-    // const questions = await DailyTrivia.find({isDeleted:false})
     const questions = await DailyTrivia.aggregate([{$match:{isDeleted:false}},{$sample:{size:limit}}])
     console.log("questions from repo",questions)
     if(questions.length===0){

@@ -82,10 +82,6 @@ const UserTrivia: React.FC = () => {
 
   return (
     <div className="user-trivia">
-      {/* <div className="trivia-header">
-        <div className="decorative-design"></div>
-      </div> */}
-      {/* <div className="points-display">Points: {points}</div> */}
 
       <div className="trivia-header">
       <h1 className="trivia-title">Daily Trivia</h1>

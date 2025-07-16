@@ -3,11 +3,8 @@ import { AxiosError } from "axios";
 
 export interface ITrivia {
   _id: string;
-  setNumber: number;
   question: string;
   options: string[];
-  correctAnswer: string;
-  isDeleted: boolean;
 }
 
 interface ITriviaResponse {
