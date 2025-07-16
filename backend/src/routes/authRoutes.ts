@@ -21,6 +21,9 @@ import { GetUsersDTO } from "../dtos/AdminUser/GetUsersDTO.js";
 import { validateObjectId } from "../middlewares/validateObjectId.js";
 import { CreatePlanDTO } from "../dtos/AdminPlans/CreatePlan.dto.js";
 import { UpdatePlanDTO } from "../dtos/AdminPlans/updatePlan.dto.js";
+import { AddTriviaDto } from "../dtos/AdminTrivia/AddTrivia.dto.js";
+import { GetTriviaDto } from "../dtos/AdminTrivia/GetTrivia.dto.js";
+import { UpdateTriviaDto } from "../dtos/AdminTrivia/UpdateTrivia.dto.js";
 const router = express.Router();
 
 //reward
@@ -171,30 +174,36 @@ router.post(
   "/admin/trivia",
   authenticateToken,
   restrictToAdmin,
+  validateRequest(AddTriviaDto),
   dailyTriviaController.addTriviaQuestion.bind(dailyTriviaController)
 );
 router.get(
   "/admin/trivia",
   authenticateToken,
   restrictToAdmin,
+  validateRequest(GetTriviaDto),
   dailyTriviaController.getTriviaQuestions.bind(dailyTriviaController)
 );
 router.put(
   "/admin/trivia/update/:id",
   authenticateToken,
   restrictToAdmin,
+  validateRequest(UpdateTriviaDto),
+  validateObjectId,
   dailyTriviaController.updateTriviaQuestion.bind(dailyTriviaController)
 );
 router.delete(
   "/admin/trivia/delete/:id",
   authenticateToken,
   restrictToAdmin,
+  validateObjectId,
   dailyTriviaController.deleteTriviaQuestion.bind(dailyTriviaController)
 );
 router.get(
   "/admin/trivia/:id",
   authenticateToken,
   restrictToAdmin,
+  validateObjectId,
   dailyTriviaController.getTriviaQuestionById.bind(dailyTriviaController)
 );
 

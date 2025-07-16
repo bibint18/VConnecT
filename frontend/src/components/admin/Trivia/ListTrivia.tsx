@@ -188,7 +188,7 @@ export default function ListTrivia() {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [page, setPage] = useState(1);
-  const limit = 4;
+  const limit = 5;
 
   const { data = { questions: [], total: 0 }, isLoading, isError } = useTriviaQuestion(
     page,

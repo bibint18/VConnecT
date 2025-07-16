@@ -185,7 +185,16 @@ export interface ITrivia{
   question:string;
   correctAnswer:string;
   isDeleted:boolean;
-  options:string[];
+}
+
+export interface ITriviaFull {
+  _id: string;
+  setNumber: number;
+  question: string;
+  correctAnswer: string;
+  isDeleted: boolean;
+  options: string[];
+  createdAt: string;
 }
 
 export interface ITriviaResponse {
@@ -203,7 +212,7 @@ export const fetchTriviaQuestions = async (page:number,limit:number,searchTerm:s
   return response.data
 }
 
-export const fetchTriviaQuestionById = async (id:string):Promise<ITrivia> => {
+export const fetchTriviaQuestionById = async (id:string):Promise<ITriviaFull> => {
   const response = await axiosInstance.get(`/admin/trivia/${id}`)
    console.log('data from frontend',response.data)
   return response.data.trivia

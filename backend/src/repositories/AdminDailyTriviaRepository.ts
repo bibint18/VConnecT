@@ -32,7 +32,7 @@ export class AdminDailyTriviaReposiroy implements IAdminDailyTriviaRepository{
     if(searchTerm){
       query.question = {$regex:searchTerm,$options:'i'}
     }
-    const questions = await DailyTrivia.find(query).skip((page -1) * limit).limit(limit).exec()
+    const questions = await DailyTrivia.find(query).sort({createdAt:-1}).skip((page -1) * limit).limit(limit).exec()
     const total = await DailyTrivia.countDocuments(query)
     return {questions,total}
   }
