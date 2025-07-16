@@ -1,10 +1,10 @@
-import mongoose , {Schema, Types} from "mongoose";
+import mongoose , {Document, Schema, Types} from "mongoose";
 export interface TriviaData {
   question: string;
   options: string[];
   correctAnswer: string;
 }
-export interface IDailyTrivia{
+export interface IDailyTrivia extends Document{
   _id:Types.ObjectId;
   question:string;
   setNumber:number;
