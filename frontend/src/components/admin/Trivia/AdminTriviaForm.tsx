@@ -25,11 +25,6 @@ const AdminTriviaForm: React.FC = () => {
     e.preventDefault();
     const validationErrors = validateTriviaForm(question, options, correctAnswer);
     setErrors(validationErrors);
-    // const triviaData = {
-    //   question,
-    //   options,
-    //   correctAnswer,
-    // };
     if(Object.keys(validationErrors).length ===0){
       const triviaData = {
         question,
@@ -72,24 +67,6 @@ const AdminTriviaForm: React.FC = () => {
             />
             {errors.question && <span className="form-error">{errors.question}</span>}
           </div>
-
-          {/* Set Number */}
-          {/* <div className="form-group">
-            <label htmlFor="setNumber" className="form-label">
-              Set Number
-            </label>
-            <input
-              type="number"
-              id="setNumber"
-              value={setNumber}
-              onChange={(e) => setSetNumber(Number(e.target.value))}
-              className="form-input"
-              placeholder="Enter set number"
-              min="1"
-              required
-            />
-          </div> */}
-
           {/* Options */}
           {options.map((option, index) => (
             <div className="form-group" key={index}>

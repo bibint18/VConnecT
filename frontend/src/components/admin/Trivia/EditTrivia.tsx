@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useTriviaQuestionById, useUpdateTriviaQuestion } from "@/hooks/useAdminTrivia";
-import "./adminTriviaForm.css"; // Reuse the same styles
+import "./adminTriviaForm.css"; 
 import toast from "react-hot-toast";
 
 const AdminTriviaEdit: React.FC = () => {
@@ -13,7 +13,6 @@ const AdminTriviaEdit: React.FC = () => {
   const [correctAnswer, setCorrectAnswer] = useState("");
   const { mutate: updateTrivia, isLoading: isUpdating } = useUpdateTriviaQuestion();
 
-  // Pre-fill form when data loads
   React.useEffect(() => {
     if (trivia) {
       setQuestion(trivia.question);
@@ -37,7 +36,7 @@ const AdminTriviaEdit: React.FC = () => {
       {
         onSuccess: () => {
           alert("Trivia question updated successfully!");
-          navigate("/trivia"); // Redirect to list after update
+          navigate("/trivia"); 
         },
         onError: () => toast(`Failed to update trivia question`),
       }
