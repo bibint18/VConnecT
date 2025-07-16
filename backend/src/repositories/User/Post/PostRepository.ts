@@ -42,6 +42,7 @@ export class PostRepository implements IPostRepository{
       userId: {
         _id: postDoc.userId._id.toString(),
         username: (postDoc.userId as any).username,
+        name:(postDoc.userId as any).name,
         profileImage: (postDoc.userId as any).profileImage,
       },
       content: postDoc.content,
@@ -80,7 +81,7 @@ export class PostRepository implements IPostRepository{
   async findAllPosts(page: number, limit: number): Promise<{ posts: IPost[]; total: number; }> {
     const skip = (page -1) * limit
     const [postDocs ,total] = await Promise.all([
-      Post.find({isDeleted:false}).populate('userId','username profileImage').sort({timestamp:-1}).skip(skip).limit(limit).exec(),
+      Post.find({isDeleted:false}).populate('userId','username name profileImage').sort({timestamp:-1}).skip(skip).limit(limit).exec(),
       Post.countDocuments({isDeleted:false})
     ])
     console.log('Raw Post Docs with Population:', postDocs);
@@ -89,6 +90,7 @@ export class PostRepository implements IPostRepository{
       userId: {
         _id: postDoc.userId._id.toString(),
         username: (postDoc.userId as any).username,
+        name:(postDoc.userId as any).name,
         profileImage: (postDoc.userId as any).profileImage,
       },
       content: postDoc.content,
@@ -122,18 +124,20 @@ export class PostRepository implements IPostRepository{
     }) 
     await commentDoc.save();
     await Post.updateOne({_id:postId},{$inc:{commentCount:1}}).exec()
-    // return commentDoc._id.toString();
     return (commentDoc._id as unknown as mongoose.Types.ObjectId).toString()
   }
 
   async getComments(postId: string): Promise<IComment[]> {
-    const commentDocs = await Comment.find({postId,isDeleted:false}).populate<{ userId: IUser }>('userId', 'username profilePicture').sort({timestamp:-1}).lean().exec() 
+    const commentDocs = await Comment.find({postId,isDeleted:false}).populate<{ userId: IUser }>('userId', 'username name profilePicture').sort({timestamp:-1}).lean().exec() 
     return commentDocs.map(commentDoc => ({
       _id: commentDoc._id.toString(),
       postId: commentDoc.postId.toString(),
       userId: commentDoc.userId._id.toString(),
       content: commentDoc.content,
       timestamp: commentDoc.timestamp,
+      username:commentDoc.userId.username,
+      name:commentDoc.userId.name,
+      profilePicture:commentDoc.userId.profileImage,
       isDeleted: commentDoc.isDeleted,
     }))
   }

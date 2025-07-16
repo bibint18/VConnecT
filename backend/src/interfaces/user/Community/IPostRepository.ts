@@ -3,6 +3,7 @@ import { IUser } from "../../../models/User.js";
 export interface IPostIUser {
   _id: string;
   username: string | undefined;
+  name?:string
   profileImage?: string;
 }
 
@@ -28,6 +29,7 @@ export interface IComment {
   timestamp?: Date;
   isDeleted?: boolean;
   username?: string; 
+  name?:string;
   profilePicture?: string;
 }
 

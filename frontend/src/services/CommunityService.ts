@@ -7,6 +7,7 @@ export interface CloudinarySignature {
 export interface IPostIuser{
   _id:string;
   username:string;
+  name:string
   profileImage?:string
 }
 export interface IPost {
@@ -37,6 +38,7 @@ export interface IComment {
   timestamp: Date;
   isDeleted: boolean;
   username?: string;
+  name?:string
   profilePicture?: string;
 }
 
@@ -106,9 +108,7 @@ export class CommunityService {
   }
 
   async getPostShareUrl(postId: string): Promise<string> {
-    // In a real app, you might fetch this from your backend
-    // For now, construct the URL client-side
-    const baseUrl = window.location.origin; // e.g., "https://yourapp.com"
+    const baseUrl = window.location.origin; 
     return `${baseUrl}/post/${postId}`;
   }
 
