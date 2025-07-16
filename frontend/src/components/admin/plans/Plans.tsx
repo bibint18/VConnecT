@@ -405,13 +405,15 @@ export default function SubscriptionPlans() {
   const navigate = useNavigate();
   const { isAuthenticated, accessToken } = useAppSelector((state) => state.auth);
   const [searchTerm, setSearchTerm] = useState('');
-  const [sortOption, setSortOption] = useState('A-Z');
+  const [sortOption, setSortOption] = useState('All');
   const [page, setPage] = useState(1);
   const limit = 4;
   const { data = { plans: [], total: 0 }, isLoading, isError } = usePlans(page, limit, searchTerm, sortOption);
   const totalPages = Math.ceil((data.total || 0) / limit);
   const { mutate } = useDeletePlan();
-
+  const plansSortOption=[
+    {value:'All',label:'All Plans'},{value:'A-Z',label:'A-Z'},{value:'Z-A',label:'Z-A'},{value:"saleLowHigh" ,label:"Sale Amount (Low-High)"},{value:"saleHighLow" ,label:'Sale Amount (High-Low)'}
+  ]
   useEffect(() => {
     if (!isAuthenticated || !accessToken) {
       navigate('/adminLogin');
@@ -450,7 +452,7 @@ export default function SubscriptionPlans() {
       <div className="max-w-7xl mx-auto">
         <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <AdminSearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-          <SortFilter sortOption={sortOption} setSortOption={setSortOption} />
+          <SortFilter sortOption={sortOption} setSortOption={setSortOption} options={plansSortOption}/>
           <button
             className="flex items-center bg-orange-500 text-white px-3 py-1.5 rounded-full font-medium text-sm shadow-sm hover:bg-orange-600 hover:-translate-y-[2px] transition-all duration-300"
             onClick={() => navigate('/plans/add')}

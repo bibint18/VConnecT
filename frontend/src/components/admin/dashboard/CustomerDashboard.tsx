@@ -642,11 +642,12 @@ export default function CustomerDashboard() {
   const unblockMutation = useUnblockUser(page, limit, searchTerm, sortOption);
   const deleteMutation = useDeleteUser(page, limit, searchTerm, sortOption);
   const { data, isLoading, isError } = useUsers(page, limit, searchTerm, sortOption);
-  
   const users: UserResponseDTO[] = data?.users ?? [];
   const totalUsers: number = data?.totalUsers ?? 0;
   const totalPages = Math.ceil(totalUsers / limit);
-
+  const userSortOptions = [
+    {value:'A-Z',label:'A-Z'},{value:'Z-A',label:'Z-A'},{value:'recent',label:'Recently joined'}
+  ]
   const handleBlock = (id: string) => {
     Swal.fire({
       title: "Are you sure?",
@@ -732,7 +733,7 @@ export default function CustomerDashboard() {
           <div>
             <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <AdminSearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-              <SortFilter sortOption={sortOption} setSortOption={setSortOption} />
+              <SortFilter sortOption={sortOption} setSortOption={setSortOption} options={userSortOptions} />
             </div>
             <div className="bg-white rounded-xl shadow-lg overflow-hidden">
               <table className="w-full">

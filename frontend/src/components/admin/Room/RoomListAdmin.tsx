@@ -234,7 +234,9 @@ export default function RoomlistAdmin() {
   const rooms: Room[] = data?.rooms ?? []; 
   const totalRooms: number = data?.totalRooms ?? 0; 
   const totalPages = Math.ceil(totalRooms / limit)
-
+  const RoomSortOptions=[
+    {value:"all",label:'ALL'},{value:"public",label:'PUBLIC'},{value:"private",label:'PRIVATE'}
+  ]
   const handleBlock = (id: string) => {
     Swal.fire({
       title: "Are you sure?",
@@ -297,7 +299,7 @@ export default function RoomlistAdmin() {
           <div>
             <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <AdminSearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-              <SortFilter sortOption={sortOption} setSortOption={setSortOption} />
+              <SortFilter sortOption={sortOption} setSortOption={setSortOption} options={RoomSortOptions} />
             </div>
             <div className="bg-white rounded-xl shadow-lg overflow-hidden">
               <table className="w-full">

@@ -15,14 +15,15 @@ export class UpdatePlanDTO {
   @IsOptional()
   description?: string;
 
-  @IsNumber({}, { message: "Regular amount must be a strin" })
+  @IsNumber({}, { message: "Regular amount must be a number" })
   @Min(0, { message: "Regular amount cannot be negative" })
   @IsOptional()
   regularAmount?: number;
 
-  @IsString({ message: "Discount amount must be a string" })
+  @IsNumber({},{ message: "Discount amount must be a number" })
+  @Min(0, { message: "Regular amount cannot be negative" })
   @IsOptional()
-  discountAmount?:string;
+  discountAmount?:number;
 
   @IsArray()
   @IsString({ each: true, message: "Each benefit must be a string" })
