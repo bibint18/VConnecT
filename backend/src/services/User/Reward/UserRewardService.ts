@@ -1,6 +1,5 @@
-import { IUserRewardService } from "../../../interfaces/user/Reward/IUserRewardService.js";
+import { IUserRewardService, RewardResponse } from "../../../interfaces/user/Reward/IUserRewardService.js";
 import { IUserRepository } from "../../../interfaces/IUserRepository.js";
-import { IReward } from "../../../models/RewardModel.js";
 import { IUser } from "../../../models/User.js";
 import { IUserRewardRepo } from "../../../interfaces/user/Reward/IUserRepository.js";
 
@@ -11,24 +10,22 @@ export class UserRewardService implements IUserRewardService {
   ) {}
 
   async getUserRewards(userId: string,page: number,
-    limit: number): Promise<{ rewards: IReward[], total: number }> {
-    const user = await this.userRepository.findById(userId);
+    limit: number): Promise<{ rewards: RewardResponse[], total: number }> {
+    const user = await this.userRepository.findByIdd(userId);
     if (!user) throw new Error("User not found");
-    const { rewards ,total} = await this.rewardRepository.findAllRewards(page,limit, "");
-
+    const { rewards ,total} = await this.rewardRepository.findAllRewards(page,limit, "")
     const data = rewards.map((reward) => ({
-      ...reward, // .lean() ensures plain object
+      ...reward, 
       isUnlocked: (reward.requiredPoints && user.point >= reward.requiredPoints) ||
                   (reward.requiredStreak && user.streak >= reward.requiredStreak) ||
                   false,
       isClaimed: user.claimedRewards.some((cr) => cr.rewardId === reward.rewardId),
     }));
-    console.log("list rewards",data)
     return {rewards:data,total}
   }
 
   async claimReward(userId: string, rewardId: string): Promise<void> {
-    const user = await this.userRepository.findById(userId);
+    const user = await this.userRepository.findByIdd(userId);
     if (!user) throw new Error("User not found");
     const reward = await this.rewardRepository.findRewardById(rewardId);
     if (!reward || !reward.isActive) throw new Error("Reward not found or inactive");
@@ -51,7 +48,7 @@ export class UserRewardService implements IUserRewardService {
   }
 
   async checkIn(userId: string): Promise<IUser> {
-    const user = await this.userRepository.findById(userId);
+    const user = await this.userRepository.findByIdd(userId);
     if (!user) throw new Error("User not found");
 
     const today = new Date();
@@ -75,7 +72,7 @@ export class UserRewardService implements IUserRewardService {
   }
 
   async getUserDetails(userId: string): Promise<IUser> {
-    const user = await this.userRepository.findById(userId);
+    const user = await this.userRepository.findByIdd(userId);
     if (!user) throw new Error("User not found");
     return user;
   }

@@ -24,8 +24,7 @@ export class PostService implements IPostService {
       throw new AppError('User not found', 404);
     }
 
-    const post: IPost = {
-      // userId,
+    const post = {
       userId: {
         _id: user._id,
         username: user.username,
@@ -50,16 +49,6 @@ export class PostService implements IPostService {
     if (!post) {
       throw new AppError('Post not found', 404);
     }
-
-    // if (post.userId !== userId && !isAdmin) {
-    //   throw new AppError('Unauthorized', 403);
-    // }
-
-    // if (post.mediaUrl && post.mediaType !== 'text') {
-    //   const publicId = post.mediaUrl.split('/').pop()?.split('.')[0] || '';
-    //   await this.cloudinaryService.deleteMedia(publicId, post.mediaType as 'image' | 'video');
-    // }
-
     await this.postRepository.delete(postId);
   }
 

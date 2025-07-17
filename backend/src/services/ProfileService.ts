@@ -12,7 +12,7 @@ export class ProfileService implements IProfileService {
   }
 
   async getUserProfile(userId:string): Promise<IUser>{
-    const user = await this.profileRepository.findById(userId)
+    const user = await this.profileRepository.findByIdd(userId)
     if(!user) throw new AppError("user not found",403)
       return user
   }
@@ -37,7 +37,7 @@ export class ProfileService implements IProfileService {
   }
 
   async changePassword(userId: string, currentPassword: string, newPassword: string): Promise<IUser> {
-    const user = await this.profileRepository.findById(userId);
+    const user = await this.profileRepository.findByIdd(userId);
     if (!user) throw new AppError("User not found", 404);
     console.log(user)
     if (!user.password) {

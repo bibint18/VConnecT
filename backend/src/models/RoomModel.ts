@@ -1,4 +1,4 @@
-import mongoose,{Schema, Types} from "mongoose";
+import mongoose,{Document, Schema, Types} from "mongoose";
 import { IUser } from "./User.js";
 
 export interface IParticipant {
@@ -8,8 +8,8 @@ export interface IParticipant {
   lastLeave: Date | null;
   totalDuration: number; 
 }
-export interface IRoom{
-  _id?: Types.ObjectId; 
+export interface IRoom extends Document{
+  _id: Types.ObjectId; 
   title: string;
   limit: number;
   premium: boolean; 

@@ -5,7 +5,7 @@ import { AppError } from "../../../utils/AppError.js";
 import { IUser, User } from "../../../models/User.js";
 import { Comment} from "../../../models/CommentModel.js";
 export class PostRepository implements IPostRepository{
-  async create(post: IPost): Promise<string> {
+  async create(post:IPost): Promise<string> {
     const newPost = new Post(post)
     await newPost.save()
     return newPost._id.toString()
@@ -84,7 +84,6 @@ export class PostRepository implements IPostRepository{
       Post.find({isDeleted:false}).populate('userId','username name profileImage').sort({timestamp:-1}).skip(skip).limit(limit).exec(),
       Post.countDocuments({isDeleted:false})
     ])
-    console.log('Raw Post Docs with Population:', postDocs);
     const posts = postDocs.map(postDoc => ({
       _id:postDoc._id.toString(),
       userId: {

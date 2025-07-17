@@ -3,14 +3,6 @@ import { FriendRequest } from "../models/FriendRequestModel.js";
 import { IUser,User} from "../models/User.js";
 import { AppError } from "../utils/AppError.js";
 
-
-// interface IPopulatedUser {
-//   _id: string;
-//   name: string;
-//   username: string;
-//   profileImage?: string;
-// }
-
 export class FriendRepository implements IFriendRepository{
   async sendFriendRequest(from: string, to: string): Promise<void> {
     if (from === to) throw new AppError("Cannot send friend request to yourself", 400)

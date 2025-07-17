@@ -3,12 +3,14 @@ import { DailyTrivia, IDailyTrivia } from "../models/DailyTriviaModel.js";
 import { TriviaSubmission } from "../models/TriviaSubmissionModel.js";
 import { User } from "../models/User.js";
 import { AppError } from "../utils/AppError.js";
+import { BaseRepository } from "./Base/BaseRepository.js";
 
-export class DailyTriviaRepository implements IDailyTriviaRepository{
+export class DailyTriviaRepository extends BaseRepository<IDailyTrivia> implements IDailyTriviaRepository{
+  constructor(){
+    super(DailyTrivia)
+  }
   async getDailyTriviaQuestions(limit: number): Promise<IDailyTrivia[]> {
-    console.log("reached repo ",limit)
     const questions = await DailyTrivia.aggregate([{$match:{isDeleted:false}},{$sample:{size:limit}}])
-    console.log("questions from repo",questions)
     if(questions.length===0){
       throw new AppError("No Unlisted questions available",400)
     }
@@ -18,13 +20,12 @@ export class DailyTriviaRepository implements IDailyTriviaRepository{
   }
 
   async submitTriviaAnswer(userId: string, triviaId: string, submittedAnswer: string): Promise<{ isCorrect: boolean; pointsUpdated: boolean; }> {
-    console.log("reached repo submit trivia",triviaId,"remaining",userId,triviaId,submittedAnswer)
     const existingSubmission = await TriviaSubmission.findOne({userId,triviaId}).exec()
     if(existingSubmission){
       throw new AppError("Question already attempted",400)
     }
-    const trivia = await DailyTrivia.findById(triviaId).exec();
-    console.log(trivia,'from repo')
+    const trivia = await this.findById(triviaId).exec()
+    // const trivia = await DailyTrivia.findById(triviaId).exec();
     if (!trivia || trivia.isDeleted) throw new AppError("Trivia question not found", 404);
     const isCorrect = submittedAnswer ===trivia.correctAnswer
     await TriviaSubmission.create({

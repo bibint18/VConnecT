@@ -2,8 +2,12 @@
 import { IAdminRoomRepository } from "../interfaces/IAdminRoomRepository.js";
 import { IRoom, Room } from "../models/RoomModel.js";
 import { AppError } from "../utils/AppError.js";
+import { BaseRepository } from "./Base/BaseRepository.js";
 
-export class AdminRoomRepository implements IAdminRoomRepository{
+export class AdminRoomRepository extends BaseRepository<IRoom> implements IAdminRoomRepository{
+  constructor(){
+    super(Room)
+  }
   async getAllRooms(page: number, limit: number, searchTerm: string, sortOption: string): Promise<IRoom[]> {
     console.log("reached repo admin room",page,limit,searchTerm,sortOption)
     const query:any = {isDeleted:false}
@@ -20,7 +24,8 @@ export class AdminRoomRepository implements IAdminRoomRepository{
     }else if(sortOption==='all'){
       sortQuery={title:1}
     }
-    const rooms = await Room.find(query)
+    // const rooms = await Room.find(query)
+    const rooms = await this.findMany(query)
       .sort(sortQuery)
       .skip((page - 1) * limit)
       .limit(limit)
@@ -35,7 +40,8 @@ export class AdminRoomRepository implements IAdminRoomRepository{
     if (searchTerm) {
       query.name = { $regex: searchTerm, $options: "i" };
     }
-    return await Room.countDocuments(query);
+    // return await Room.countDocuments(query);
+    return await this.count(query)
   }
 
   async blockRoom(id: string): Promise<IRoom> {
@@ -58,7 +64,8 @@ export class AdminRoomRepository implements IAdminRoomRepository{
 
   async getRoomDetails(id: string): Promise<IRoom | null> {
     console.log('reached here')
-    const room = await Room.findById(id)
+    // const room = await Room.findById(id)
+    const room = await this.findById(id)
     .populate('createdBy','name email')
     .populate('participants.userId','name email')
     .exec()

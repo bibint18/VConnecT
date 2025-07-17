@@ -1,12 +1,10 @@
 import { IRewardController } from "../../../interfaces/Admin/Reward/IRewardController.js";
-// import { IUserRewardService } from "../../../interfaces/user/Reward/IUserRewardService.js";
 import { IRewardService } from "../../../interfaces/Admin/Reward/IRewardService.js";
 import { Response, Request, NextFunction } from "express";
 import { HTTP_STATUS_CODE } from "../../../utils/statusCode.js";
 
 export class AdminRewardController implements IRewardController {
   constructor(private adminRewardService: IRewardService) {}
-
   async createReward(
     req: Request,
     res: Response,

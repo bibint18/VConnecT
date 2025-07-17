@@ -6,13 +6,16 @@ import { HTTP_STATUS_CODE } from "../utils/statusCode.js";
 import { IRoomController } from "../interfaces/user/Room/IRoomController.js";
 import { RoomMapper } from "../mappers/Room/RoomMapper.js";
 import { AppError } from "../utils/AppError.js";
+import { Document } from "mongoose";
+import { CreateRoomDTO } from "../dtos/Room/createRoom.dto.js";
+import { validateOrReject } from "class-validator";
 
 export class RoomController implements IRoomController {
   private roomService: RoomService;
   constructor(roomService: RoomService) {
     this.roomService = roomService;
   }
-
+  
   async createRoom(
     req: Request,
     res: Response,
@@ -21,20 +24,22 @@ export class RoomController implements IRoomController {
     try {
       const userId = (req as any).user?.id;
       const now = new Date();
-      console.log(userId);
-      const roomData: IRoom = {
-        title: (req as any).body.title,
-        limit: req.body.limit,
-        premium: req.body.premium === "Yes",
-        type: req.body.type,
-        description: req.body.description,
+      const dto = new CreateRoomDTO(req.body)
+      await validateOrReject(dto)
+      const isPremium = dto.premium === "Yes";
+      const roomData: Omit<IRoom,keyof Document> = {
+        title: dto.title,
+        limit: dto.limit,
+        premium:isPremium,
+        type: dto.type,
+        description: dto.description,
         createdBy: userId,
         participants: [
           {
             userId: userId,
             firstJoin: now,
             lastJoin: now,
-            lastLeave: null,
+            lastLeave: now,
             totalDuration: 0,
           },
         ],

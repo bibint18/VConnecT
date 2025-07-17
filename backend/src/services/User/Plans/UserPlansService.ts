@@ -19,7 +19,7 @@ export class UserPlanService implements UserIPlanService{
 
   async updateUserPlan(userId: string, planId: string, transactionId: string): Promise<IUser> {
     try{
-    const user = await this.userRepository.findById(userId);
+    const user = await this.userRepository.findByIdd(userId);
     if (!user) throw new Error("User not found");
     const {plans} = await this.planRepository.findActivePlans(1,100)
     const selectedPlan = plans.find((p) => p._id.toString() === planId)
@@ -64,7 +64,7 @@ export class UserPlanService implements UserIPlanService{
   }
 
   async getUserPlan(userId: string): Promise<{ planId: string; planName: string; status: string; startDate: Date; endDate?: Date; transactionId?: string; roomBenefit: number; } | null> {
-    const user = await this.userRepository.findById(userId);
+    const user = await this.userRepository.findByIdd(userId);
     if(!user){
       throw new Error("User not found")
     }

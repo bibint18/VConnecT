@@ -3,9 +3,13 @@ import { IRoomRepository } from "../interfaces/IRoomRepository.js";
 import mongoose from "mongoose";
 import { AppError } from "../utils/AppError.js";
 import { User ,IUser} from "../models/User.js";
+import { BaseRepository } from "./Base/BaseRepository.js";
 
-export class RoomRepository implements IRoomRepository{
-  async createRoom(roomData:IRoom):Promise<IRoom | null>{
+export class RoomRepository extends BaseRepository<IRoom> implements IRoomRepository{
+  constructor(){
+    super(Room)
+  }
+  async createRoom(roomData:Partial<IRoom>):Promise<IRoom | null>{
     const user = await User.findById(roomData.createdBy)
     if (!user) {
       throw new AppError("User not found", 404);
@@ -14,7 +18,9 @@ export class RoomRepository implements IRoomRepository{
     if(user?.availableRoomLimit ==0){
       throw new Error("You have reached your room creation limit!!!")
     }
-    console.log('Users room create limit',user?.availableRoomLimit)
+    if(!roomData.title){
+      throw new Error("Title is required")
+    }
     if(roomData.title.trim()===''){
       throw new Error("Should add title")
     }
@@ -22,8 +28,14 @@ export class RoomRepository implements IRoomRepository{
     if(existingTitle){
       throw new Error("Title already exist")
     }
+    if(!roomData.limit){
+      throw new Error("Limit is required")
+    }
     if(roomData.limit>10 || roomData.limit<1){
       throw new Error("Limit should between 1-10")
+    }
+    if(!roomData.description){
+      throw new Error("Description is required")
     }
     if(roomData.description.trim()===''){
       throw new Error("Should add description")
@@ -60,15 +72,18 @@ export class RoomRepository implements IRoomRepository{
     query.isBlocked = false;
     const skip = (page -1) * limit;
 
-    const rooms = await Room.find(query).populate("createdBy", "name email").populate("participants.userId", "name email").sort({createdAt:-1}).skip(skip).limit(limit).exec()
-    console.log("rooms from service ",rooms)
-    const total = await Room.countDocuments(query)
+    const rooms = await this.findMany(query)
+    .populate("createdBy", "name email").populate("participants.userId", "name email").sort({createdAt:-1}).skip(skip).limit(limit).exec()
+    const total=await this.count(query)
+    // const total = await Room.countDocuments(query)
     return {rooms,user,total}
   }
 
   async joinRoom(RoomId: string, userId: string, secretCode: string): Promise<IRoom | null> {
     try {
-      const room = await Room.findById(RoomId).populate("createdBy", "name email").populate("participants.userId", "name email");
+      // const room = await Room.findById(RoomId)
+      const room =await this.findById(RoomId)
+      .populate("createdBy", "name email").populate("participants.userId", "name email");
       if(room?.isBlocked){
         throw new Error("Room is Blocked")
       }
@@ -108,7 +123,8 @@ export class RoomRepository implements IRoomRepository{
 
   async deleteRoom(roomId: string): Promise<void> {
     try {
-      const room = await Room.findById(roomId)
+      // const room = await Room.findById(roomId)
+      const room =await this.findById(roomId)
       if(!room){
         throw new Error("No Room")
       }

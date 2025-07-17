@@ -9,7 +9,7 @@ export class RoomService implements IRoomService {
   constructor(RoomRepo:IRoomRepository){
     this.roomRepository=RoomRepo
   }
-  async createRoom(roomData:IRoom):Promise<IRoom | null>{
+  async createRoom(roomData:Partial<IRoom>):Promise<IRoom | null>{
     if(roomData.type==='PRIVATE'){
       roomData.secretCode=uuidv4().slice(0,8)
     }

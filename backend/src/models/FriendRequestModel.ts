@@ -1,6 +1,6 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Document, Schema } from "mongoose";
 
-interface IFriendRequest {
+export interface IFriendRequest extends Document {
   from: mongoose.Types.ObjectId;
   to: mongoose.Types.ObjectId;
   status: "pending" | "accepted" | "rejected";

@@ -1,11 +1,11 @@
 import mongoose, { Document, Schema } from "mongoose";
 
-export interface IReward  {
+export interface IReward extends Document{
   rewardId: string;
   title: string;
   description: string;
   type: "room_creation" | "bonus_points";
-  value: number; // e.g., 1 for +1 room, 10 for 10 points
+  value: number; 
   requiredPoints?: number;
   requiredStreak?: number;
   isActive: boolean;

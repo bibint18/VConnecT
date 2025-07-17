@@ -2,7 +2,7 @@ import { IRoom } from "../../../models/RoomModel";
 import { IUser } from "../../../models/User";
 
 export interface IRoomService{
-  createRoom(roomData:IRoom):Promise<IRoom | null>
+  createRoom(roomData:Partial<IRoom>):Promise<IRoom | null>
   getAllRooms(userId: string,
       page: number,
       limit: number,

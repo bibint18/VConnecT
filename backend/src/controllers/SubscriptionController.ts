@@ -1,4 +1,4 @@
-// New: Controller for subscription endpoints
+
 import { Request, Response, NextFunction } from "express";
 import { ISubscriptionRepository } from "../repositories/User/SubscriptionRepository.js";
 import { AppError } from "../utils/AppError.js";

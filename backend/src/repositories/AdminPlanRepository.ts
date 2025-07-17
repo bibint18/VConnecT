@@ -11,7 +11,6 @@ export class PlansRepository extends BaseRepository<IPlan> implements IPlanRepos
   if (existingPlan) {
     throw new Error("A plan with this name already exists");
   }
-    // return await Plan.create(planData)
     return await this.create(planData)
   }
   async getAllPlans(search:string,sort:string,page:number,limit:number): Promise<{ plans: IPlan[], total: number }> {

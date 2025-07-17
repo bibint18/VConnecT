@@ -13,8 +13,8 @@ export class UserRepository extends BaseRepository<IUser> implements IUserReposi
     return await super.create(data)
   }
 
-  async findById(id: string): Promise<IUser | null> {
-    return await super.findById(id)
+  async findByIdd(id: string): Promise<IUser | null> {
+    return await User.findById(id)
   }
   
   async findByEmail(email: string): Promise<IUser | null> {
