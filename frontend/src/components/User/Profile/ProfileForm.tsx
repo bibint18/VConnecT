@@ -271,19 +271,18 @@ const handleCheckin = async () => {
 }
 
 const isCheckInDisabled = () => {
-  if (!user?.lastStreakUpdate) return false; // Enable if no previous check-in
+  if (!user?.lastStreakUpdate) return false; 
   const now = new Date();
   const lastUpdate = new Date(user.lastStreakUpdate);
   const timeDiff = now.getTime() - lastUpdate.getTime();
   const twentyFourHours = 24 * 60 * 60 * 1000;
-  return timeDiff < twentyFourHours; // Disable if less than 24 hours
+  return timeDiff < twentyFourHours; 
 };
 
   if (loading) return <div className="text-white">Loading...</div>;
   if (error) return <div className="text-red-500">{error}</div>;
   return (
   <div className="min-h-screen bg-black text-white px-6 py-6 pl-24 md:pl-72">
-      {/* Check-in Banner */}
       <div className="bg-gradient-to-r from-pink-500/30 to-purple-500/30 rounded-xl p-4 mb-8">
         <div className="flex items-start space-x-4">
           <div onClick={handleCheckin} className="bg-gradient-to-r from-pink-400 to-purple-400 text-white px-4 py-2 rounded-lg cursor-pointer">
@@ -306,7 +305,6 @@ const isCheckInDisabled = () => {
         </div>
       </div>
 
-      {/* Profile Header */}
       <div className="flex justify-between items-start mb-8">
         <div className="flex items-center space-x-4">
           <div className="relative">
@@ -339,7 +337,6 @@ const isCheckInDisabled = () => {
         </button>
       </div>
 
-      {/* Form Grid */}
       <form onSubmit={handleSubmit}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-4">

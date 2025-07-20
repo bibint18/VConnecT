@@ -1,13 +1,11 @@
 import { IPostService } from '../../../interfaces/user/Community/IPostService.js';
 import { IComment, IPost, IPostRepository } from '../../../interfaces/user/Community/IPostRepository.js';
-// import { ICloudinaryService } from '../../../interfaces/user/Community/ICloudinaryService.js';
 import { AppError } from '../../../utils/AppError.js';
 import { IUser } from '../../../models/User.js';
 
 export class PostService implements IPostService {
   constructor(
     private postRepository: IPostRepository,
-    // private cloudinaryService: ICloudinaryService
   ) {}
 
   async createPost(

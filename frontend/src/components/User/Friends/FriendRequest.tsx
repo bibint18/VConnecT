@@ -40,13 +40,13 @@ const FriendRequests: React.FC = () => {
     socket.on(
       "friend-request-received",
       (data: { requestId: string; from: string }) => {
-        fetchRequests(); // Refresh list on new request
+        fetchRequests();
         toast.info(`New friend request from user ${data.from}`);
       }
     );
 
     socket.on("friend-request-accepted", () => {
-      fetchRequests(); // Refresh on acceptance
+      fetchRequests(); 
     });
 
     return () => {
@@ -71,34 +71,6 @@ const FriendRequests: React.FC = () => {
   };
 
   return (
-    // <div className="min-h-screen bg-gray-100 p-4">
-    //   <h1 className="text-2xl font-bold text-center mb-4">Friend Requests</h1>
-    //   <ul className="bg-white shadow rounded-lg p-4 max-w-2xl mx-auto">
-    //     {requests.map((req) => (
-    //       <li key={req.id} className="flex justify-between items-center py-2 border-b last:border-b-0">
-    //         <span className="text-gray-800">
-    //           {req.from.name} (@{req.from.username})
-    //         </span>
-    //         <div className="space-x-2">
-    //           <button
-    //             onClick={() => handleRespond(req.id, true)}
-    //             className="bg-green-500 text-white px-2 py-1 rounded"
-    //           >
-    //             Accept
-    //           </button>
-    //           <button
-    //             onClick={() => handleRespond(req.id, false)}
-    //             className="bg-red-500 text-white px-2 py-1 rounded"
-    //           >
-    //             Reject
-    //           </button>
-    //         </div>
-    //       </li>
-    //     ))}
-    //     {requests.length === 0 && <li className="text-gray-500 text-center py-2">No pending requests</li>}
-    //   </ul>
-    // </div>
-
     <div className="min-h-screen bg-gray-50 p-6">
       <h1 className="text-3xl font-semibold text-gray-900 text-center mb-6">
         Friend Requests

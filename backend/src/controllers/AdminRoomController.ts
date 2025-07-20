@@ -28,7 +28,6 @@ export class AdminRoomController implements IAdminRoomController {
         String(searchTerm),
         String(sortOption)
       );
-      // const totalRooms = await this.adminRoomService.getTotalRooms(String(searchTerm));
       res.status(HTTP_STATUS_CODE.OK).json(response);
     } catch (error) {
       next(error);

@@ -1,60 +1,60 @@
-"use client"
-
-import type React from "react"
-import { useState, useRef, useEffect } from "react"
-import { Mic, Paperclip, Send } from "react-feather"
-
-// Define types for our data
+"use client";
+import type React from "react";
+import { useState, useRef, useEffect } from "react";
+import { Mic, Paperclip, Send } from "react-feather";
 interface Message {
-  id: string
-  senderId: string
-  text: string
-  timestamp: Date
-  isEmoji?: boolean
+  id: string;
+  senderId: string;
+  text: string;
+  timestamp: Date;
+  isEmoji?: boolean;
 }
 
 interface User {
-  id: string
-  name: string
-  avatar: string
-  isOnline: boolean
+  id: string;
+  name: string;
+  avatar: string;
+  isOnline: boolean;
 }
 
 interface ChatWindowProps {
-  currentUser: User
-  activeChat: User | null
-  messages: Message[]
-  onSendMessage: (text: string) => void
+  currentUser: User;
+  activeChat: User | null;
+  messages: Message[];
+  onSendMessage: (text: string) => void;
 }
 
-const ChatWindow: React.FC<ChatWindowProps> = ({ currentUser, activeChat, messages, onSendMessage }) => {
-  const [newMessage, setNewMessage] = useState("")
-  const messagesEndRef = useRef<HTMLDivElement>(null)
+const ChatWindow: React.FC<ChatWindowProps> = ({
+  currentUser,
+  activeChat,
+  messages,
+  onSendMessage,
+}) => {
+  const [newMessage, setNewMessage] = useState("");
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Scroll to bottom when messages change
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
-  }, [messages])
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   const handleSendMessage = (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     if (newMessage.trim()) {
-      onSendMessage(newMessage)
-      setNewMessage("")
+      onSendMessage(newMessage);
+      setNewMessage("");
     }
-  }
+  };
 
   if (!activeChat) {
     return (
       <div className="flex items-center justify-center h-full bg-gray-50 rounded-lg">
         <p className="text-gray-500">Select a conversation to start chatting</p>
       </div>
-    )
+    );
   }
 
   return (
     <div className="flex flex-col h-full bg-white rounded-lg shadow-lg overflow-hidden">
-      {/* Chat Header */}
       <div className="flex items-center justify-between p-4 border-b">
         <div className="flex items-center">
           <div className="relative">
@@ -69,7 +69,9 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ currentUser, activeChat, messag
           </div>
           <div className="ml-3">
             <h3 className="font-bold text-lg">{activeChat.name}</h3>
-            {activeChat.isOnline && <p className="text-xs text-green-500">Online</p>}
+            {activeChat.isOnline && (
+              <p className="text-xs text-green-500">Online</p>
+            )}
           </div>
         </div>
         <div className="flex space-x-2">
@@ -110,13 +112,17 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ currentUser, activeChat, messag
         </div>
       </div>
 
-      {/* Messages */}
       <div className="flex-1 p-4 overflow-y-auto bg-gray-50">
         <div className="space-y-4">
           {messages.map((message) => {
-            const isCurrentUser = message.senderId === currentUser.id
+            const isCurrentUser = message.senderId === currentUser.id;
             return (
-              <div key={message.id} className={`flex ${isCurrentUser ? "justify-end" : "justify-start"}`}>
+              <div
+                key={message.id}
+                className={`flex ${
+                  isCurrentUser ? "justify-end" : "justify-start"
+                }`}
+              >
                 {!isCurrentUser && (
                   <img
                     src={activeChat.avatar || "/placeholder.svg"}
@@ -141,13 +147,12 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ currentUser, activeChat, messag
                   />
                 )}
               </div>
-            )
+            );
           })}
           <div ref={messagesEndRef} />
         </div>
       </div>
 
-      {/* Message Input */}
       <form onSubmit={handleSendMessage} className="p-4 border-t">
         <div className="flex items-center bg-gray-100 rounded-full px-4 py-2">
           <Paperclip size={20} className="text-gray-500 mr-2" />
@@ -159,14 +164,17 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ currentUser, activeChat, messag
             onChange={(e) => setNewMessage(e.target.value)}
           />
           <Mic size={20} className="text-gray-500 mx-2" />
-          <button type="submit" className="bg-purple-600 text-white p-2 rounded-full" disabled={!newMessage.trim()}>
+          <button
+            type="submit"
+            className="bg-purple-600 text-white p-2 rounded-full"
+            disabled={!newMessage.trim()}
+          >
             <Send size={18} />
           </button>
         </div>
       </form>
     </div>
-  )
-}
+  );
+};
 
-export default ChatWindow
-
+export default ChatWindow;

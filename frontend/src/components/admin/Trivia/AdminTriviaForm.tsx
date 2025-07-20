@@ -1,18 +1,19 @@
-
-
 import React, { useState } from "react";
 import { useAddTriviaQuestion } from "@/hooks/useAdminTrivia";
-import "./adminTriviaForm.css"; 
-import { validateTriviaForm ,FormErrors} from "@/utils/validations/AdminTriviaValidations";
+import "./adminTriviaForm.css";
+import {
+  validateTriviaForm,
+  FormErrors,
+} from "@/utils/validations/AdminTriviaValidations";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
 const AdminTriviaForm: React.FC = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [question, setQuestion] = useState("");
   const [options, setOptions] = useState(["", "", "", ""]);
   const [correctAnswer, setCorrectAnswer] = useState("");
-  const [errors,setErrors] = useState<FormErrors>({})
+  const [errors, setErrors] = useState<FormErrors>({});
   const { mutate: addTrivia, isLoading } = useAddTriviaQuestion();
 
   const handleOptionChange = (index: number, value: string) => {
@@ -23,9 +24,13 @@ const AdminTriviaForm: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const validationErrors = validateTriviaForm(question, options, correctAnswer);
+    const validationErrors = validateTriviaForm(
+      question,
+      options,
+      correctAnswer
+    );
     setErrors(validationErrors);
-    if(Object.keys(validationErrors).length ===0){
+    if (Object.keys(validationErrors).length === 0) {
       const triviaData = {
         question,
         options,
@@ -33,18 +38,17 @@ const AdminTriviaForm: React.FC = () => {
       };
       addTrivia(triviaData, {
         onSuccess: () => {
-          toast("Trivia question added successfully!",{duration:2000});
+          toast("Trivia question added successfully!", { duration: 2000 });
           setQuestion("");
           setOptions(["", "", "", ""]);
           setCorrectAnswer("");
           setTimeout(() => {
-            navigate('/trivia')
-          },2000)
+            navigate("/trivia");
+          }, 2000);
         },
         onError: () => toast(`Failed to add trivia question`),
       });
     }
-    
   };
 
   return (
@@ -52,7 +56,6 @@ const AdminTriviaForm: React.FC = () => {
       <div className="form-card">
         <h2 className="form-heading">Add Daily Trivia Question</h2>
         <form onSubmit={handleSubmit}>
-          {/* Question */}
           <div className="form-group">
             <label htmlFor="question" className="form-label">
               Question
@@ -65,9 +68,10 @@ const AdminTriviaForm: React.FC = () => {
               className="form-input"
               placeholder="Enter trivia question"
             />
-            {errors.question && <span className="form-error">{errors.question}</span>}
+            {errors.question && (
+              <span className="form-error">{errors.question}</span>
+            )}
           </div>
-          {/* Options */}
           {options.map((option, index) => (
             <div className="form-group" key={index}>
               <label htmlFor={`option${index}`} className="form-label">
@@ -87,7 +91,6 @@ const AdminTriviaForm: React.FC = () => {
             </div>
           ))}
 
-          {/* Correct Answer */}
           <div className="form-group">
             <label htmlFor="correctAnswer" className="form-label">
               Correct Answer
@@ -109,8 +112,6 @@ const AdminTriviaForm: React.FC = () => {
               <span className="form-error">{errors.correctAnswer}</span>
             )}
           </div>
-
-          {/* Submit Button */}
           <button type="submit" className="form-button" disabled={isLoading}>
             {isLoading ? "Adding..." : "Add Trivia Question"}
           </button>

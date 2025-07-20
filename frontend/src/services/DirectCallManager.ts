@@ -25,8 +25,8 @@ export class DirectCallManager {
   constructor(callId: string, userId: string, callDetails: CallDetails, streamCallback: StreamCallback) {
     this.callId = callId;
     this.userId = userId;
-    this.username = userId; // TODO: Replace with actual username if available
-    this.callDetails = callDetails; // CHANGE: Store callDetails
+    this.username = userId; 
+    this.callDetails = callDetails; 
     this.streamCallback = streamCallback;
     const socketUrl = import.meta.env.VITE_WEB_SOCKET_URL
     console.log("socket url",socketUrl)

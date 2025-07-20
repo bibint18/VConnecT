@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { validatePlanForm } from "../../../utils/validations/PlanValidation";
 import "./addPlan.css";
@@ -18,10 +17,10 @@ interface PlanFormData {
 }
 
 const EditPlan: React.FC = () => {
-  const navigate = useNavigate()
-  const {id} = useParams<{id:string}>()
-  const {data:user} = useGetPlanById(id || '')
-  const {mutate,isLoading} = useUpdatePlan()
+  const navigate = useNavigate();
+  const { id } = useParams<{ id: string }>();
+  const { data: user } = useGetPlanById(id || "");
+  const { mutate, isLoading } = useUpdatePlan();
   const [formData, setFormData] = useState<PlanFormData>({
     name: "",
     type: "paid",
@@ -31,32 +30,39 @@ const EditPlan: React.FC = () => {
     benefits: [],
     isListed: true,
     duration: "1 month",
-    roomBenefit:0,
+    roomBenefit: 0,
   });
 
- useEffect(() => {
-  if(user){
-    setFormData({
-      name: user.name || '',
-      type: user.type || 'paid',
-      description: user.description || '',
-      regularAmount: user.regularAmount || 0,
-      discountAmount: user.discountAmount || 0,
-      benefits: user.benefits || '',
-      isListed: Boolean(user.isListed),
-      duration: user.duration || '1 month',
-      roomBenefit:user.roomBenefit || 0,
-    })
-  }
- },[user])
+  useEffect(() => {
+    if (user) {
+      setFormData({
+        name: user.name || "",
+        type: user.type || "paid",
+        description: user.description || "",
+        regularAmount: user.regularAmount || 0,
+        discountAmount: user.discountAmount || 0,
+        benefits: user.benefits || "",
+        isListed: Boolean(user.isListed),
+        duration: user.duration || "1 month",
+        roomBenefit: user.roomBenefit || 0,
+      });
+    }
+  }, [user]);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ 
-      ...prev, 
-      [name]: name === "isListed" ? value === "true" : name === "roomBenefit" ? Number(value) : value
+    setFormData((prev) => ({
+      ...prev,
+      [name]:
+        name === "isListed"
+          ? value === "true"
+          : name === "roomBenefit"
+          ? Number(value)
+          : value,
     }));
   };
 
@@ -70,12 +76,15 @@ const EditPlan: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!validatePlanForm(formData)) return;
-    if(id){
-      mutate({id,planData:formData},{
-        onSuccess: () => {
-          navigate('/plans')
+    if (id) {
+      mutate(
+        { id, planData: formData },
+        {
+          onSuccess: () => {
+            navigate("/plans");
+          },
         }
-      })
+      );
     }
   };
   if (isLoading) return <p>Loading...</p>;
@@ -84,9 +93,10 @@ const EditPlan: React.FC = () => {
       <div className="form-card">
         <h2 className="form-heading">Edit Plan</h2>
         <form onSubmit={handleSubmit}>
-          {/* Name & Type */}
           <div className="form-group">
-            <label htmlFor="name" className="form-label">Name</label>
+            <label htmlFor="name" className="form-label">
+              Name
+            </label>
             <input
               type="text"
               id="name"
@@ -95,13 +105,13 @@ const EditPlan: React.FC = () => {
               onChange={handleChange}
               className="form-input"
               placeholder="Enter plan name"
-              
             />
           </div>
 
-
-<div className="form-group">
-            <label htmlFor="type" className="form-label">Type</label>
+          <div className="form-group">
+            <label htmlFor="type" className="form-label">
+              Type
+            </label>
             <select
               id="type"
               name="type"
@@ -113,10 +123,10 @@ const EditPlan: React.FC = () => {
               <option value="free">Free</option>
             </select>
           </div>
-
-          {/* Description */}
           <div className="form-group">
-            <label htmlFor="description" className="form-label">Description</label>
+            <label htmlFor="description" className="form-label">
+              Description
+            </label>
             <textarea
               id="description"
               name="description"
@@ -124,12 +134,13 @@ const EditPlan: React.FC = () => {
               onChange={handleChange}
               className="form-textarea"
               placeholder="Enter plan description"
-              
             />
           </div>
 
           <div className="form-group">
-            <label htmlFor="roomBenefit" className="form-label">Room Benefit</label>
+            <label htmlFor="roomBenefit" className="form-label">
+              Room Benefit
+            </label>
             <input
               type="number"
               id="roomBenefit"
@@ -143,10 +154,11 @@ const EditPlan: React.FC = () => {
             />
           </div>
 
-          {/* Regular Amount & Discount Amount */}
           <div className="form-row">
             <div className="form-group half-width">
-              <label htmlFor="regularAmount" className="form-label">Regular Amount</label>
+              <label htmlFor="regularAmount" className="form-label">
+                Regular Amount
+              </label>
               <input
                 type="number"
                 id="regularAmount"
@@ -155,11 +167,12 @@ const EditPlan: React.FC = () => {
                 onChange={handleChange}
                 className="form-input"
                 placeholder="Enter regular amount"
-                
               />
             </div>
             <div className="form-group half-width">
-              <label htmlFor="discountAmount" className="form-label">Discount Amount</label>
+              <label htmlFor="discountAmount" className="form-label">
+                Discount Amount
+              </label>
               <input
                 type="number"
                 id="discountAmount"
@@ -168,14 +181,14 @@ const EditPlan: React.FC = () => {
                 onChange={handleChange}
                 className="form-input"
                 placeholder="Enter discount amount"
-                
               />
             </div>
           </div>
 
-          {/* Benefits */}
           <div className="form-group">
-            <label htmlFor="benefits" className="form-label">Benefits</label>
+            <label htmlFor="benefits" className="form-label">
+              Benefits
+            </label>
             <textarea
               id="benefits"
               name="benefits"
@@ -186,11 +199,11 @@ const EditPlan: React.FC = () => {
             />
           </div>
 
-          {/* Duration & Status */}
           <div className="form-row">
-
-<div className="form-group half-width">
-              <label htmlFor="duration" className="form-label">Duration</label>
+            <div className="form-group half-width">
+              <label htmlFor="duration" className="form-label">
+                Duration
+              </label>
               <select
                 id="duration"
                 name="duration"
@@ -206,7 +219,9 @@ const EditPlan: React.FC = () => {
               </select>
             </div>
             <div className="form-group half-width">
-              <label htmlFor="isListed" className="form-label">Status</label>
+              <label htmlFor="isListed" className="form-label">
+                Status
+              </label>
               <select
                 id="isListed"
                 name="isListed"
@@ -220,11 +235,7 @@ const EditPlan: React.FC = () => {
             </div>
           </div>
 
-          <button 
-            type="submit" 
-            className="form-button" 
-            disabled={isLoading}
-          >
+          <button type="submit" className="form-button" disabled={isLoading}>
             {isLoading ? "Editing..." : "Edit Plan"}
           </button>
         </form>

@@ -6,7 +6,6 @@ const Header: React.FC = () => {
   return (
     <header className="w-full bg-white shadow-md fixed top-0 left-0 right-0 z-50">
       <div className=" mx-auto px-6 py-4 flex justify-between items-center">
-        {/* Left Side: Logo */}
         <div className="flex items-center">
           <img
             src={logo} 
@@ -14,8 +13,6 @@ const Header: React.FC = () => {
             className="h-10 w-auto" 
           />
         </div>
-
-        {/* Right Side: Admin Text */}
         <div className="flex items-center">
           <span className="text-gray-700 font-medium text-lg">Admin</span>
         </div>

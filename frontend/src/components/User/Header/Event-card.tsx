@@ -41,7 +41,7 @@ const EventCards = () => {
         <div key={index} className="bg-white rounded-lg shadow-lg p-4">
           <div className="w-full h-40 bg-gray-200 rounded-t-lg mb-4">
             <img
-            src={event.image} // Replace with your image URL or local path
+            src={event.image} 
             alt={event.title}
             className="!w-full !h-40 !object-cover !rounded-t-lg !mb-4 !animate-fadeIn"
           />

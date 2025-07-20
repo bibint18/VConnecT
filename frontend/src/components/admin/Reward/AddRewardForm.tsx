@@ -21,7 +21,6 @@ const AddReward: React.FC = () => {
   useEffect(() => {
     if (rewardId) {
       const fetchData = async () => {
-
         try {
           const reward = await fetchReward(rewardId);
           setForm({
@@ -94,17 +93,14 @@ const AddReward: React.FC = () => {
   };
 
   return (
-  <div className="container !bg-white mx-auto p-6">
-      
+    <div className="container !bg-white mx-auto p-6">
       <form
         onSubmit={handleSubmit}
         className="max-w-lg bg-white p-6 rounded-lg shadow-lg !text-black"
       >
-
-<h1 className="text-3xl font-bold mb-6">
-        {rewardId ? "Edit Reward" : "Add New Reward"}
-      </h1>
-        {/* Title */}
+        <h1 className="text-3xl font-bold mb-6">
+          {rewardId ? "Edit Reward" : "Add New Reward"}
+        </h1>
         <div className="mb-4">
           <label className="block text-sm font-medium mb-1">Title</label>
           <input
@@ -117,15 +113,11 @@ const AddReward: React.FC = () => {
             <p className="text-red-500 text-sm mt-1">{formErrors.title}</p>
           )}
         </div>
-
-        {/* Description */}
         <div className="mb-4">
           <label className="block text-sm font-medium mb-1">Description</label>
           <textarea
             value={form.description}
-            onChange={(e) =>
-              setForm({ ...form, description: e.target.value })
-            }
+            onChange={(e) => setForm({ ...form, description: e.target.value })}
             className="w-full p-2 border rounded-lg !text-black"
           ></textarea>
           {formErrors.description && (
@@ -135,7 +127,6 @@ const AddReward: React.FC = () => {
           )}
         </div>
 
-        {/* Type */}
         <div className="mb-4">
           <label className="block text-sm font-medium mb-1">Type</label>
           <select
@@ -153,7 +144,6 @@ const AddReward: React.FC = () => {
           </select>
         </div>
 
-        {/* Value */}
         <div className="mb-4">
           <label className="block text-sm font-medium mb-1">Value</label>
           <input
@@ -170,7 +160,6 @@ const AddReward: React.FC = () => {
           )}
         </div>
 
-        {/* Required Points */}
         <div className="mb-4">
           <label className="block text-sm font-medium mb-1">
             Required Points (optional)
@@ -191,7 +180,6 @@ const AddReward: React.FC = () => {
           )}
         </div>
 
-        {/* Required Streak */}
         <div className="mb-4">
           <label className="block text-sm font-medium mb-1">
             Required Streak (optional)
@@ -212,32 +200,24 @@ const AddReward: React.FC = () => {
           )}
         </div>
 
-        {/* Active Checkbox */}
         <div className="mb-4">
           <label className="flex items-center">
             <input
               type="checkbox"
               checked={form.isActive}
-              onChange={(e) =>
-                setForm({ ...form, isActive: e.target.checked })
-              }
+              onChange={(e) => setForm({ ...form, isActive: e.target.checked })}
               className="mr-2"
             />
             Active
           </label>
         </div>
 
-        {/* Submit */}
         <button
           type="submit"
           disabled={loading}
           className="w-full bg-blue-600 !text-black py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50"
         >
-          {loading
-            ? "Saving..."
-            : rewardId
-            ? "Update Reward"
-            : "Create Reward"}
+          {loading ? "Saving..." : rewardId ? "Update Reward" : "Create Reward"}
         </button>
       </form>
     </div>

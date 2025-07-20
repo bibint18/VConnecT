@@ -17,7 +17,7 @@ export const loginUser = async(email:string,password:string,recaptchaToken:strin
   return response.data
   }catch(error:unknown){
     if (error instanceof AxiosError && error.response) {
-      throw new Error(error.response.data.message); // Forward backend error to frontend
+      throw new Error(error.response.data.message); 
     }
     throw new Error("Something went wrong. Please try again.");
   } 
@@ -51,7 +51,4 @@ export const adminLogout = async () => {
   } catch (error) {
     console.error(error)
   }
-  // document.cookie = "adminToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-  // store.dispatch({type:"auth/logout"})
-  // window.location.href='/adminLogin'
 }

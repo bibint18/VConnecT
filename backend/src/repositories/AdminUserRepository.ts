@@ -18,7 +18,6 @@ export class AdminUserRepository extends BaseRepository<IUser> implements IAdmin
     }else if(sortOption==='recent'){
       sortQuery={createdAt:-1}
     }
-    // return await User.find(query)
     return await this.findMany(query)
     .populate('plan.planId','name')
     .sort(sortQuery)
@@ -30,12 +29,10 @@ export class AdminUserRepository extends BaseRepository<IUser> implements IAdmin
     if(search){
       query.name={$regex:search,$options:'i'}
     }
-    // return await User.countDocuments(query)
     return await this.count(query)
   }
 
   async getUserById (id:string){
-    // return await User.findById(id).lean()
     return await this.findById(id).lean()
   }
 

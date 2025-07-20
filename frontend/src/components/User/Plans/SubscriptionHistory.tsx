@@ -1,4 +1,3 @@
-// components/SubscriptionHistory.tsx
 import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { IUserPlan, PlanService } from "@/services/PlanService";
@@ -80,8 +79,7 @@ const SubscriptionHistory: React.FC<Props> = ({ onClose }) => {
                       Status: {plan.status}
                     </p>
                     <p className="text-gray-400 text-sm">
-                      Start:{" "}
-                      {new Date(plan.startDate).toLocaleDateString()}
+                      Start: {new Date(plan.startDate).toLocaleDateString()}
                     </p>
                     <p className="text-gray-400 text-sm">
                       End:{" "}

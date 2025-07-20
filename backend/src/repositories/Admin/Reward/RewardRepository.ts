@@ -9,7 +9,6 @@ export class RewardRepository extends BaseRepository<IReward> implements IReward
     super(Reward)
   }
   async createReward(reward: Partial<IReward>): Promise<IReward> {
-    // return await Reward.create(reward)
     const rewards= await this.create(reward)
     if(!rewards){
       throw new Error("Cannot create reward")
@@ -18,7 +17,6 @@ export class RewardRepository extends BaseRepository<IReward> implements IReward
   }
 
   async findRewardById(rewardId: string): Promise<IReward | null> {
-    // return await Reward.findOne({rewardId})
     return this.findOne({rewardId})
   }
 
@@ -32,13 +30,11 @@ export class RewardRepository extends BaseRepository<IReward> implements IReward
     }
     const rewards = await Reward.find(query).sort({createdAt:-1})
     .skip((page -1 )* limit).limit(limit).lean()
-    // const total = await Reward.countDocuments(query)
     const total = await this.count(query)
     return {rewards,total}
   }
 
   async updateReward(rewardId: string, updates: Partial<IReward>): Promise<IReward | null> {
-    // return await Reward.findOneAndUpdate({rewardId},updates,{new:true})
     return await this.findOneAndUpdate({rewardId},updates)
   }
 

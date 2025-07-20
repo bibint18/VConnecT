@@ -10,7 +10,6 @@ import { AdminDailyTriviaController } from "../controllers/AdminDailyTriviaContr
 import { AdminDailyTriviaReposiroy } from "../repositories/AdminDailyTriviaRepository.js";
 import { AdminDailyTriviaService } from "../services/AdminDailyTriviaService.js";
 import { RewardRepository } from "../repositories/Admin/Reward/RewardRepository.js";
-// import { UserRewardRepository } from '../repositories/User/Reward/UserRewardRepository'
 import { AdminRewardService } from "../services/Admin/Reward/RewardService.js";
 import { AdminRewardController } from "../controllers/Admin/Reward/RewardController.js";
 import { DashboardRepository } from "../repositories/Admin/Dashboard/DashboardRepository.js";
@@ -206,8 +205,6 @@ router.get(
   validateObjectId,
   dailyTriviaController.getTriviaQuestionById.bind(dailyTriviaController)
 );
-
-
 
 //dashboard
 const dashboardRepository = new DashboardRepository();

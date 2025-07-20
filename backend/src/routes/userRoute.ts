@@ -54,7 +54,8 @@ export const createUserRoutes = (
   );
   router.put(
     "/user/profile/edit",
-    authenticateToken,validateRequest(UpdateProfileDTO),
+    authenticateToken,
+    validateRequest(UpdateProfileDTO),
     ProfileController.updateProfile.bind(ProfileController)
   );
   router.get(
@@ -69,7 +70,8 @@ export const createUserRoutes = (
   );
   router.post(
     "/user/profile/image",
-    authenticateToken,validateRequest(UpdateProfileImageDTO),
+    authenticateToken,
+    validateRequest(UpdateProfileImageDTO),
     ProfileController.updateProfileImage.bind(ProfileController)
   );
   router.post(
@@ -79,24 +81,28 @@ export const createUserRoutes = (
   );
   router.post(
     "/user/profile/change-password",
-    authenticateToken, validateRequest(ChangePasswordDTO),
+    authenticateToken,
+    validateRequest(ChangePasswordDTO),
     ProfileController.changePassword.bind(ProfileController)
   );
 
   //rooms
   router.post(
     "/user/room/create",
-    authenticateToken,validateRequest(CreateRoomDTO) , 
+    authenticateToken,
+    validateRequest(CreateRoomDTO),
     RoomController.createRoom.bind(RoomController)
   );
   router.get(
     "/user/rooms",
-    authenticateToken,validateRequest(GetAllRoomsDTO),
+    authenticateToken,
+    validateRequest(GetAllRoomsDTO),
     RoomController.getAllRooms.bind(RoomController)
   );
   router.post(
     "/user/room/join",
-    authenticateToken, validateRequest(JoinRoomDTO),
+    authenticateToken,
+    validateRequest(JoinRoomDTO),
     RoomController.joinRoom.bind(RoomController)
   );
 
@@ -211,7 +217,11 @@ export const createUserRoutes = (
     authenticateToken,
     plansController.getUserPlan.bind(plansController)
   );
-  router.get('/plans/history',authenticateToken,plansController.getUserPlanHistory.bind(plansController))
+  router.get(
+    "/plans/history",
+    authenticateToken,
+    plansController.getUserPlanHistory.bind(plansController)
+  );
 
   //payment
   const paymentService = new PaymentService(plansRepository);

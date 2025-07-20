@@ -30,9 +30,6 @@ export class AdminUsersController implements IAdminUserController {
         String(searchTerm),
         String(sortOption)
       );
-      // const totalUsers = await this.adminUserService.getTotalUsers(
-      //   String(searchTerm)
-      // );
       res.status(HTTP_STATUS_CODE.OK).json(response);
     } catch (error) {
       next(error);

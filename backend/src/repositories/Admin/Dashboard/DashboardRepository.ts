@@ -1,6 +1,5 @@
 import { IDashboardRepository,DashboardData } from "../../../interfaces/Admin/Dashboard/IDashboardRepo.js";
 import { User } from "../../../models/User.js";
-
 import { Room } from "../../../models/RoomModel.js";
 import { AppError } from "../../../utils/AppError.js";
 
@@ -12,7 +11,6 @@ export class DashboardRepository implements IDashboardRepository{
      const premiumUsersResult = await User.aggregate([
       { $match: { isDeleted: false } },
       { $unwind: "$plan" },
-      // { $match: { "plan.status": "active" } },
       ...(startDate && endDate
         ? [{ $match: { "plan.startDate": { $gte: startDate, $lte: endDate } } }]
         : []),
@@ -33,7 +31,6 @@ export class DashboardRepository implements IDashboardRepository{
     const popularPlans = await User.aggregate([
       { $match: { isDeleted: false } },
       { $unwind: "$plan" },
-      // { $match: { "plan.status": "active" } },
       ...(startDate && endDate
         ? [{ $match: { "plan.startDate": { $gte: startDate, $lte: endDate } } }]
         : []),
@@ -63,7 +60,6 @@ export class DashboardRepository implements IDashboardRepository{
     const totalIncomeResult = await User.aggregate([
       { $match: { isDeleted: false } },
       { $unwind: "$plan" },
-      // { $match: { "plan.status": "active" } },
       ...(startDate && endDate
         ? [{ $match: { "plan.startDate": { $gte: startDate, $lte: endDate } } }]
         : []),
@@ -90,7 +86,6 @@ export class DashboardRepository implements IDashboardRepository{
     const incomeOverTime = await User.aggregate([
       { $match: { isDeleted: false } },
       { $unwind: "$plan" },
-      // { $match: { "plan.status": "active" } },
       ...(startDate && endDate
         ? [{ $match: { "plan.startDate": { $gte: startDate, $lte: endDate } } }]
         : []),
@@ -172,7 +167,6 @@ export class DashboardRepository implements IDashboardRepository{
     const revenueDetails = await User.aggregate([
         { $match: { isDeleted: false } },
         { $unwind: "$plan" },
-        // { $match: { "plan.status": "active" } },
         ...(startDate && endDate
           ? [{ $match: { "plan.startDate": { $gte: startDate, $lte: endDate } } }]
           : []),
@@ -225,7 +219,6 @@ export class DashboardRepository implements IDashboardRepository{
                   $and: [
                     { $gt: [{ $size: "$planDetails" }, 0] },
                     { $eq: [{ $arrayElemAt: ["$planDetails.type", 0] }, "paid"] },
-                    // { $eq: [{ $arrayElemAt: ["$plan.status", 0] }, "active"] },
                   ],
                 },
                 then: true,

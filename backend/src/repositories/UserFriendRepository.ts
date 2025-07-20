@@ -19,9 +19,6 @@ export class UserFriendRespository implements IUserFriendRepository{
               {senderId:friend._id,receiverId:user._id}
             ]
           }).sort({timestamp:-1})
-          console.log("getUser repo lastmessafe",lastMessage)
-          console.log("getUser repo friendId",friend._id)
-          console.log("getUser repo UserId",user._id)
           const unreadCount = await Message.countDocuments({senderId:friend._id,receiverId:user._id,isRead:false})
           const formattedTimestamp = lastMessage?.timestamp
             ? new Date(lastMessage.timestamp).toLocaleString('en-US', {
@@ -53,7 +50,6 @@ export class UserFriendRespository implements IUserFriendRepository{
         })
       )
       friendList.sort((a, b) => new Date(b.fullTimestamp).getTime() - new Date(a.fullTimestamp).getTime());
-      console.log("getUser repo friendList",friendList)
       return friendList
     } catch (error) {
       throw error instanceof AppError ? error : new AppError("Failed to fetch friends", 500);

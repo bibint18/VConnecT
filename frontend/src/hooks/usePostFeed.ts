@@ -24,7 +24,6 @@ export const usePostFeed = () => {
   const queryClient = useQueryClient();
   const communityService = new CommunityService();
 
-  // Infinite query for fetching the feed
   const {
     data,
     fetchNextPage,
@@ -47,7 +46,7 @@ export const usePostFeed = () => {
     }
   }, [queryError]);
 
-  // Mutation for liking a post
+  
   const likeMutation = useMutation({
     mutationFn: (postId: string) => communityService.likePost(postId),
     onSuccess: () => {
@@ -58,7 +57,6 @@ export const usePostFeed = () => {
     },
   });
 
-  // Mutation for disliking a post
   const dislikeMutation = useMutation({
     mutationFn: (postId: string) => communityService.dislikePost(postId),
     onSuccess: () => {
@@ -69,7 +67,6 @@ export const usePostFeed = () => {
     },
   });
 
-  // Mutation for commenting on a post
   const commentMutation = useMutation({
     mutationFn: ({ postId, content }: CommentInput) => 
       communityService.commentOnPost(postId, content),
@@ -81,7 +78,7 @@ export const usePostFeed = () => {
     },
   });
 
-  // Share
+  
   const handleShare = async (postId: string) => {
     try {
       const shareUrl = await communityService.getPostShareUrl(postId);

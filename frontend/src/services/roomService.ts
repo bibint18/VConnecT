@@ -35,30 +35,6 @@ export const joinRoom = async(roomId:string,secretCode?:string) => {
   }
 }
 
-
-
-// export interface Participant {
-//   userId: { name: string; email: string };
-//   firstJoin: Date;
-//   lastJoin: Date;
-//   lastLeave: Date | null;
-//   totalDuration: number; 
-// }
-
-// export interface IDetailRoom {
-//   _id: string;
-//   title: string;
-//   createdBy: { name: string; email: string }
-//   limit: number;
-//   participants: Participant[];
-//   createdAt: Date;
-//   type: "PUBLIC" | "PRIVATE";
-//   premium: boolean;
-//   isBlocked?:boolean;
-//   secretCode?:string;
-//   description: string;
-// }
-
 interface Participant {
   name: string;
   email: string;

@@ -33,7 +33,6 @@ const verifyRecaptcha = async (req:Request, res:Response, next:NextFunction):Pro
 
     next();
   } catch (error) {
-    // return res.status(500).json({ message: "Error verifying reCAPTCHA" });
     next(error)
   }
 };

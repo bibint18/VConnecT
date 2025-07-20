@@ -1,5 +1,3 @@
-
-
 import React from 'react';
 import { 
   Home, 
@@ -7,7 +5,6 @@ import {
   FileText, 
   Users, 
   Star, 
-  // Settings, 
   LogOut,
   MessageSquare
 } from 'react-feather';
@@ -26,7 +23,6 @@ const navItems: NavItem[] = [
   { name: 'Rooms', icon: MessageSquare,path:'/rooms' },
   { name: 'Friends', icon: Users ,path:'/friends/request'},
   { name: 'Premium', icon: Star ,path:'/user/plans'},
-  // { name: 'Setting', icon: Settings ,path:"/settings"},
 ];
 import { logoutTheUser } from '@/redux/userSlice.js';
 import { useAppDispatch } from '@/redux/store';

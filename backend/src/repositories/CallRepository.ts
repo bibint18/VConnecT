@@ -9,7 +9,6 @@ export class CallRepository extends BaseRepository<IRoom> implements ICallReposi
   }
   async joinCall(roomId: string, userId: string): Promise<void> {
     try {
-      // const room = await Room.findById(roomId).exec()
       const room = await this.findById(roomId).exec()
       if(!room){
         throw new AppError("Room not found",404)
@@ -44,7 +43,6 @@ export class CallRepository extends BaseRepository<IRoom> implements ICallReposi
 
   async leaveCall(roomId: string, userId: string): Promise<void> {
     try {
-      // const room = await Room.findById(roomId).exec()
       const room = await this.findById(roomId).exec()
       if(!room) throw new AppError("Room not found",404)
         const participantIndex = room.participants.findIndex((p) => p.userId.toString() === userId);
@@ -64,7 +62,6 @@ export class CallRepository extends BaseRepository<IRoom> implements ICallReposi
 
   async getRoomParticipants(roomId: string): Promise<{ participants: IParticipant[] } | null> {
     const room = await this.findById(roomId).exec()
-    // const room = await Room.findById(roomId).exec();
     return room ? { participants: room.participants } : null;
   }
   

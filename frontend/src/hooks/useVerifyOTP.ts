@@ -11,7 +11,6 @@ export const useVerifyOTP = () => {
       if (error instanceof AxiosError && error.response?.data?.message) {
         console.log(error.response.data.message);
       } else {
-        // alert("OTP verification failed");
         console.log("Otp verificarion failed")
       }
     },

@@ -1,4 +1,4 @@
-// New: Utility for sending push notifications
+
 import webPush from 'web-push';
 
 webPush.setVapidDetails(

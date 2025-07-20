@@ -15,7 +15,6 @@ const GoogleLoginButton = () => {
       const { accessToken, user } = response.data;
       dispatch(loginTheUser({ name: user.name, email: user.email, accessToken ,userId:user._id}));
     } catch (error:unknown) {
-      // Display error to user (e.g., via state or toast)
       const errorMessage =
     (error as { response?: { data?: { message?: string } } }).response?.data?.message || 
     'Google login failed';

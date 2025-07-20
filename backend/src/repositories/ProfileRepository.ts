@@ -16,10 +16,8 @@ export class ProfileRepository extends BaseRepository<IUser> implements IProfile
     }
   }
   async updateProfile(id: string, data: Partial<IUser>): Promise<IUser | null> {
-    try {
-      console.log("reached profile update repository",id,data)   
+    try {  
       const updatedUser = await User.findByIdAndUpdate(id,data,{new:true}).exec()
-      console.log("updated user from repo ",updatedUser)
       return updatedUser
     } catch (error) {
       console.error("error updating user",error)
@@ -30,7 +28,6 @@ export class ProfileRepository extends BaseRepository<IUser> implements IProfile
   async updateStreak(id: string): Promise<IUser | null> {
     try {
       const user = await super.findById(id).exec()
-      // const user = await User.findById(id).exec();
       if (!user) return null;
       const now = new Date();
       const lastUpdate = user.lastStreakUpdate;
@@ -49,7 +46,6 @@ export class ProfileRepository extends BaseRepository<IUser> implements IProfile
       const updatedUser = await user.save();
       return updatedUser;
     } catch (error) {
-      console.error("error updating streak", error);
       throw error;
     }
   }

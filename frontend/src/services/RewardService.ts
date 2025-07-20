@@ -17,10 +17,11 @@ export interface IReward {
 }
 
 export class RewardService {
-  async getRewards(page:number=1,limit:number=9): Promise<{ rewards: IReward[], total: number }> {
+  async getRewards(page:number=1,limit:number=9,search: string = "",
+    sort: string = "title:asc",filter: string = "all"): Promise<{ rewards: IReward[], total: number }> {
     try {
-      const response = await axiosInstance.get("/rewards",{params:{page,limit}});
-      console.log('response',response.data)
+      const [sortField, sortOrder] = sort.split(":");
+      const response = await axiosInstance.get("/rewards",{params:{page,limit,search,sortField,sortOrder,filter}});
       return {rewards: response.data.data,total:response.data.total}
     } catch (error: unknown) {
       if(error instanceof AxiosError && error.message){

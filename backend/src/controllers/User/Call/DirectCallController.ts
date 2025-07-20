@@ -34,8 +34,6 @@ export class DirectCallController implements IDirectCallController {
       });
     } catch (error) {
       next(error)
-      // console.error("Error fetching call details:", error);
-      // res.status(HTTP_STATUS_CODE.INTERNAL_SERVER_ERROR).json({ message: "Failed to fetch call details" });
     }
   }
 }

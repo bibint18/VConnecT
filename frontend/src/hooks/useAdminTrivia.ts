@@ -31,7 +31,7 @@ export const useTriviaQuestionById = (id: string) => {
   return useQuery<ITrivia>({
     queryKey: ["triviaQuestion", id],
     queryFn: () => fetchTriviaQuestionById(id),
-    enabled: !!id, // Only fetch if ID is provided
+    enabled: !!id, 
   });
 };
 

@@ -22,7 +22,6 @@ export class UserRepository extends BaseRepository<IUser> implements IUserReposi
   }
 
   async updateOtp(email: String, otp: String, otpExpiry: Date): Promise<void> {
-    console.log("otpExpiry: ",otpExpiry)
     await OtpVerification.findOneAndUpdate({email},{otp,expiresAt:otpExpiry},{upsert:true,new:true})
   }
 
@@ -45,7 +44,6 @@ export class UserRepository extends BaseRepository<IUser> implements IUserReposi
       const userName = await User.findOne({username}).exec()
       return userName
     } catch (error) {
-      console.log('error finding user by username',error)
       throw Error
     }
   }

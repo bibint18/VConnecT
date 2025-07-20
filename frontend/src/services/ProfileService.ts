@@ -25,9 +25,7 @@ export const getUserProfile = async () => {
 
 export const updateUserProfile = async (profileData: Partial<IUserProfile>) => {
   try {
-    console.log("[ProfileService] Sending profile update:", profileData);
     const response = await axiosInstance.put('/user/profile/edit',profileData)
-    console.log("api response ",response.data)
     return response.data
   } catch (error) {
     console.error("[ProfileService] Update error:", error);

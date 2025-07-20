@@ -10,10 +10,12 @@ export class UserRewardService implements IUserRewardService {
   ) {}
 
   async getUserRewards(userId: string,page: number,
-    limit: number): Promise<{ rewards: RewardResponse[], total: number }> {
+    limit: number,search: string,
+    sortField: string,
+    sortOrder: string,filter:string): Promise<{ rewards: RewardResponse[], total: number }> {
     const user = await this.userRepository.findByIdd(userId);
     if (!user) throw new Error("User not found");
-    const { rewards ,total} = await this.rewardRepository.findAllRewards(page,limit, "")
+    const { rewards ,total} = await this.rewardRepository.findAllRewards(page,limit,search, sortField, sortOrder,userId,filter)
     const data = rewards.map((reward) => ({
       ...reward, 
       isUnlocked: (reward.requiredPoints && user.point >= reward.requiredPoints) ||

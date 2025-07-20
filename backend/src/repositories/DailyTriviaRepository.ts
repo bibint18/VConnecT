@@ -25,7 +25,6 @@ export class DailyTriviaRepository extends BaseRepository<IDailyTrivia> implemen
       throw new AppError("Question already attempted",400)
     }
     const trivia = await this.findById(triviaId).exec()
-    // const trivia = await DailyTrivia.findById(triviaId).exec();
     if (!trivia || trivia.isDeleted) throw new AppError("Trivia question not found", 404);
     const isCorrect = submittedAnswer ===trivia.correctAnswer
     await TriviaSubmission.create({

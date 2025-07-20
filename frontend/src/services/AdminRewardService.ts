@@ -1,5 +1,3 @@
-// src/services/rewardService.ts
-
 import axiosInstance from "@/utils/axiosInterceptor";
 import { AxiosError } from "axios";
 
@@ -55,7 +53,6 @@ export const fetchReward = async (rewardId: string) => {
   }
 };
 
-// Create or update a reward
 export const saveReward = async (rewardId: string | undefined, payload: any) => {
   try {
     if (rewardId) {

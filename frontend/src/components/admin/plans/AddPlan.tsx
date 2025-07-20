@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useAddPlan } from "../../../hooks/useAddPlans";
 import "./addPlan.css";
@@ -18,7 +17,7 @@ interface PlanFormData {
 }
 
 const AddPlan: React.FC = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [formData, setFormData] = useState<PlanFormData>({
     name: "",
     type: "paid",
@@ -28,20 +27,25 @@ const AddPlan: React.FC = () => {
     benefits: [],
     isListed: true,
     duration: "1 month",
-    roomBenefit:0
+    roomBenefit: 0,
   });
 
   const { mutate, isLoading } = useAddPlan();
 
-  
-
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ 
-      ...prev, 
-      [name]: name === "isListed" ? value === "true" : name === "roomBenefit" ? Number(value) : value
+    setFormData((prev) => ({
+      ...prev,
+      [name]:
+        name === "isListed"
+          ? value === "true"
+          : name === "roomBenefit"
+          ? Number(value)
+          : value,
     }));
   };
 
@@ -56,7 +60,7 @@ const AddPlan: React.FC = () => {
     e.preventDefault();
     if (!validatePlanForm(formData)) return;
     mutate(formData);
-    navigate('/plans')
+    navigate("/plans");
   };
 
   return (
@@ -64,9 +68,10 @@ const AddPlan: React.FC = () => {
       <div className="form-card">
         <h2 className="form-heading">Add New Plan</h2>
         <form onSubmit={handleSubmit}>
-          {/* Name & Type */}
           <div className="form-group">
-            <label htmlFor="name" className="form-label">Name</label>
+            <label htmlFor="name" className="form-label">
+              Name
+            </label>
             <input
               type="text"
               id="name"
@@ -75,12 +80,13 @@ const AddPlan: React.FC = () => {
               onChange={handleChange}
               className="form-input"
               placeholder="Enter plan name"
-              
             />
           </div>
 
           <div className="form-group">
-            <label htmlFor="type" className="form-label">Type</label>
+            <label htmlFor="type" className="form-label">
+              Type
+            </label>
             <select
               id="type"
               name="type"
@@ -93,23 +99,10 @@ const AddPlan: React.FC = () => {
             </select>
           </div>
 
-          {/* <div className="form-group">
-            <label htmlFor="type" className="form-label">Type</label>
-            <input
-              type="text"
-              id="type"
-              name="type"
-              value={formData.type}
-              onChange={handleChange}
-              className="form-input"
-              placeholder="Enter plan type"
-              
-            />
-          </div> */}
-
-          {/* Description */}
           <div className="form-group">
-            <label htmlFor="description" className="form-label">Description</label>
+            <label htmlFor="description" className="form-label">
+              Description
+            </label>
             <textarea
               id="description"
               name="description"
@@ -117,12 +110,13 @@ const AddPlan: React.FC = () => {
               onChange={handleChange}
               className="form-textarea"
               placeholder="Enter plan description"
-              
             />
           </div>
 
           <div className="form-group">
-            <label htmlFor="roomBenefit" className="form-label">Room Benefit</label>
+            <label htmlFor="roomBenefit" className="form-label">
+              Room Benefit
+            </label>
             <input
               type="number"
               id="roomBenefit"
@@ -136,10 +130,11 @@ const AddPlan: React.FC = () => {
             />
           </div>
 
-          {/* Regular Amount & Discount Amount */}
           <div className="form-row">
             <div className="form-group half-width">
-              <label htmlFor="regularAmount" className="form-label">Regular Amount</label>
+              <label htmlFor="regularAmount" className="form-label">
+                Regular Amount
+              </label>
               <input
                 type="number"
                 id="regularAmount"
@@ -148,11 +143,12 @@ const AddPlan: React.FC = () => {
                 onChange={handleChange}
                 className="form-input"
                 placeholder="Enter regular amount"
-                
               />
             </div>
             <div className="form-group half-width">
-              <label htmlFor="discountAmount" className="form-label">Discount Amount</label>
+              <label htmlFor="discountAmount" className="form-label">
+                Discount Amount
+              </label>
               <input
                 type="number"
                 id="discountAmount"
@@ -161,14 +157,14 @@ const AddPlan: React.FC = () => {
                 onChange={handleChange}
                 className="form-input"
                 placeholder="Enter discount amount"
-                
               />
             </div>
           </div>
 
-          {/* Benefits */}
           <div className="form-group">
-            <label htmlFor="benefits" className="form-label">Benefits</label>
+            <label htmlFor="benefits" className="form-label">
+              Benefits
+            </label>
             <textarea
               id="benefits"
               name="benefits"
@@ -178,24 +174,11 @@ const AddPlan: React.FC = () => {
               placeholder="Enter benefits (one per line)"
             />
           </div>
-
-          {/* Duration & Status */}
           <div className="form-row">
-            {/* <div className="form-group half-width">
-              <label htmlFor="duration" className="form-label">Duration</label>
-              <input
-                type="text"
-                id="duration"
-                name="duration"
-                value={formData.duration}
-                onChange={handleChange}
-                className="form-input"
-                placeholder="Enter duration"
-              />
-            </div> */}
-
-<div className="form-group half-width">
-              <label htmlFor="duration" className="form-label">Duration</label>
+            <div className="form-group half-width">
+              <label htmlFor="duration" className="form-label">
+                Duration
+              </label>
               <select
                 id="duration"
                 name="duration"
@@ -212,7 +195,9 @@ const AddPlan: React.FC = () => {
             </div>
 
             <div className="form-group half-width">
-              <label htmlFor="isListed" className="form-label">Status</label>
+              <label htmlFor="isListed" className="form-label">
+                Status
+              </label>
               <select
                 id="isListed"
                 name="isListed"
@@ -226,11 +211,7 @@ const AddPlan: React.FC = () => {
             </div>
           </div>
 
-          <button 
-            type="submit" 
-            className="form-button" 
-            disabled={isLoading}
-          >
+          <button type="submit" className="form-button" disabled={isLoading}>
             {isLoading ? "Adding..." : "Add Plan"}
           </button>
         </form>

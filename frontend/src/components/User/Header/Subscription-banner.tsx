@@ -7,7 +7,6 @@ import { motion } from 'framer-motion';
 const SubscriptionSection = () => {
   const navigate = useNavigate();
 
-  // Animation variants for the container
   const sectionVariants = {
     hidden: { opacity: 0, y: 50 },
     visible: {
@@ -20,7 +19,6 @@ const SubscriptionSection = () => {
     },
   };
 
-  // Animation variants for text elements (staggered)
   const textContainerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -43,7 +41,6 @@ const SubscriptionSection = () => {
     },
   };
 
-  // Animation variants for the button
   const buttonVariants = {
     hover: {
       scale: 1.05,

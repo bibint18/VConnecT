@@ -9,7 +9,6 @@ export class AdminRoomRepository extends BaseRepository<IRoom> implements IAdmin
     super(Room)
   }
   async getAllRooms(page: number, limit: number, searchTerm: string, sortOption: string): Promise<IRoom[]> {
-    console.log("reached repo admin room",page,limit,searchTerm,sortOption)
     const query:any = {isDeleted:false}
     if(searchTerm){
       query.title={$regex:searchTerm,$options:'i'}
@@ -24,7 +23,6 @@ export class AdminRoomRepository extends BaseRepository<IRoom> implements IAdmin
     }else if(sortOption==='all'){
       sortQuery={title:1}
     }
-    // const rooms = await Room.find(query)
     const rooms = await this.findMany(query)
       .sort(sortQuery)
       .skip((page - 1) * limit)
@@ -40,7 +38,6 @@ export class AdminRoomRepository extends BaseRepository<IRoom> implements IAdmin
     if (searchTerm) {
       query.name = { $regex: searchTerm, $options: "i" };
     }
-    // return await Room.countDocuments(query);
     return await this.count(query)
   }
 
@@ -64,7 +61,6 @@ export class AdminRoomRepository extends BaseRepository<IRoom> implements IAdmin
 
   async getRoomDetails(id: string): Promise<IRoom | null> {
     console.log('reached here')
-    // const room = await Room.findById(id)
     const room = await this.findById(id)
     .populate('createdBy','name email')
     .populate('participants.userId','name email')

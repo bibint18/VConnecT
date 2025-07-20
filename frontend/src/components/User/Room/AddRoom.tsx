@@ -23,8 +23,8 @@ const AddRoom: React.FC = () => {
     description: '',
   });
   const [error, setError] = useState<string | null>(null);
-  const [secretCode, setSecretCode] = useState<string | null>(null); // State for secret code
-  const [showModal, setShowModal] = useState(false); // State for modal visibility
+  const [secretCode, setSecretCode] = useState<string | null>(null); 
+  const [showModal, setShowModal] = useState(false); 
 
   const handleFormChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>

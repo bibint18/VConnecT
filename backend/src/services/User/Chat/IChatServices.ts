@@ -11,7 +11,6 @@ import { User } from "../../../models/User.js";
 export class ChatService implements IChatService{
   private activeCallRequests = new Set<string>();
   constructor(private readonly chatRepository: IChatRepository, private readonly chatIo:Namespace,private readonly callRepository:IFriendCallRepository,private readonly subscriptionRepository:ISubscriptionRepository){
-    console.log("ChatService initialized with chatIo:", chatIo ? "present" : "undefined");
     this.setupSocketEvents()
   }
   
@@ -43,11 +42,8 @@ export class ChatService implements IChatService{
     }
 
     const lastMessage = await this.chatRepository.getLastMessage(senderId,recieverId);
-    console.log("service last Message",lastMessage)
     const unreadCountSender = await this.chatRepository.getUnreadMessageCount(senderId,recieverId)
-    console.log("service unread sender count",unreadCountSender)
     const unreadCountReceiver = await this.chatRepository.getUnreadMessageCount(recieverId,senderId)
-    console.log("service unread receiever count",unreadCountReceiver)
     this.chatIo.to(senderId).emit('update-last-message',{
       friendId:recieverId,lastMessage,unreadCount:unreadCountSender
     })
@@ -64,19 +60,16 @@ export class ChatService implements IChatService{
 
   async getLastMessage(senderId: string, recieverId: string): Promise<IMessage | null> {
     const lastMessage = await this.chatRepository.getLastMessage(senderId,recieverId)
-    console.log("get Lastmessafe",lastMessage)
     return lastMessage
   }
 
   async getUnreadMessageCount(userId:string,friendId:string):Promise<number>{
     const count =await this.chatRepository.getUnreadMessageCount(userId,friendId)
-    console.log("geyUnread count",count)
     return count
   }
 
   handleSocketEvents(socket: Socket): void {
     socket.on('join-chat', ({ userId }, callback) => {
-      console.log(`User ${userId} joining chat with socket ${socket.id}`);
       socket.data.userId = userId;
       socket.join(userId);
       if (callback) {

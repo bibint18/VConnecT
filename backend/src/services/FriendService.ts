@@ -24,7 +24,7 @@ export class FriendService {
       });
 
       socket.on("send-friend-request", async (data: { to: string }, callback) => {
-        const userId = (socket as any).userId; // Set via middleware or join-call
+        const userId = (socket as any).userId; 
         if (!userId) return callback({ error: "Unauthorized" });
 
         try {
@@ -46,7 +46,6 @@ export class FriendService {
       });
 
       socket.on("respond-friend-request", async (data: { requestId: string; accept: boolean }, callback) => {
-        console.log("responded to the friend requestttttttttttttttttttt")
         const userId = (socket as any).userId;
         console.log("userId from respond backend service",userId)
         if (!userId) return callback({ error: "Unauthorized" });

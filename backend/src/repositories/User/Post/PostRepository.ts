@@ -110,7 +110,6 @@ export class PostRepository implements IPostRepository{
   }
 
   async removeLike(postId: string, userId: string): Promise<void> {
-    console.log("reached repo dislike",postId,userId)
     await Post.updateOne({_id:postId,isDeleted:false,likes:userId},{$pull:{likes:userId},$inc:{likeCount:-1}}).exec()
   }
 

@@ -155,7 +155,6 @@ const PostFeed: React.FC = () => {
   const handleLikeClick = async (postId: string) => {
     if (!isLiking[postId] && userId && postId) {
       setIsLiking((prev) => ({ ...prev, [postId]: true }));
-      // Optimistically update likers
       const previousLikers = likers[postId] || [];
       setLikers((prev) => {
         const currentLikers = prev[postId] || [];
@@ -170,7 +169,6 @@ const PostFeed: React.FC = () => {
       try {
         await handleLike(postId);
         console.log(`Like submitted for post ${postId}`);
-        // Fetch updated likers
         const communityService = new CommunityService();
         const updatedLikers = await communityService.getPostLikers(postId);
         console.log(`Fetched likers after like for post ${postId}:`, updatedLikers);
@@ -180,7 +178,6 @@ const PostFeed: React.FC = () => {
         }));
       } catch (error) {
         console.error(`Failed to like post ${postId}:`, error);
-        // Revert optimistic update
         setLikers((prev) => ({
           ...prev,
           [postId]: previousLikers,

@@ -39,7 +39,6 @@ export class FriendCallManager {
         audio: true 
       });
       
-      // Generate a unique call ID
       this.state.callId = `call_${[this.chatService['userId'], receiverId].sort().join("_")}_${Date.now()}`;
       this.state.remoteUserId = receiverId;
       this.createPeerConnection()

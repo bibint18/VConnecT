@@ -1,6 +1,4 @@
-
 "use client";
-
 import React, { useEffect, useState } from "react";
 import FriendsList from "./FriendList";
 import ChatBox from "./ChatBox";

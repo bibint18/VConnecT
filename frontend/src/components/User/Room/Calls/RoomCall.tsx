@@ -259,7 +259,7 @@ const RoomCall: React.FC = () => {
         `}
       </style>
       <div className="!max-w-7xl !mx-auto !flex !flex-col lg:!flex-row !gap-4 sm:!gap-6 !h-[calc(100vh-2rem)] sm:!h-[calc(100vh-3rem)]">
-        {/* Main video area */}
+        {/* Main  */}
         <div className="!flex-1 !flex !flex-col !h-full">
           <div className="!bg-gray-900 !rounded-xl !p-3 sm:!p-4 !mb-4 !shadow-lg !border !border-gray-700">
             <h1 className="!text-lg sm:!text-xl !font-bold !flex !items-center !gap-2">
@@ -267,7 +267,7 @@ const RoomCall: React.FC = () => {
             </h1>
           </div>
 
-          {/* Video grid */}
+          {/* grid */}
           <div
             className={`video-grid-container ${getVideoGridClass()} !gap-3 sm:!gap-4 !flex-1 !h-full !rounded-xl`}
           >

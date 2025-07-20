@@ -75,13 +75,11 @@ export class RoomRepository extends BaseRepository<IRoom> implements IRoomReposi
     const rooms = await this.findMany(query)
     .populate("createdBy", "name email").populate("participants.userId", "name email").sort({createdAt:-1}).skip(skip).limit(limit).exec()
     const total=await this.count(query)
-    // const total = await Room.countDocuments(query)
     return {rooms,user,total}
   }
 
   async joinRoom(RoomId: string, userId: string, secretCode: string): Promise<IRoom | null> {
     try {
-      // const room = await Room.findById(RoomId)
       const room =await this.findById(RoomId)
       .populate("createdBy", "name email").populate("participants.userId", "name email");
       if(room?.isBlocked){
@@ -123,7 +121,6 @@ export class RoomRepository extends BaseRepository<IRoom> implements IRoomReposi
 
   async deleteRoom(roomId: string): Promise<void> {
     try {
-      // const room = await Room.findById(roomId)
       const room =await this.findById(roomId)
       if(!room){
         throw new Error("No Room")

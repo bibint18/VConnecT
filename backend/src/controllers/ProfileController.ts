@@ -47,14 +47,12 @@ export class ProfileController implements IProfileController {
         id,
         profileData
       ); 
-      console.log("[ProfileController] updateProfile - Updated User:", updatedUser);
       const updateProfileResponseDto = ProfileMapper.toUpdateProfileResponse(
         updatedUser,
         "Profile updated"
       );
       res.status(HTTP_STATUS_CODE.OK).json(updateProfileResponseDto);
     } catch (error) {
-      console.error("[ProfileController] updateProfile - Error:", error);
       next(error);
     }
   }

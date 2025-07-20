@@ -1,6 +1,4 @@
-
 "use client";
-
 import React, { useState, useEffect } from "react";
 import { Search, Plus } from "react-feather";
 import { toast } from "react-toastify";
@@ -57,7 +55,6 @@ const FriendsList: React.FC<FriendsListProps> = ({ activeChat, onSelectFriend })
                       hour12: true,
                     })
                   : friend.timestamp,
-                // CHANGE: Update fullTimestamp for sorting
                 fullTimestamp: lastMessage?.timestamp || friend.fullTimestamp,
                 unreadCount: unreadCount || 0,
               }
@@ -66,16 +63,11 @@ const FriendsList: React.FC<FriendsListProps> = ({ activeChat, onSelectFriend })
         return updatedFriends.sort((a, b) => new Date(b.fullTimestamp).getTime() - new Date(a.fullTimestamp).getTime());
       });
     });
-    // socket.on('update-last-message',({friendId,lastMessage,unreadCount}) => {
-    //   console.log('update event data',friendId,lastMessage,unreadCount)
-    //   setFriends((prevFriends) => prevFriends.map((friend) => friend.id ===friendId ? {...friend,lastMessage:lastMessage?.content || "NO MESSEGES YET",timestamp:lastMessage?.timestamp || friend.fullTimestamp,unreadCount:unreadCount || 0,} : friend))
-    // })
 
     const loadFriends = async () => {
       try {
         const friendList = await chatService.fetchFriends();
         const sortedFriendList = friendList.sort((a,b) => new Date(b.fullTimestamp).getTime() - new Date(a.fullTimestamp).getTime())
-        // setFriends(friendList);
         setFriends(sortedFriendList)
         if (friendList.length > 0 && !activeChat) {
           onSelectFriend(friendList[0].id);
