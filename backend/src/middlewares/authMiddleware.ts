@@ -14,9 +14,6 @@ declare module 'express' {
     user?: DecodedUser;
   }
 }
-// interface AuthenticatedRequest extends Request {
-//   user?: DecodedUser;
-// }
 
 export const authenticateToken =async (req: Request, res: Response, next: NextFunction):Promise<void> => {
   const authHeader = req.headers['authorization'];

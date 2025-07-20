@@ -14,7 +14,7 @@ export class UserRewardRepository implements IUserRewardRepo {
         { description: { $regex: searchTerm, $options: "i" } },
       ],
     };
-    const rewards = await Reward.find(query).skip((page - 1) * limit).limit(limit)
+    const rewards = await Reward.find(query).skip((page - 1) * limit).limit(limit).lean()
     const total = await Reward.countDocuments(query);
     return { rewards, total };
   }

@@ -21,7 +21,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
 
   render():React.ReactNode {
     if (this.state.hasError) {
-      return <h1>PAGE NOT FOUND</h1>;
+      return <h1>SOMETHING WENT WRONG!!</h1>;
     }
     return this.props.children;
   }
