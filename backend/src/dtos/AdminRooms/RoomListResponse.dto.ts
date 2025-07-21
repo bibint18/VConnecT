@@ -1,6 +1,6 @@
 import { IsArray, IsNumber, ValidateNested } from "class-validator";
 import { Type } from "class-transformer";
-import { RoomResponseDTO } from "./RoomResponse.dto";
+import { RoomResponseDTO } from "./RoomResponse.dto.js";
 
 export class RoomListResponseDTO {
   @IsArray()

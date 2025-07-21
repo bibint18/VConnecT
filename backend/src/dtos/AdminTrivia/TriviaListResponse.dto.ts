@@ -1,6 +1,6 @@
 import { IsArray, IsNumber, ValidateNested } from "class-validator";
 import { Type } from "class-transformer";
-import { TriviaResponseDTO } from "./AdminTriviaResponse.dto";
+import { TriviaResponseDTO } from "./AdminTriviaResponse.dto.js";
 
 export class TriviaListResponseDTO {
   @IsArray()

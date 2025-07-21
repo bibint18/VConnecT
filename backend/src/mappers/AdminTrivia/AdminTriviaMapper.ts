@@ -1,7 +1,7 @@
-import { IDailyTrivia } from "../../models/DailyTriviaModel";
-import { TriviaResponseDTO } from "../../dtos/AdminTrivia/AdminTriviaResponse.dto";
-import { TriviaListResponseDTO } from "../../dtos/AdminTrivia/TriviaListResponse.dto";
-import { TriviaDetailsResponseDTO } from "../../dtos/AdminTrivia/TriviaDetailResponse.dto";
+import { IDailyTrivia } from "../../models/DailyTriviaModel.js";
+import { TriviaResponseDTO } from "../../dtos/AdminTrivia/AdminTriviaResponse.dto.js";
+import { TriviaListResponseDTO } from "../../dtos/AdminTrivia/TriviaListResponse.dto.js";
+import { TriviaDetailsResponseDTO } from "../../dtos/AdminTrivia/TriviaDetailResponse.dto.js";
 
 export class TriviaMapper {
   static toTriviaResponse(trivia: IDailyTrivia): TriviaResponseDTO {

@@ -1,5 +1,5 @@
 import { Request,Response,NextFunction} from "express";
-import logger from "../utils/Logger";
+import logger from "../utils/Logger.js";
 
 export function errorLoggerMiddleware(err:any,req:Request,res:Response,next:NextFunction){
   logger.error(`Error occured`,{

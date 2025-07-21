@@ -1,7 +1,7 @@
-import { IPlan } from "../../models/PlansModel";
-import { PlanResponseDTO } from "../../dtos/AdminPlans/PlanResponse.dto";
-import { PlanListResponseDTO } from "../../dtos/AdminPlans/planListResponse.dto";
-import { PlanDetailsResponseDTO } from "../../dtos/AdminPlans/PlanDetailResponse.dto";
+import { IPlan } from "../../models/PlansModel.js";
+import { PlanResponseDTO } from "../../dtos/AdminPlans/PlanResponse.dto.js";
+import { PlanListResponseDTO } from "../../dtos/AdminPlans/planListResponse.dto.js";
+import { PlanDetailsResponseDTO } from "../../dtos/AdminPlans/PlanDetailResponse.dto.js";
 
 export class PlanMapper {
   static toPlanResponse(plan: IPlan): PlanResponseDTO {

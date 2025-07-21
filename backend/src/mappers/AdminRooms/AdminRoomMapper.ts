@@ -1,7 +1,7 @@
-import { IRoom } from "../../models/RoomModel";
-import { RoomResponseDTO } from "../../dtos/AdminRooms/RoomResponse.dto";
-import { RoomListResponseDTO } from "../../dtos/AdminRooms/RoomListResponse.dto";
-import { RoomDetailsResponseDTO } from "../../dtos/AdminRooms/RoomDetailsResponse.dto";
+import { IRoom } from "../../models/RoomModel.js";
+import { RoomResponseDTO } from "../../dtos/AdminRooms/RoomResponse.dto.js";
+import { RoomListResponseDTO } from "../../dtos/AdminRooms/RoomListResponse.dto.js";
+import { RoomDetailsResponseDTO } from "../../dtos/AdminRooms/RoomDetailsResponse.dto.js";
 export class RoomMapper {
   static toRoomResponse(room: IRoom): RoomResponseDTO {
     return new RoomResponseDTO(

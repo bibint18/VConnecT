@@ -1,9 +1,9 @@
-import { IUser } from "../../models/User";
-import { GetProfileResponseDTO } from "../../dtos/profile/getProfileResponse.dto";
-import { UpdateProfileResponseDTO } from "../../dtos/profile/updateProfileResponse.dto";
-import { UpdateProfileImageResponseDTO } from "../../dtos/profile/updateProfileImageResponse.dto";
-import { UpdateStreakResponseDTO } from "../../dtos/profile/updateStreakResponse.dto";
-import { ChangePasswordResponseDTO } from "../../dtos/profile/changePasswordResponse.dto";
+import { IUser } from "../../models/User.js";
+import { GetProfileResponseDTO } from "../../dtos/profile/getProfileResponse.dto.js";
+import { UpdateProfileResponseDTO } from "../../dtos/profile/updateProfileResponse.dto.js";
+import { UpdateProfileImageResponseDTO } from "../../dtos/profile/updateProfileImageResponse.dto.js";
+import { UpdateStreakResponseDTO } from "../../dtos/profile/updateStreakResponse.dto.js";
+import { ChangePasswordResponseDTO } from "../../dtos/profile/changePasswordResponse.dto.js";
 
 export class ProfileMapper {
   static toProfileResponse(user: IUser): {

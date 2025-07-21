@@ -1,6 +1,6 @@
 import { IsArray, IsNumber, ValidateNested } from "class-validator";
 import { Type } from "class-transformer";
-import { PlanResponseDTO } from "./PlanResponse.dto";
+import { PlanResponseDTO } from "./PlanResponse.dto.js";
 
 export class PlanListResponseDTO {
   @IsArray()

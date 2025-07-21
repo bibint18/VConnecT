@@ -1,9 +1,9 @@
-import { IUser } from "../../models/User";
-import { UserResponseDTO } from "../../dtos/auth/loginResponseDto";
-import { SignupResponseDTO } from "../../dtos/auth/signupResponse.dto";
-import { VerifyOtpResponseDTO } from "../../dtos/auth/verifyOtpResponse.dto";
-import { ResendOtpResponseDTO } from "../../dtos/auth/resendOtpResponse.dto";
-import { HomeDataResponseDTO } from "../../dtos/auth/homeDataResponse.dto";
+import { IUser } from "../../models/User.js";
+import { UserResponseDTO } from "../../dtos/auth/loginResponseDto.js";
+import { SignupResponseDTO } from "../../dtos/auth/signupResponse.dto.js";
+import { VerifyOtpResponseDTO } from "../../dtos/auth/verifyOtpResponse.dto.js";
+import { ResendOtpResponseDTO } from "../../dtos/auth/resendOtpResponse.dto.js";
+import { HomeDataResponseDTO } from "../../dtos/auth/homeDataResponse.dto.js";
 
 export class UserMapper {
   static toLoginResponse(user: IUser): UserResponseDTO {
