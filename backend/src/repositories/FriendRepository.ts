@@ -25,7 +25,7 @@ export class FriendRepository implements IFriendRepository{
       .populate("from", "name username profileImage")
       .exec();
     return requests.map((req) => ({
-      id: req._id.toString(),
+      id: req._id as string,
       from: (req.from as unknown as IUser),
       createdAt: req.createdAt,
     }));

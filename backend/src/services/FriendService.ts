@@ -34,7 +34,7 @@ export class FriendService {
           const toSocketId = this.socketMap.get(data.to);
           if (toSocketId) {
             this.io.to(toSocketId).emit("friend-request-received", {
-              requestId: request?._id.toString(),
+              requestId: request?._id as string,
               from: userId,
             });
           }
